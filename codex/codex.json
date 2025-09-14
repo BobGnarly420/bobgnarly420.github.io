@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "site": {
+    "title": "EV — Fluxiter",
+    "subtitle": "Systems, sound, surfaces",
+    "description": "Portfolio of Evelyn: generative design, audio, systems coaching.",
+    "theme": {
+      "primary": "#68E1FD",
+      "accent": "#FF5C99",
+      "bg": "#0A0A0A",
+      "fg": "#F2F2F2"
+    },
+    "cta": [
+      {
+        "label": "Book a session",
+        "href": "/contact",
+        "kind": "primary"
+      },
+      {
+        "label": "Donate",
+        "href": "https://ko-fi.com/ev",
+        "kind": "secondary"
+      }
+    ]
+  },
+  "person": {
+    "handle": "ev",
+    "name": "Evelyn",
+    "tagline": "Authentic small business · amateur renaissance engine",
+    "socials": {}
+  },
+  "sections": [
+    {
+      "key": "projects",
+      "title": "Projects",
+      "route": "/projects/:slug?",
+      "sources": [
+        "projects"
+      ],
+      "sort": {
+        "by": "order"
+      }
+    },
+    {
+      "key": "visuals",
+      "title": "Visuals",
+      "route": "/visuals/:slug?",
+      "sources": [
+        "visuals"
+      ]
+    },
+    {
+      "key": "writing",
+      "title": "Writing",
+      "route": "/writing/:slug?",
+      "sources": [
+        "writings"
+      ]
+    }
+  ],
+  "content": {
+    "projects": [],
+    "visuals": [],
+    "writings": []
+  }
+}
