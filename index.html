@@ -41,7 +41,7 @@
         const codex = await res.json();
         document.title = codex.site?.title || document.title;
         const nav = document.getElementById('nav');
-        nav.innerHTML = codex.sections.map(s => `[<a href="${s.route.replace('/:slug?','')}">${s.title}</a>]`).join(' ');
+        nav.innerHTML = codex.sections.map(s => `[<a href="${s.route.replace('/:slug?','')}">${s.title}</a>]`).join(' ') + ' [<a href="aquarium.html">Aquarium</a>]';
         const grid = document.getElementById('grid');
         const projects = (codex.content.projects || [])
           .filter(p => (p.visibility ?? 'public') === 'public')
