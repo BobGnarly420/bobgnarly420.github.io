@@ -56,6 +56,11 @@
       "sources": [
         "writings"
       ]
+    },
+    {
+      "key": "aquarium",
+      "title": "Aquarium",
+      "route": "/aquarium.html"
     }
   ],
   "content": {

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>4D Aquarium</title>
+  <style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#001;color:#fff;font-family:sans-serif}
+    #info{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.4);padding:0.5em 1em;border-radius:4px;font-size:14px}
+    #donate{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.4);padding:0.5em 1em;border-radius:4px;font-size:14px;color:#fff;text-decoration:none}
+    canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+  </style>
+</head>
+<body>
+  <div id="info">4D Aquarium – hyperplanar slices of polytopes and tori</div>
+  <a id="donate" href="https://ko-fi.com/ev333" target="_blank">Donate</a>
+  <canvas id="c"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+  <script>
+  const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:false});
+  renderer.setPixelRatio(1);
+  renderer.setClearColor(0x001133);
+  const scale=4;
+  function resize(){
+    renderer.setSize(window.innerWidth/scale, window.innerHeight/scale, false);
+    renderer.domElement.style.width='100%';
+    renderer.domElement.style.height='100%';
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x001133,4,15);
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
+  const light = new THREE.DirectionalLight(0xffffff,1);
+  light.position.set(5,10,7);
+  scene.add(light);
+
+  // tank bounds
+  const tankGeom = new THREE.EdgesGeometry(new THREE.BoxGeometry(6,4,4));
+  const tank = new THREE.LineSegments(tankGeom, new THREE.LineBasicMaterial({color:0x335577,transparent:true,opacity:0.4}));
+  scene.add(tank);
+
+  // helpers for 4D rotation
+  function rotate4(v, a, i, j){
+    const c=Math.cos(a), s=Math.sin(a), vi=v[i], vj=v[j];
+    v[i]=vi*c - vj*s;
+    v[j]=vi*s + vj*c;
+  }
+
+  // create fish (tesseract slices)
+  const fishGeom = new THREE.BufferGeometry();
+  const fishMat = new THREE.PointsMaterial({color:0xff88ff,size:0.05});
+  const fish = new THREE.Points(fishGeom, fishMat);
+  scene.add(fish);
+
+  const fishTrailGeom = new THREE.BufferGeometry();
+  const fishTrailMat = new THREE.PointsMaterial({color:0xff88ff,size:0.02,transparent:true,opacity:0.3});
+  const fishTrail = new THREE.Points(fishTrailGeom, fishTrailMat);
+  scene.add(fishTrail);
+
+  // create eel (4-torus slices)
+  const eelGeom = new THREE.BufferGeometry();
+  const eelMat = new THREE.PointsMaterial({color:0x88ffcc,size:0.03});
+  const eel = new THREE.Points(eelGeom, eelMat);
+  scene.add(eel);
+
+  const eelTrailGeom = new THREE.BufferGeometry();
+  const eelTrailMat = new THREE.PointsMaterial({color:0x88ffcc,size:0.015,transparent:true,opacity:0.25});
+  const eelTrail = new THREE.Points(eelTrailGeom, eelTrailMat);
+  scene.add(eelTrail);
+
+  // pentachoron neon tetras
+  const basePent = [
+    [1,1,1,-1],
+    [1,-1,-1,-1],
+    [-1,1,-1,-1],
+    [-1,-1,1,-1],
+    [0,0,0,1]
+  ].map(v=>v.map(n=>n*0.5));
+  const pentEdges=[];
+  for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)pentEdges.push([i,j]);
+  const tetraCount=20;
+  const tetras=[];
+  for(let i=0;i<tetraCount;i++){
+    tetras.push({
+      offset:[(Math.random()-0.5)*4,(Math.random()-0.5)*2,(Math.random()-0.5)*2,(Math.random()-0.5)*2],
+      rotA:Math.random()*Math.PI*2,
+      rotB:Math.random()*Math.PI*2
+    });
+  }
+  const tetraGeom = new THREE.BufferGeometry();
+  const tetraMat = new THREE.PointsMaterial({color:0x00ffff,size:0.04});
+  const tetraFish = new THREE.Points(tetraGeom, tetraMat);
+  scene.add(tetraFish);
+
+  const fishTrailPts=[];
+  const eelTrailPts=[];
+
+  // precompute tesseract vertices and edges
+  const tVerts=[];
+  for(let i=0;i<16;i++){
+    tVerts.push([(i&1?1:-1),(i&2?1:-1),(i&4?1:-1),(i&8?1:-1)]);
+  }
+  const tEdges=[];
+  for(let i=0;i<16;i++)for(let j=i+1;j<16;j++){
+    const d=i^j; if(d&&!(d&(d-1))) tEdges.push([i,j]);
+  }
+
+  function sliceTesseract(w, time){
+    const pts=[];
+    tEdges.forEach(([a,b])=>{
+      const va=tVerts[a].slice();
+      const vb=tVerts[b].slice();
+      rotate4(va,time*0.3,0,3); rotate4(vb,time*0.3,0,3);
+      rotate4(va,time*0.2,1,2); rotate4(vb,time*0.2,1,2);
+      const wa=va[3], wb=vb[3];
+      if((wa<w && wb>w) || (wa>w && wb<w)){
+        const r=(w-wa)/(wb-wa);
+        pts.push(new THREE.Vector3(
+          va[0]+(vb[0]-va[0])*r,
+          va[1]+(vb[1]-va[1])*r,
+          va[2]+(vb[2]-va[2])*r
+        ));
+      }
+    });
+    return pts;
+  }
+
+  function sliceTorus(w,time){
+    const pts=[];
+    const R=1,r=0.3;
+    for(let u=0;u<Math.PI*2;u+=0.15){
+      for(let v=0;v<Math.PI*2;v+=0.15){
+        const x=(R+r*Math.cos(v))*Math.cos(u);
+        const y=(R+r*Math.cos(v))*Math.sin(u);
+        const z=r*Math.sin(v)*Math.cos(time*0.4);
+        const ww=r*Math.sin(v)*Math.sin(time*0.4);
+        if(Math.abs(ww-w)<0.02) pts.push(new THREE.Vector3(x,y,z));
+      }
+    }
+    return pts;
+  }
+
+  let t=0;
+  function animate(){
+    t+=0.01;
+    const wSlice=Math.sin(t);
+    const fishPts = sliceTesseract(wSlice,t);
+    fishGeom.setFromPoints(fishPts);
+    fishTrailPts.push(...fishPts);
+    if(fishTrailPts.length>2000) fishTrailPts.splice(0,fishTrailPts.length-2000);
+    fishTrailGeom.setFromPoints(fishTrailPts);
+
+    const eelPts = sliceTorus(wSlice*0.5,t);
+    eelGeom.setFromPoints(eelPts);
+    eelTrailPts.push(...eelPts);
+    if(eelTrailPts.length>3000) eelTrailPts.splice(0,eelTrailPts.length-3000);
+    eelTrailGeom.setFromPoints(eelTrailPts);
+
+    const tetraPts=[];
+    tetras.forEach(f=>{
+      const verts=basePent.map(v=>v.slice());
+      verts.forEach(v=>{rotate4(v,t*0.4+f.rotA,0,3); rotate4(v,t*0.3+f.rotB,1,2); for(let k=0;k<4;k++) v[k]+=f.offset[k];});
+      pentEdges.forEach(([a,b])=>{
+        const va=verts[a], vb=verts[b];
+        const wa=va[3], wb=vb[3];
+        if((wa<wSlice && wb>wSlice) || (wa>wSlice && wb<wSlice)){
+          const r=(wSlice-wa)/(wb-wa);
+          tetraPts.push(new THREE.Vector3(
+            va[0]+(vb[0]-va[0])*r,
+            va[1]+(vb[1]-va[1])*r,
+            va[2]+(vb[2]-va[2])*r
+          ));
+        }
+      });
+    });
+    tetraGeom.setFromPoints(tetraPts);
+    renderer.render(scene,camera);
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize',resize);
+  resize();
+  animate();
+  </script>
+</body>
+</html>

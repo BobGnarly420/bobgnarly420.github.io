@@ -5,54 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Loading…</title>
   <style>
-    body {
-      margin: 0;
-      padding: 1rem;
-      background: #000;
-      color: #fff;
-      font-family: "Courier New", monospace;
-    }
-    #nav a {
-      color: #0f0;
-      text-decoration: none;
-      margin-right: 2ch;
-    }
-    #grid {
-      margin-top: 2ch;
-    }
-    .entry {
-      display: block;
-      padding: 1ch;
-      margin-bottom: 1ch;
-      border: 1px solid #555;
-      white-space: pre-wrap;
-      background: #000;
-      color: #fff;
-    }
+    html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#fff;font-family:"Courier New",monospace}
+    #sand{position:fixed;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;z-index:-1}
+    #nav,#cta,#grid{padding:1rem}
+    #nav a{color:#0f0;text-decoration:none;margin-right:2ch}
+    #cta a{color:#0ff;text-decoration:none;margin-right:2ch}
+    #grid{margin-top:2ch}
+    .entry{display:block;padding:1ch;margin-bottom:1ch;border:1px solid #555;white-space:pre-wrap;background:#000;color:#fff}
   </style>
 </head>
 <body>
+  <canvas id="sand"></canvas>
   <nav id="nav"></nav>
+  <div id="cta"></div>
   <main id="grid"></main>
   <script>
-    async function bootCodex() {
-      try {
-        const res = await fetch('/codex/codex.json');
-        const codex = await res.json();
-        document.title = codex.site?.title || document.title;
-        const nav = document.getElementById('nav');
-        nav.innerHTML = codex.sections.map(s => `[<a href="${s.route.replace('/:slug?','')}">${s.title}</a>]`).join(' ');
-        const grid = document.getElementById('grid');
-        const projects = (codex.content.projects || [])
-          .filter(p => (p.visibility ?? 'public') === 'public')
-          .sort((a,b) => (a.order ?? 0) - (b.order ?? 0));
-        grid.innerHTML = projects.map(p => {
-          const border = '+--------------------------------------+';
-          return `<pre class="entry">${border}\n| ${p.title}\n| ${p.blurb || ''}\n${border}</pre>`;
-        }).join('');
-      } catch (err) {
-        console.error('Failed to load codex', err);
-      }
+    const canvas=document.getElementById('sand');
+    const ctx=canvas.getContext('2d');
+    let w,h,cols,rows,grid;const cell=4;
+    function init(){
+      canvas.width=innerWidth/cell;canvas.height=innerHeight/cell;
+      canvas.style.width=innerWidth+"px";canvas.style.height=innerHeight+"px";
+      w=canvas.width;h=canvas.height;cols=w;rows=h;
+      grid=new Uint8Array(cols*rows);
+    }
+    function idx(x,y){return y*cols+x}
+    function spawn(){for(let i=0;i<5;i++){const x=Math.floor(Math.random()*cols);grid[idx(x,0)]=1}}
+    function step(){for(let y=rows-2;y>=0;y--){for(let x=0;x<cols;x++){const i=idx(x,y);if(grid[i]){const below=idx(x,y+1);if(!grid[below]){grid[below]=1;grid[i]=0}else{const dl=x>0&&!grid[idx(x-1,y+1)];const dr=x+1<cols&&!grid[idx(x+1,y+1)];let dir=0;if(dl&&dr)dir=Math.random()<0.5?-1:1;else if(dl)dir=-1;else if(dr)dir=1;if(dir){grid[idx(x+dir,y+1)]=1;grid[i]=0;}}}}}}
+    function draw(){ctx.fillStyle="#001";ctx.fillRect(0,0,w,h);ctx.fillStyle="#d9a066";for(let y=0;y<rows;y++){for(let x=0;x<cols;x++){if(grid[idx(x,y)])ctx.fillRect(x,y,1,1)}}}
+    function loop(){spawn();step();draw();requestAnimationFrame(loop)}
+    window.addEventListener('resize',init);init();loop();
+
+    async function bootCodex(){
+      try{
+        const res=await fetch('/codex/codex.json');
+        const codex=await res.json();
+        document.title=codex.site?.title||document.title;
+        const nav=document.getElementById('nav');
+        nav.innerHTML=codex.sections.map(s=>`[<a href="${s.route.replace('/:slug?','')}">${s.title}</a>]`).join(' ');
+        const gridEl=document.getElementById('grid');
+        const projects=(codex.content.projects||[]).filter(p=>(p.visibility??'public')==='public').sort((a,b)=>(a.order??0)-(b.order??0));
+        gridEl.innerHTML=projects.map(p=>{const border='+--------------------------------------+';return `<pre class="entry">${border}\n| ${p.title}\n| ${p.blurb||''}\n${border}</pre>`;}).join('');
+        const cta=document.getElementById('cta');
+        cta.innerHTML=(codex.site?.cta||[]).map(c=>`<a href="${c.href}" target="_blank">${c.label}</a>`).join('');
+      }catch(err){console.error('Failed to load codex',err);}
     }
     bootCodex();
   </script>
