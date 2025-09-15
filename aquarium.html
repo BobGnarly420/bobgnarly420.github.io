@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>4D Aquarium</title>
+  <style>
+    body,html{margin:0;height:100%;overflow:hidden;background:#001a33;color:#fff;font-family:sans-serif}
+    #info{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.4);padding:0.5em 1em;border-radius:4px;font-size:14px}
+  </style>
+</head>
+<body>
+  <div id="info">4D Aquarium – hyperplanar slices of polytopes and tori</div>
+  <canvas id="c"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+  <script>
+  const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true});
+  function resize(){
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x001a33,4,15);
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
+  const light = new THREE.DirectionalLight(0xffffff,1);
+  light.position.set(5,10,7);
+  scene.add(light);
+
+  // helpers for 4D rotation
+  function rotate4(v, a, i, j){
+    const c=Math.cos(a), s=Math.sin(a), vi=v[i], vj=v[j];
+    v[i]=vi*c - vj*s;
+    v[j]=vi*s + vj*c;
+  }
+
+  // create fish (tesseract slices)
+  const fishGeom = new THREE.BufferGeometry();
+  const fishMat = new THREE.PointsMaterial({color:0xff88ff,size:0.05});
+  const fish = new THREE.Points(fishGeom, fishMat);
+  scene.add(fish);
+
+  // create eel (4-torus slices)
+  const eelGeom = new THREE.BufferGeometry();
+  const eelMat = new THREE.PointsMaterial({color:0x88ffcc,size:0.03});
+  const eel = new THREE.Points(eelGeom, eelMat);
+  scene.add(eel);
+
+  // precompute tesseract vertices and edges
+  const tVerts=[];
+  for(let i=0;i<16;i++){
+    tVerts.push([(i&1?1:-1),(i&2?1:-1),(i&4?1:-1),(i&8?1:-1)]);
+  }
+  const tEdges=[];
+  for(let i=0;i<16;i++)for(let j=i+1;j<16;j++){
+    const d=i^j; if(d&&!(d&(d-1))) tEdges.push([i,j]);
+  }
+
+  function sliceTesseract(w, time){
+    const pts=[];
+    tEdges.forEach(([a,b])=>{
+      const va=tVerts[a].slice();
+      const vb=tVerts[b].slice();
+      rotate4(va,time*0.3,0,3); rotate4(vb,time*0.3,0,3);
+      rotate4(va,time*0.2,1,2); rotate4(vb,time*0.2,1,2);
+      const wa=va[3], wb=vb[3];
+      if((wa<w && wb>w) || (wa>w && wb<w)){
+        const r=(w-wa)/(wb-wa);
+        pts.push(new THREE.Vector3(
+          va[0]+(vb[0]-va[0])*r,
+          va[1]+(vb[1]-va[1])*r,
+          va[2]+(vb[2]-va[2])*r
+        ));
+      }
+    });
+    return pts;
+  }
+
+  function sliceTorus(w,time){
+    const pts=[];
+    const R=1,r=0.3;
+    for(let u=0;u<Math.PI*2;u+=0.15){
+      for(let v=0;v<Math.PI*2;v+=0.15){
+        const x=(R+r*Math.cos(v))*Math.cos(u);
+        const y=(R+r*Math.cos(v))*Math.sin(u);
+        const z=r*Math.sin(v)*Math.cos(time*0.4);
+        const ww=r*Math.sin(v)*Math.sin(time*0.4);
+        if(Math.abs(ww-w)<0.02) pts.push(new THREE.Vector3(x,y,z));
+      }
+    }
+    return pts;
+  }
+
+  let t=0;
+  function animate(){
+    t+=0.01;
+    const wSlice=Math.sin(t);
+    fishGeom.setFromPoints(sliceTesseract(wSlice,t));
+    eelGeom.setFromPoints(sliceTorus(wSlice*0.5,t));
+    renderer.render(scene,camera);
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize',resize);
+  resize();
+  animate();
+  </script>
+</body>
+</html>
