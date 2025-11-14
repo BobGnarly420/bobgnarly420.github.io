@@ -3,7 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Three-Chamber Vapor Extraction Simulator</title>
+  <title>Interactive Physics Simulations | BobGnarly420 Portfolio</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Interactive scientific visualizations and simulations showcasing computational physics, fluid dynamics, and mathematical modeling. Featuring three-chamber vapor extraction and 4D geometry visualizations." />
+  <meta name="keywords" content="physics simulation, computational fluid dynamics, scientific visualization, interactive simulation, vapor extraction, 4D geometry, WebGL, mathematical modeling" />
+  <meta name="author" content="BobGnarly420" />
+  <link rel="canonical" href="https://bobgnarly420.github.io/" />
+
+  <!-- Open Graph Meta Tags for Social Media -->
+  <meta property="og:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
+  <meta property="og:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry. Explore three-chamber vapor extraction and hyperdimensional aquarium simulations." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bobgnarly420.github.io/" />
+  <meta property="og:site_name" content="BobGnarly420 Portfolio" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
+  <meta name="twitter:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry." />
+
+  <!-- Additional SEO -->
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "BobGnarly420 Portfolio",
+    "url": "https://bobgnarly420.github.io/",
+    "description": "Interactive scientific visualizations and physics simulations",
+    "author": {
+      "@type": "Person",
+      "name": "BobGnarly420"
+    },
+    "mainEntity": {
+      "@type": "CreativeWork",
+      "@id": "https://bobgnarly420.github.io/#main-simulation",
+      "name": "Three-Chamber Vapor Extraction Simulator",
+      "description": "Interactive simulation of steam-assisted distillation of essential oils across coupled oil heating, water percolation, and vapor separation chambers",
+      "genre": "Scientific Visualization",
+      "keywords": ["fluid dynamics", "vapor extraction", "computational physics", "interactive simulation"]
+    }
+  }
+  </script>
   <style>
     :root {
       color-scheme: dark;
@@ -211,9 +256,68 @@
       color: #fecaca;
       font-size: 0.85rem;
     }
+
+    /* Portfolio Navigation */
+    .portfolio-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(5, 7, 18, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(103, 232, 249, 0.15);
+      padding: 0.75rem 1.5rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .portfolio-nav h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .portfolio-nav nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .portfolio-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .portfolio-nav a:hover {
+      color: #7dd3fc;
+    }
+
+    .portfolio-nav a.active {
+      color: var(--text);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    body {
+      padding-top: 3.5rem;
+    }
   </style>
 </head>
 <body>
+  <!-- Portfolio Navigation -->
+  <div class="portfolio-nav">
+    <h2>BobGnarly420 Portfolio</h2>
+    <nav>
+      <a href="/" class="active">Vapor Simulator</a>
+      <a href="/aquarium.html">4D Aquarium</a>
+    </nav>
+  </div>
+
   <div class="app">
     <header>
       <h1>Three-Chamber Vapor Extraction Simulator</h1>
