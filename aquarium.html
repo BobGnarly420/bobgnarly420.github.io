@@ -2,13 +2,193 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>4D Aquarium</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>4D Aquarium - Hyperdimensional Visualization | BobGnarly420</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Interactive 4D aquarium visualization featuring hyperplanar slices of tesseracts and 4-tori. Explore hyperdimensional geometry through animated cross-sections." />
+  <meta name="keywords" content="4D visualization, tesseract, hypercube, 4D torus, dimensional slicing, geometry visualization, WebGL, Three.js, hyperspace" />
+  <meta name="author" content="BobGnarly420" />
+  <link rel="canonical" href="https://bobgnarly420.github.io/aquarium.html" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="4D Aquarium - Hyperdimensional Visualization" />
+  <meta property="og:description" content="Interactive 4D aquarium featuring hyperplanar slices of tesseracts and 4-tori. Explore the fourth dimension through animated geometric visualizations." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bobgnarly420.github.io/aquarium.html" />
+  <meta property="og:site_name" content="BobGnarly420 Portfolio" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="4D Aquarium - Hyperdimensional Visualization" />
+  <meta name="twitter:description" content="Interactive 4D visualization featuring hyperplanar slices of tesseracts and 4-tori." />
+
+  <!-- Additional SEO -->
+  <meta name="robots" content="index, follow" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "4D Aquarium",
+    "url": "https://bobgnarly420.github.io/aquarium.html",
+    "description": "Interactive 4D aquarium visualization featuring hyperplanar slices of polytopes and tori",
+    "author": {
+      "@type": "Person",
+      "name": "BobGnarly420"
+    },
+    "genre": "Interactive Visualization",
+    "keywords": ["4D geometry", "tesseract", "hypercube", "dimensional visualization"],
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "BobGnarly420 Portfolio",
+      "url": "https://bobgnarly420.github.io/"
+    }
+  }
+  </script>
   <style>
-    body,html{margin:0;height:100%;overflow:hidden;background:#001a33;color:#fff;font-family:sans-serif}
-    #info{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.4);padding:0.5em 1em;border-radius:4px;font-size:14px}
+    :root {
+      --bg: #001a33;
+      --bg-gradient-start: rgba(136, 255, 204, 0.15);
+      --bg-gradient-end: rgba(0, 10, 25, 0.98);
+      --accent: #22d3ee;
+      --accent-hover: #7dd3fc;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --nav-bg: rgba(5, 7, 18, 0.97);
+      --nav-border: rgba(103, 232, 249, 0.18);
+      --aqua-cyan: #88ffcc;
+      --aqua-magenta: #ff88ff;
+    }
+
+    body, html {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at 70% 30%, var(--bg-gradient-start), var(--bg-gradient-end)), var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    #info {
+      position: absolute;
+      top: 72px;
+      left: 16px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 0.65rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(136, 255, 204, 0.2);
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Portfolio Navigation */
+    .portfolio-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--nav-border);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .portfolio-nav h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: linear-gradient(135deg, var(--accent), var(--aqua-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .portfolio-nav nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .portfolio-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .portfolio-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--aqua-cyan));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .portfolio-nav a:hover {
+      color: var(--accent-hover);
+    }
+
+    .portfolio-nav a.active {
+      color: var(--text);
+    }
+
+    .portfolio-nav a.active::after {
+      transform: scaleX(1);
+    }
+
+    @media (max-width: 640px) {
+      .portfolio-nav {
+        padding: 0.85rem 1.25rem;
+      }
+
+      .portfolio-nav h2 {
+        font-size: 1rem;
+      }
+
+      .portfolio-nav nav {
+        gap: 1.25rem;
+      }
+
+      .portfolio-nav a {
+        font-size: 0.875rem;
+      }
+
+      #info {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Portfolio Navigation -->
+  <div class="portfolio-nav">
+    <h2>BobGnarly420 Portfolio</h2>
+    <nav>
+      <a href="/">Vapor Simulator</a>
+      <a href="/aquarium.html" class="active">4D Aquarium</a>
+    </nav>
+  </div>
+
   <div id="info">4D Aquarium – hyperplanar slices of polytopes and tori</div>
   <canvas id="c"></canvas>
   <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>

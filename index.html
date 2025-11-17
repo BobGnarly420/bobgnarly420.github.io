@@ -3,20 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Three-Chamber Vapor Extraction Simulator</title>
+  <title>Interactive Physics Simulations | BobGnarly420 Portfolio</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Interactive scientific visualizations and simulations showcasing computational physics, fluid dynamics, and mathematical modeling. Featuring three-chamber vapor extraction and 4D geometry visualizations." />
+  <meta name="keywords" content="physics simulation, computational fluid dynamics, scientific visualization, interactive simulation, vapor extraction, 4D geometry, WebGL, mathematical modeling" />
+  <meta name="author" content="BobGnarly420" />
+  <link rel="canonical" href="https://bobgnarly420.github.io/" />
+
+  <!-- Open Graph Meta Tags for Social Media -->
+  <meta property="og:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
+  <meta property="og:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry. Explore three-chamber vapor extraction and hyperdimensional aquarium simulations." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bobgnarly420.github.io/" />
+  <meta property="og:site_name" content="BobGnarly420 Portfolio" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
+  <meta name="twitter:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry." />
+
+  <!-- Additional SEO -->
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "BobGnarly420 Portfolio",
+    "url": "https://bobgnarly420.github.io/",
+    "description": "Interactive scientific visualizations and physics simulations",
+    "author": {
+      "@type": "Person",
+      "name": "BobGnarly420"
+    },
+    "mainEntity": {
+      "@type": "CreativeWork",
+      "@id": "https://bobgnarly420.github.io/#main-simulation",
+      "name": "Three-Chamber Vapor Extraction Simulator",
+      "description": "Interactive simulation of steam-assisted distillation of essential oils across coupled oil heating, water percolation, and vapor separation chambers",
+      "genre": "Scientific Visualization",
+      "keywords": ["fluid dynamics", "vapor extraction", "computational physics", "interactive simulation"]
+    }
+  }
+  </script>
   <style>
     :root {
       color-scheme: dark;
       --bg: #050712;
-      --panel: rgba(13, 25, 46, 0.85);
-      --panel-border: rgba(103, 232, 249, 0.18);
+      --bg-gradient-start: rgba(30, 64, 175, 0.25);
+      --bg-gradient-end: rgba(2, 6, 23, 0.98);
+      --panel: rgba(13, 25, 46, 0.88);
+      --panel-border: rgba(103, 232, 249, 0.2);
       --accent: #22d3ee;
+      --accent-hover: #7dd3fc;
       --text: #f1f5f9;
       --muted: #94a3b8;
       --oil: #f97316;
       --water: #38bdf8;
       --steam: #a855f7;
       --extract: #facc15;
+      --nav-bg: rgba(5, 7, 18, 0.97);
+      --nav-border: rgba(103, 232, 249, 0.18);
     }
 
     * {
@@ -27,11 +77,18 @@
       margin: 0;
       min-height: 100vh;
       font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(30, 64, 175, 0.35), rgba(2, 6, 23, 0.95)), var(--bg);
+      background: radial-gradient(circle at 20% 20%, var(--bg-gradient-start), var(--bg-gradient-end)), var(--bg);
       color: var(--text);
       display: flex;
       justify-content: center;
-      padding: 2.5rem 1.5rem 4rem;
+      padding: 5.5rem 1.5rem 4rem;
+      overflow-x: hidden;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 5rem 1rem 3rem;
+      }
     }
 
     .app {
@@ -69,19 +126,21 @@
     .panel {
       background: var(--panel);
       border: 1px solid var(--panel-border);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: clamp(1rem, 2.5vw, 1.5rem);
-      box-shadow: 0 18px 55px rgba(15, 23, 42, 0.35);
-      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px) saturate(120%);
+      -webkit-backdrop-filter: blur(20px) saturate(120%);
     }
 
     canvas {
       width: 100%;
       height: clamp(320px, 55vh, 480px);
-      border-radius: 14px;
-      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
       background: #020617;
       display: block;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .status-bar,
@@ -109,28 +168,57 @@
       appearance: none;
       border: none;
       border-radius: 999px;
-      padding: 0.6rem 1.1rem;
+      padding: 0.65rem 1.3rem;
       font-weight: 600;
       font-size: 0.95rem;
       letter-spacing: 0.01em;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: #0f172a;
-      background: linear-gradient(135deg, rgba(125, 211, 252, 0.25), rgba(14, 165, 233, 0.75));
-      border: 1px solid rgba(125, 211, 252, 0.45);
-      box-shadow: 0 12px 25px rgba(14, 116, 144, 0.25);
+      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      border: 1px solid rgba(125, 211, 252, 0.5);
+      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
     }
 
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 30px rgba(14, 116, 144, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(34, 211, 238, 0.4), 0 3px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     button.secondary {
-      background: rgba(71, 85, 105, 0.35);
+      background: rgba(71, 85, 105, 0.4);
       color: var(--text);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: none;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    button.secondary:hover {
+      background: rgba(71, 85, 105, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .legend {
@@ -211,9 +299,105 @@
       color: #fecaca;
       font-size: 0.85rem;
     }
+
+    /* Portfolio Navigation */
+    .portfolio-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--nav-border);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .portfolio-nav h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: linear-gradient(135deg, var(--accent), #88ffcc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .portfolio-nav nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .portfolio-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .portfolio-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #88ffcc);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .portfolio-nav a:hover {
+      color: var(--accent-hover);
+    }
+
+    .portfolio-nav a.active {
+      color: var(--text);
+    }
+
+    .portfolio-nav a.active::after {
+      transform: scaleX(1);
+    }
+
+    @media (max-width: 640px) {
+      .portfolio-nav {
+        padding: 0.85rem 1.25rem;
+      }
+
+      .portfolio-nav h2 {
+        font-size: 1rem;
+      }
+
+      .portfolio-nav nav {
+        gap: 1.25rem;
+      }
+
+      .portfolio-nav a {
+        font-size: 0.875rem;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Portfolio Navigation -->
+  <div class="portfolio-nav">
+    <h2>BobGnarly420 Portfolio</h2>
+    <nav>
+      <a href="/" class="active">Vapor Simulator</a>
+      <a href="/aquarium.html">4D Aquarium</a>
+    </nav>
+  </div>
+
   <div class="app">
     <header>
       <h1>Three-Chamber Vapor Extraction Simulator</h1>
@@ -322,7 +506,7 @@ Steam + Oil  →  [ Separate ]  →  Extract
         flowRates: { oil: 0, water: 0, vapor: 0, extract: 0 },
         time: 0,
         running: false,
-        tickHandle: null,
+        animationFrameId: null,
         error: null
       };
 
@@ -811,16 +995,28 @@ Steam + Oil  →  [ Separate ]  →  Extract
         ctx.restore();
       }
 
+      var lastCanvasWidth = 0;
+      var lastCanvasHeight = 0;
+
       function render() {
         if (!state.chambers) {
           return;
         }
-        var dpr = window.devicePixelRatio || 1;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for performance
         var rect = canvas.getBoundingClientRect();
-        var width = rect.width || canvas.width;
-        var height = rect.height || canvas.height;
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
+        var width = Math.floor(rect.width);
+        var height = Math.floor(rect.height);
+
+        // Only update canvas dimensions if they changed
+        if (width !== lastCanvasWidth || height !== lastCanvasHeight) {
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+          lastCanvasWidth = width;
+          lastCanvasHeight = height;
+        }
+
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
         ctx.clearRect(0, 0, width, height);
@@ -864,15 +1060,36 @@ Steam + Oil  →  [ Separate ]  →  Extract
         errorEl.style.display = 'none';
       }
 
-      function stepAndRender() {
-        try {
-          updateSimulation();
-          render();
-          updateHud();
-        } catch (err) {
-          stopSimulation();
-          showError('Simulation halted: ' + err.message);
+      var lastTime = 0;
+      var accumulator = 0;
+      var frameInterval = 1000 / 60; // 60 FPS target
+
+      function animate(currentTime) {
+        if (!state.running) {
+          return;
         }
+
+        var deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+        accumulator += deltaTime;
+
+        // Update simulation at fixed timestep
+        while (accumulator >= frameInterval) {
+          try {
+            updateSimulation();
+            accumulator -= frameInterval;
+          } catch (err) {
+            stopSimulation();
+            showError('Simulation halted: ' + err.message);
+            return;
+          }
+        }
+
+        // Always render at display refresh rate
+        render();
+        updateHud();
+
+        state.animationFrameId = requestAnimationFrame(animate);
       }
 
       function startSimulation() {
@@ -883,7 +1100,9 @@ Steam + Oil  →  [ Separate ]  →  Extract
         clearError();
         statusText.textContent = 'Status: running';
         runBtn.textContent = '⏸️ Pause';
-        state.tickHandle = setInterval(stepAndRender, 100);
+        lastTime = performance.now();
+        accumulator = 0;
+        state.animationFrameId = requestAnimationFrame(animate);
       }
 
       function stopSimulation() {
@@ -893,9 +1112,9 @@ Steam + Oil  →  [ Separate ]  →  Extract
         state.running = false;
         statusText.textContent = 'Status: paused';
         runBtn.textContent = '▶️ Run';
-        if (state.tickHandle) {
-          clearInterval(state.tickHandle);
-          state.tickHandle = null;
+        if (state.animationFrameId) {
+          cancelAnimationFrame(state.animationFrameId);
+          state.animationFrameId = null;
         }
       }
 

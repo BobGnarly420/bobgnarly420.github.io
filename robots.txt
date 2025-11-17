@@ -1,0 +1,16 @@
+# Robots.txt for BobGnarly420 Portfolio
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://bobgnarly420.github.io/sitemap.xml
+
+# Crawl-delay to be respectful to search engine bots
+Crawl-delay: 1
+
+# Disallow crawling of .git directory (security)
+User-agent: *
+Disallow: /.git/
+Disallow: /codex/
