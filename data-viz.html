@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Data Dashboard | BobGnarly420</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Interactive data visualization dashboard featuring real-time charts, graphs, and analytics. Built with Chart.js and modern web technologies." />
+  <meta name="keywords" content="data visualization, interactive dashboard, Chart.js, data analytics, web development" />
+  <meta name="author" content="BobGnarly420" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Interactive Data Dashboard | BobGnarly420" />
+  <meta property="og:description" content="Interactive data visualization dashboard featuring real-time charts and analytics." />
+  <meta property="og:type" content="website" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --bg-card: rgba(20, 24, 36, 0.9);
+      --accent: #00d4ff;
+      --accent-secondary: #667eea;
+      --text: #e4e6eb;
+      --text-muted: #a0a5b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.3s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.1);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card:nth-child(1) .stat-value {
+      color: var(--accent);
+    }
+
+    .stat-card:nth-child(2) .stat-value {
+      color: var(--success);
+    }
+
+    .stat-card:nth-child(3) .stat-value {
+      color: var(--warning);
+    }
+
+    .stat-card:nth-child(4) .stat-value {
+      color: var(--danger);
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-change {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-change.positive {
+      color: var(--success);
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .chart-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .chart-card.large {
+      grid-column: 1 / -1;
+    }
+
+    .chart-card.large .chart-container {
+      height: 400px;
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      padding: 1rem;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 1rem;
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: 8px;
+    }
+
+    .activity-item:nth-child(even) {
+      border-left-color: var(--accent-secondary);
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .activity-desc {
+      margin-top: 0.3rem;
+      color: var(--text);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--accent-secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Scrollbar styling */
+    .activity-feed::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .activity-feed::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .activity-feed::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card.large .chart-container {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to Portfolio</a>
+
+    <div class="header">
+      <h1>Interactive Data Dashboard</h1>
+      <p>Real-time analytics and visualization</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="updateAllCharts()">Refresh Data</button>
+      <button class="btn btn-secondary" onclick="randomizeData()">Randomize</button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-users">0</div>
+        <div class="stat-label">Total Users</div>
+        <div class="stat-change positive">+12.5%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-revenue">$0</div>
+        <div class="stat-label">Revenue</div>
+        <div class="stat-change positive">+23.1%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-sessions">0</div>
+        <div class="stat-label">Active Sessions</div>
+        <div class="stat-change negative">-4.3%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-conversion">0%</div>
+        <div class="stat-label">Conversion Rate</div>
+        <div class="stat-change positive">+8.7%</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h2>User Growth</h2>
+        <div class="chart-container">
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2>Traffic Sources</h2>
+        <div class="chart-container">
+          <canvas id="doughnutChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card large">
+        <h2>Revenue Analytics</h2>
+        <div class="chart-container">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2>Performance Metrics</h2>
+        <div class="chart-container">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2>Activity Timeline</h2>
+        <div class="activity-feed" id="activityFeed">
+          <!-- Activity items will be generated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Chart.js global configuration
+    Chart.defaults.color = '#a0a5b8';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+
+    // Utility functions
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateMonthlyData(baseValue, variance) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const data = [];
+      let current = baseValue;
+
+      for (let i = 0; i < 12; i++) {
+        current += random(-variance, variance);
+        data.push(Math.max(0, current));
+      }
+
+      return { labels: months, data: data };
+    }
+
+    // Animate stat counters
+    function animateValue(id, start, end, duration, prefix = '', suffix = '') {
+      const element = document.getElementById(id);
+      const range = end - start;
+      const increment = end > start ? 1 : -1;
+      const stepTime = Math.abs(Math.floor(duration / range));
+      let current = start;
+
+      const timer = setInterval(() => {
+        current += increment;
+        element.textContent = prefix + current.toLocaleString() + suffix;
+        if (current === end) {
+          clearInterval(timer);
+        }
+      }, stepTime);
+    }
+
+    // Initialize stat animations
+    function initStats() {
+      animateValue('stat-users', 0, 45234, 2000);
+      animateValue('stat-revenue', 0, 128750, 2000, '$');
+      animateValue('stat-sessions', 0, 3842, 2000);
+      animateValue('stat-conversion', 0, 3.4, 2000, '', '%');
+    }
+
+    // Line Chart - User Growth
+    const lineData = generateMonthlyData(1000, 300);
+    const lineChart = new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: lineData.labels,
+        datasets: [{
+          label: 'Users',
+          data: lineData.data,
+          borderColor: '#00d4ff',
+          backgroundColor: 'rgba(0, 212, 255, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#00d4ff',
+          pointBorderColor: '#0a0e1a',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+
+    // Doughnut Chart - Traffic Sources
+    const doughnutChart = new Chart(document.getElementById('doughnutChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Organic', 'Direct', 'Social', 'Referral', 'Email'],
+        datasets: [{
+          data: [35, 25, 20, 15, 5],
+          backgroundColor: [
+            '#00d4ff',
+            '#667eea',
+            '#f093fb',
+            '#10b981',
+            '#f59e0b'
+          ],
+          borderWidth: 0,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Bar Chart - Revenue Analytics
+    const revenueData = generateMonthlyData(50000, 15000);
+    const barChart = new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: revenueData.labels,
+        datasets: [{
+          label: 'Revenue',
+          data: revenueData.data,
+          backgroundColor: 'rgba(0, 212, 255, 0.7)',
+          borderColor: '#00d4ff',
+          borderWidth: 2,
+          borderRadius: 8
+        }, {
+          label: 'Profit',
+          data: revenueData.data.map(v => v * 0.3),
+          backgroundColor: 'rgba(102, 126, 234, 0.7)',
+          borderColor: '#667eea',
+          borderWidth: 2,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              padding: 15,
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.05)'
+            },
+            ticks: {
+              callback: function(value) {
+                return '$' + (value / 1000).toFixed(0) + 'k';
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+
+    // Radar Chart - Performance Metrics
+    const radarChart = new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Speed', 'Reliability', 'Scalability', 'Security', 'UX', 'Performance'],
+        datasets: [{
+          label: 'Current',
+          data: [85, 92, 78, 88, 94, 82],
+          borderColor: '#00d4ff',
+          backgroundColor: 'rgba(0, 212, 255, 0.2)',
+          borderWidth: 2,
+          pointBackgroundColor: '#00d4ff',
+          pointBorderColor: '#0a0e1a',
+          pointBorderWidth: 2
+        }, {
+          label: 'Target',
+          data: [90, 95, 85, 95, 98, 90],
+          borderColor: '#667eea',
+          backgroundColor: 'rgba(102, 126, 234, 0.2)',
+          borderWidth: 2,
+          pointBackgroundColor: '#667eea',
+          pointBorderColor: '#0a0e1a',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.08)'
+            },
+            angleLines: {
+              color: 'rgba(255, 255, 255, 0.08)'
+            },
+            pointLabels: {
+              font: {
+                size: 11
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Activity Feed
+    const activities = [
+      { time: '2 min ago', desc: 'New user registration from San Francisco' },
+      { time: '5 min ago', desc: 'Payment processed: $1,250.00' },
+      { time: '12 min ago', desc: 'System backup completed successfully' },
+      { time: '18 min ago', desc: 'New feature deployed to production' },
+      { time: '25 min ago', desc: 'Database optimization completed' },
+      { time: '32 min ago', desc: 'API rate limit increased for premium users' },
+      { time: '45 min ago', desc: 'Security scan completed - No issues found' },
+      { time: '1 hour ago', desc: 'Monthly report generated' }
+    ];
+
+    function renderActivityFeed() {
+      const feed = document.getElementById('activityFeed');
+      feed.innerHTML = activities.map(activity => `
+        <div class="activity-item">
+          <div class="activity-time">${activity.time}</div>
+          <div class="activity-desc">${activity.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // Update functions
+    function updateAllCharts() {
+      // Update line chart
+      const newLineData = generateMonthlyData(1000, 300);
+      lineChart.data.datasets[0].data = newLineData.data;
+      lineChart.update('active');
+
+      // Update bar chart
+      const newRevenueData = generateMonthlyData(50000, 15000);
+      barChart.data.datasets[0].data = newRevenueData.data;
+      barChart.data.datasets[1].data = newRevenueData.data.map(v => v * 0.3);
+      barChart.update('active');
+
+      // Update stats
+      initStats();
+    }
+
+    function randomizeData() {
+      // Randomize doughnut chart
+      doughnutChart.data.datasets[0].data = [
+        random(20, 40),
+        random(15, 30),
+        random(10, 25),
+        random(10, 20),
+        random(5, 15)
+      ];
+      doughnutChart.update('active');
+
+      // Randomize radar chart
+      radarChart.data.datasets[0].data = radarChart.data.datasets[0].data.map(() => random(70, 95));
+      radarChart.update('active');
+    }
+
+    // Real-time update simulation
+    function simulateRealTimeUpdates() {
+      setInterval(() => {
+        // Add small variations to line chart
+        const lastIndex = lineChart.data.datasets[0].data.length - 1;
+        const lastValue = lineChart.data.datasets[0].data[lastIndex];
+        const newValue = lastValue + random(-50, 100);
+        lineChart.data.datasets[0].data[lastIndex] = Math.max(0, newValue);
+        lineChart.update('none');
+      }, 3000);
+    }
+
+    // Initialize everything
+    window.addEventListener('load', () => {
+      initStats();
+      renderActivityFeed();
+      simulateRealTimeUpdates();
+    });
+  </script>
+</body>
+</html>
