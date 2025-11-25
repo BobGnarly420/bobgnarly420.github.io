@@ -1,33 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BobGnarly420 | Quantitative Mathematician & Visualization Architect</title>
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Advanced mathematical visualizations exploring 4D data manifolds, topological optimization, and emergent computational systems." />
-  <meta name="keywords" content="quantitative mathematics, 4D visualization, topological optimization, cellular automata, particle systems, data science" />
-  <meta name="author" content="BobGnarly420" />
-  <link rel="canonical" href="https://bobgnarly420.github.io/" />
-
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="BobGnarly420 | Quantitative Mathematician" />
-  <meta property="og:description" content="Advanced mathematical visualizations and computational systems" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://bobgnarly420.github.io/" />
-
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "BobGnarly420",
-    "url": "https://bobgnarly420.github.io/",
-    "jobTitle": "Quantitative Mathematician & Visualization Architect",
-    "description": "Exploring hyperdimensional data through topological and computational methods"
-  }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BobGnarly420 - Developer Portfolio</title>
+  <meta name="description" content="Full-stack developer specializing in build tools, performance optimization, and web applications.">
 
   <style>
     * {
@@ -37,735 +14,332 @@
     }
 
     body {
-      font-family: 'Garamond', 'Georgia', serif;
-      background: #000;
-      color: #fff;
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #fff;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    /* Canvas layers */
-    .canvas-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
+    header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid #eee;
     }
 
-    #cellular-automata {
-      z-index: 1;
-      opacity: 0.15;
-    }
-
-    #topology-surface {
-      z-index: 2;
-      opacity: 0.25;
-    }
-
-    #particle-system {
-      z-index: 3;
-      opacity: 0.6;
-    }
-
-    /* Monolith */
-    .monolith-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      perspective: 1500px;
-    }
-
-    .monolith {
-      width: 280px;
-      height: 520px;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(240, 240, 255, 0.92) 25%,
-        rgba(255, 245, 255, 0.94) 50%,
-        rgba(245, 255, 255, 0.93) 75%,
-        rgba(255, 255, 255, 0.95) 100%
-      );
-      border-radius: 8px;
-      box-shadow:
-        0 0 80px rgba(255, 255, 255, 0.4),
-        0 0 40px rgba(200, 200, 255, 0.3),
-        inset 0 0 60px rgba(255, 255, 255, 0.2),
-        inset 0 0 20px rgba(180, 180, 255, 0.15);
-      position: relative;
-      animation: float 8s ease-in-out infinite;
-      transform-style: preserve-3d;
-      border: 2px solid rgba(255, 255, 255, 0.8);
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: rotateY(-2deg) rotateX(1deg) translateY(0);
-      }
-      50% {
-        transform: rotateY(2deg) rotateX(-1deg) translateY(-15px);
-      }
-    }
-
-    .monolith::before {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      background: linear-gradient(
-        45deg,
-        transparent 30%,
-        rgba(255, 255, 255, 0.1) 50%,
-        transparent 70%
-      );
-      background-size: 200% 200%;
-      animation: shimmer 3s ease-in-out infinite;
-      border-radius: 8px;
-      pointer-events: none;
-    }
-
-    @keyframes shimmer {
-      0%, 100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-
-    .monolith-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      text-align: center;
-      padding: 2rem 1.5rem;
-    }
-
-    .monolith-title {
-      font-size: 1.8rem;
-      font-weight: 300;
-      letter-spacing: 0.15em;
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, #d4af37 0%, #f4e5a6 50%, #d4af37 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-      font-family: 'Cinzel', 'Garamond', serif;
-    }
-
-    .theorem {
-      margin: 1.5rem 0;
-      font-size: 0.9rem;
-      line-height: 1.8;
-      color: #1a1a2e;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-    }
-
-    .theorem-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: #d4af37;
-      text-transform: uppercase;
+    h1 {
+      font-size: 2.5rem;
       margin-bottom: 0.5rem;
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+      font-weight: 600;
     }
 
-    .theorem-math {
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      background: rgba(212, 175, 55, 0.08);
-      padding: 0.5rem;
-      border-radius: 4px;
-      border-left: 3px solid #d4af37;
-      margin-top: 0.5rem;
-      color: #2a2a3e;
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 1rem;
     }
 
-    /* Navigation */
-    nav {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
+    .contact-links {
       display: flex;
       gap: 1.5rem;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 1rem;
     }
 
-    nav a {
-      color: rgba(255, 255, 255, 0.7);
+    .contact-links a {
+      color: #0066cc;
       text-decoration: none;
-      font-size: 0.9rem;
       font-weight: 500;
-      letter-spacing: 0.05em;
-      transition: all 0.3s ease;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    nav a:hover {
-      color: #d4af37;
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    .contact-links a:hover {
+      text-decoration: underline;
     }
 
-    /* Data stream info */
-    .data-info {
-      position: fixed;
-      top: 2rem;
-      right: 2rem;
-      z-index: 100;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 1.5rem;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.75rem;
-      font-family: 'Courier New', monospace;
-      min-width: 200px;
+    h2 {
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem;
+      font-weight: 600;
     }
 
-    .data-stream {
+    .project {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .project h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-meta {
       display: flex;
-      justify-content: space-between;
-      margin: 0.5rem 0;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .project-meta a {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.4rem 1rem;
+      border: 1px solid #0066cc;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .project-meta a:hover {
+      background: #0066cc;
+      color: white;
+    }
+
+    .project p {
+      margin-bottom: 1rem;
+      color: #555;
+    }
+
+    .tech-stack {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .tech-tag {
+      padding: 0.3rem 0.8rem;
+      background: #e3f2fd;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #1976d2;
+      font-weight: 500;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .skill-category h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: #333;
+    }
+
+    .skill-category ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .skill-category li {
       padding: 0.4rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #555;
     }
 
-    .data-label {
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    .skill-category li:before {
+      content: "▸ ";
+      color: #0066cc;
+      font-weight: bold;
     }
 
-    .data-value {
-      color: #d4af37;
-      font-weight: 700;
+    code {
+      background: #f5f5f5;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      border-left: 3px solid #0066cc;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #eee;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
     }
 
     @media (max-width: 768px) {
-      .monolith {
-        width: 200px;
-        height: 400px;
-      }
-
-      .monolith-title {
-        font-size: 1.3rem;
-      }
-
-      .theorem {
-        font-size: 0.75rem;
-      }
-
-      .data-info {
-        top: 1rem;
-        right: 1rem;
-        font-size: 0.65rem;
+      body {
         padding: 1rem;
       }
 
-      nav {
-        bottom: 1rem;
-        padding: 0.75rem 1.5rem;
-        gap: 1rem;
+      h1 {
+        font-size: 2rem;
       }
 
-      nav a {
-        font-size: 0.8rem;
+      .contact-links {
+        flex-direction: column;
+        gap: 0.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Multi-layer canvas system -->
-  <canvas id="cellular-automata" class="canvas-layer"></canvas>
-  <canvas id="topology-surface" class="canvas-layer"></canvas>
-  <canvas id="particle-system" class="canvas-layer"></canvas>
+  <header>
+    <h1>BobGnarly420</h1>
+    <p class="subtitle">Full-Stack Developer | Build Tools & Performance Optimization</p>
+    <div class="contact-links">
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+      <a href="mailto:contact@example.com">Email</a>
+    </div>
+  </header>
 
-  <!-- Central monolith -->
-  <div class="monolith-container">
-    <div class="monolith">
-      <div class="monolith-text">
-        <h1 class="monolith-title">EMERGENCE</h1>
+  <section>
+    <h2>About</h2>
+    <p>Developer focused on build tooling, performance optimization, and creating developer tools that integrate cleanly into CI/CD pipelines. I build practical solutions to common development workflow problems.</p>
+  </section>
 
-        <div class="theorem">
-          <div class="theorem-label">Theorem I</div>
-          In hyperdimensional space, volatility manifests as curvature along temporal geodesics.
-        </div>
+  <section>
+    <h2>Projects</h2>
 
-        <div class="theorem">
-          <div class="theorem-label">Theorem II</div>
-          <div class="theorem-math">
-            ∇⁴Ψ(v,r,ρ,τ) = λΨ
-          </div>
-          Risk propagates through 4-manifolds as eigenstates of the temporal Laplacian.
-        </div>
+    <div class="project">
+      <h3>Bundle Analyzer</h3>
+      <div class="project-meta">
+        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/blob/main/projects/bundle-analyzer/README.md">View README</a>
+        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/bundle-analyzer">Source Code</a>
+      </div>
 
-        <div class="theorem">
-          <div class="theorem-label">Theorem III</div>
-          Return optimization converges to stable attractors in phase-space topology.
-        </div>
+      <p><strong>Problem:</strong> JavaScript bundles grow over time without visibility into what's causing size increases. Manual analysis is time-consuming.</p>
 
-        <div class="theorem">
-          <div class="theorem-label">Corollary</div>
-          Information density at decision boundaries exhibits fractal scaling: D = log N / log ε
-        </div>
+      <p><strong>Solution:</strong> CLI tool that analyzes bundle files, detects optimization opportunities (large functions, duplicate code, excessive dependencies), and enforces size budgets in CI/CD.</p>
+
+      <p><strong>Features:</strong></p>
+      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+        <li>Zero dependencies - pure Node.js</li>
+        <li>Identifies large functions and duplicate code patterns</li>
+        <li>Configurable size budgets with CI/CD exit codes</li>
+        <li>JSON and text output formats</li>
+        <li>Tested with Node.js test runner</li>
+      </ul>
+
+      <p><strong>Quick Start:</strong></p>
+      <pre><code>cd projects/bundle-analyzer
+node cli.js --input demo/sample-bundle.js --budget 100
+npm test</code></pre>
+
+      <div class="tech-stack">
+        <span class="tech-tag">Node.js</span>
+        <span class="tech-tag">CLI</span>
+        <span class="tech-tag">CI/CD</span>
+        <span class="tech-tag">Testing</span>
       </div>
     </div>
-  </div>
 
-  <!-- Data stream display -->
-  <div class="data-info">
-    <div class="data-stream">
-      <span class="data-label">Volatility</span>
-      <span class="data-value" id="volatility">0.000</span>
+    <div class="project">
+      <h3>Lighthouse Budget Enforcer</h3>
+      <div class="project-meta">
+        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/blob/main/projects/lighthouse-enforcer/README.md">View README</a>
+        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/lighthouse-enforcer">Source Code</a>
+      </div>
+
+      <p><strong>Problem:</strong> Lighthouse generates performance reports, but without automated enforcement, metrics can regress without anyone noticing.</p>
+
+      <p><strong>Solution:</strong> Tool that validates Lighthouse audit reports against configurable performance budgets (Core Web Vitals, scores, resource limits) and fails CI builds when thresholds are exceeded.</p>
+
+      <p><strong>Features:</strong></p>
+      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+        <li>Validates Core Web Vitals (LCP, FID, CLS)</li>
+        <li>Checks performance, accessibility, SEO scores</li>
+        <li>Categorizes violations by severity</li>
+        <li>CI/CD integration with exit codes</li>
+        <li>Tested with Node.js test runner</li>
+      </ul>
+
+      <p><strong>Quick Start:</strong></p>
+      <pre><code>cd projects/lighthouse-enforcer
+node cli.js --report demo/sample-report.json --budget demo/budget.json
+npm test</code></pre>
+
+      <div class="tech-stack">
+        <span class="tech-tag">Node.js</span>
+        <span class="tech-tag">Lighthouse</span>
+        <span class="tech-tag">Performance</span>
+        <span class="tech-tag">Testing</span>
+      </div>
     </div>
-    <div class="data-stream">
-      <span class="data-label">Risk</span>
-      <span class="data-value" id="risk">0.000</span>
+
+    <div class="project">
+      <h3>Interactive Data Dashboard</h3>
+      <div class="project-meta">
+        <a href="/data-viz.html">Live Demo</a>
+      </div>
+
+      <p><strong>Description:</strong> Real-time analytics dashboard featuring multiple chart types (line, bar, doughnut, radar) built with Chart.js. Includes animated stat counters, activity feed, and data refresh capabilities.</p>
+
+      <p><strong>Features:</strong></p>
+      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+        <li>Multiple visualization types with Chart.js</li>
+        <li>Responsive design for mobile and desktop</li>
+        <li>Interactive controls and real-time updates</li>
+        <li>Clean, professional UI</li>
+      </ul>
+
+      <div class="tech-stack">
+        <span class="tech-tag">JavaScript</span>
+        <span class="tech-tag">Chart.js</span>
+        <span class="tech-tag">HTML/CSS</span>
+        <span class="tech-tag">Data Visualization</span>
+      </div>
     </div>
-    <div class="data-stream">
-      <span class="data-label">Return</span>
-      <span class="data-value" id="return">0.000</span>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <h3>Languages</h3>
+        <ul>
+          <li>JavaScript (ES6+)</li>
+          <li>Node.js</li>
+          <li>HTML5/CSS3</li>
+        </ul>
+      </div>
+
+      <div class="skill-category">
+        <h3>Tools & Frameworks</h3>
+        <ul>
+          <li>Git & GitHub</li>
+          <li>Chart.js</li>
+          <li>CI/CD (GitHub Actions)</li>
+          <li>Command Line Tools</li>
+        </ul>
+      </div>
+
+      <div class="skill-category">
+        <h3>Focus Areas</h3>
+        <ul>
+          <li>Build Tools & Automation</li>
+          <li>Performance Optimization</li>
+          <li>Data Visualization</li>
+          <li>Developer Tooling</li>
+        </ul>
+      </div>
     </div>
-    <div class="data-stream">
-      <span class="data-label">Time</span>
-      <span class="data-value" id="time">0.000</span>
-    </div>
-  </div>
-
-  <!-- Navigation -->
-  <nav>
-    <a href="/">HOME</a>
-    <a href="/data-viz.html">ANALYTICS</a>
-    <a href="https://github.com/BobGnarly420" target="_blank">GITHUB</a>
-  </nav>
-
-  <script>
-    // Initialize canvases
-    const caCanvas = document.getElementById('cellular-automata');
-    const tsCanvas = document.getElementById('topology-surface');
-    const psCanvas = document.getElementById('particle-system');
-
-    const caCtx = caCanvas.getContext('2d');
-    const tsCtx = tsCanvas.getContext('2d');
-    const psCtx = psCanvas.getContext('2d');
-
-    // Set canvas sizes
-    function resizeCanvases() {
-      [caCanvas, tsCanvas, psCanvas].forEach(canvas => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      });
-    }
-    resizeCanvases();
-    window.addEventListener('resize', resizeCanvases);
-
-    // === 4D DATA STREAM ===
-    class DataStream {
-      constructor() {
-        this.volatility = 0.5;
-        this.risk = 0.5;
-        this.return = 0.5;
-        this.time = 0;
-        this.dt = 0.001;
-      }
-
-      update() {
-        this.time += this.dt;
-
-        // Simulate market-like behavior with coupled oscillators
-        const noise = () => (Math.random() - 0.5) * 0.02;
-
-        // Volatility follows mean-reverting process
-        this.volatility += (0.5 - this.volatility) * 0.01 + noise();
-        this.volatility = Math.max(0, Math.min(1, this.volatility));
-
-        // Risk correlated with volatility
-        this.risk += (this.volatility - this.risk) * 0.05 + noise();
-        this.risk = Math.max(0, Math.min(1, this.risk));
-
-        // Return anti-correlated with risk (risk-return tradeoff)
-        const targetReturn = 1 - this.risk * 0.5 + Math.sin(this.time * 0.5) * 0.3;
-        this.return += (targetReturn - this.return) * 0.03 + noise();
-        this.return = Math.max(0, Math.min(1, this.return));
-
-        // Update display
-        document.getElementById('volatility').textContent = this.volatility.toFixed(3);
-        document.getElementById('risk').textContent = this.risk.toFixed(3);
-        document.getElementById('return').textContent = this.return.toFixed(3);
-        document.getElementById('time').textContent = (this.time % 10).toFixed(3);
-      }
-
-      getVector() {
-        return [this.volatility, this.risk, this.return, this.time % 1];
-      }
-    }
-
-    const dataStream = new DataStream();
-
-    // === CELLULAR AUTOMATA ===
-    class CellularAutomata {
-      constructor(ctx, width, height) {
-        this.ctx = ctx;
-        this.width = width;
-        this.height = height;
-        this.cellSize = 8;
-        this.cols = Math.ceil(width / this.cellSize);
-        this.rows = Math.ceil(height / this.cellSize);
-        this.grid = this.createGrid();
-        this.nextGrid = this.createGrid();
-        this.generation = 0;
-      }
-
-      createGrid() {
-        const grid = [];
-        for (let i = 0; i < this.cols; i++) {
-          grid[i] = [];
-          for (let j = 0; j < this.rows; j++) {
-            grid[i][j] = Math.random() > 0.7 ? 1 : 0;
-          }
-        }
-        return grid;
-      }
-
-      countNeighbors(x, y) {
-        let sum = 0;
-        for (let i = -1; i <= 1; i++) {
-          for (let j = -1; j <= 1; j++) {
-            if (i === 0 && j === 0) continue;
-            const col = (x + i + this.cols) % this.cols;
-            const row = (y + j + this.rows) % this.rows;
-            sum += this.grid[col][row];
-          }
-        }
-        return sum;
-      }
-
-      update(dataVector) {
-        // Use volatility to influence rules
-        const volatilityThreshold = 2 + Math.floor(dataVector[0] * 2);
-
-        for (let i = 0; i < this.cols; i++) {
-          for (let j = 0; j < this.rows; j++) {
-            const neighbors = this.countNeighbors(i, j);
-            const state = this.grid[i][j];
-
-            // Conway's Game of Life with volatility-based variation
-            if (state === 1 && (neighbors < 2 || neighbors > 3)) {
-              this.nextGrid[i][j] = 0;
-            } else if (state === 0 && neighbors === volatilityThreshold) {
-              this.nextGrid[i][j] = 1;
-            } else {
-              this.nextGrid[i][j] = state;
-            }
-          }
-        }
-
-        [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
-        this.generation++;
-      }
-
-      draw(dataVector) {
-        this.ctx.fillStyle = '#000';
-        this.ctx.fillRect(0, 0, this.width, this.height);
-
-        const riskColor = Math.floor(dataVector[1] * 100);
-
-        for (let i = 0; i < this.cols; i++) {
-          for (let j = 0; j < this.rows; j++) {
-            if (this.grid[i][j] === 1) {
-              this.ctx.fillStyle = `rgba(${100 + riskColor}, ${150 + riskColor}, 255, 0.6)`;
-              this.ctx.fillRect(
-                i * this.cellSize,
-                j * this.cellSize,
-                this.cellSize - 1,
-                this.cellSize - 1
-              );
-            }
-          }
-        }
-      }
-    }
-
-    // === TOPOLOGY SURFACE ===
-    class TopologySurface {
-      constructor(ctx, width, height) {
-        this.ctx = ctx;
-        this.width = width;
-        this.height = height;
-        this.resolution = 20;
-        this.time = 0;
-      }
-
-      // Project 4D point to 3D using stereographic projection
-      project4Dto3D(x, y, z, w) {
-        const scale = 1 / (1 - w * 0.5);
-        return [x * scale, y * scale, z * scale];
-      }
-
-      // Map 3D to 2D screen space
-      project3Dto2D(x, y, z, rotX = 0.3, rotY = 0) {
-        // Apply rotation
-        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-
-        let y2 = y * cosX - z * sinX;
-        let z2 = y * sinX + z * cosX;
-
-        let x2 = x * cosY - z2 * sinY;
-        z2 = x * sinY + z2 * cosY;
-
-        // Perspective projection
-        const perspective = 500 / (500 + z2);
-        return {
-          x: this.width / 2 + x2 * perspective * 200,
-          y: this.height / 2 + y2 * perspective * 200,
-          z: z2
-        };
-      }
-
-      // 4D hypersurface function influenced by data stream
-      surface4D(u, v, dataVector) {
-        const [vol, risk, ret, time] = dataVector;
-
-        // Create a 4D torus-like surface with data-driven deformation
-        const R = 2 + vol * 0.5;
-        const r = 1 + risk * 0.3;
-
-        const x = (R + r * Math.cos(v)) * Math.cos(u);
-        const y = (R + r * Math.cos(v)) * Math.sin(u);
-        const z = r * Math.sin(v) + ret * Math.sin(u * 2) * 0.5;
-        const w = Math.sin(u + v + time * 2) * 0.3;
-
-        return [x, y, z, w];
-      }
-
-      draw(dataVector) {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-
-        const points = [];
-        const res = this.resolution;
-
-        // Generate surface points
-        for (let i = 0; i < res; i++) {
-          for (let j = 0; j < res; j++) {
-            const u = (i / res) * Math.PI * 2;
-            const v = (j / res) * Math.PI * 2;
-
-            const point4D = this.surface4D(u, v, dataVector);
-            const point3D = this.project4Dto3D(...point4D);
-            const point2D = this.project3Dto2D(...point3D, 0.3, this.time * 0.2);
-
-            points.push({ ...point2D, i, j });
-          }
-        }
-
-        // Sort by depth
-        points.sort((a, b) => a.z - b.z);
-
-        // Draw triangles
-        this.ctx.strokeStyle = `rgba(212, 175, 55, 0.3)`;
-        this.ctx.lineWidth = 0.5;
-
-        for (const point of points) {
-          const i = point.i;
-          const j = point.j;
-
-          if (i < res - 1 && j < res - 1) {
-            const p1 = points.find(p => p.i === i && p.j === j);
-            const p2 = points.find(p => p.i === i + 1 && p.j === j);
-            const p3 = points.find(p => p.i === i && p.j === j + 1);
-
-            if (p1 && p2 && p3) {
-              const intensity = (p1.z + 300) / 600;
-              const color = Math.floor(intensity * 100);
-
-              this.ctx.beginPath();
-              this.ctx.moveTo(p1.x, p1.y);
-              this.ctx.lineTo(p2.x, p2.y);
-              this.ctx.lineTo(p3.x, p3.y);
-              this.ctx.closePath();
-
-              this.ctx.fillStyle = `rgba(${150 + color}, ${100 + color}, 255, ${0.1 + intensity * 0.15})`;
-              this.ctx.fill();
-              this.ctx.stroke();
-            }
-          }
-        }
-
-        this.time += 0.01;
-      }
-    }
-
-    // === PARTICLE SYSTEM ===
-    class Particle {
-      constructor(x, y, dataVector) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 2;
-        this.vy = (Math.random() - 0.5) * 2;
-        this.life = 1;
-        this.decay = 0.002 + Math.random() * 0.003;
-        this.size = 2 + Math.random() * 3;
-
-        // Particle behavior influenced by data
-        const [vol, risk, ret, time] = dataVector;
-        this.color = {
-          r: 150 + vol * 105,
-          g: 100 + risk * 155,
-          b: 200 + ret * 55
-        };
-      }
-
-      update(dataVector) {
-        const [vol, risk, ret, time] = dataVector;
-
-        // Acceleration based on data stream
-        this.vx += (Math.random() - 0.5) * vol * 0.1;
-        this.vy += (Math.random() - 0.5) * risk * 0.1;
-
-        // Damping
-        this.vx *= 0.99;
-        this.vy *= 0.99;
-
-        this.x += this.vx;
-        this.y += this.vy;
-        this.life -= this.decay;
-
-        return this.life > 0;
-      }
-
-      draw(ctx) {
-        const alpha = this.life;
-        const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-        grd.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`);
-        grd.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
-
-        ctx.fillStyle = grd;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    class ParticleSystem {
-      constructor(ctx, width, height) {
-        this.ctx = ctx;
-        this.width = width;
-        this.height = height;
-        this.particles = [];
-        this.maxParticles = 500;
-        this.spawnRate = 5;
-      }
-
-      spawn(dataVector) {
-        for (let i = 0; i < this.spawnRate; i++) {
-          if (this.particles.length < this.maxParticles) {
-            // Spawn from edges
-            const side = Math.floor(Math.random() * 4);
-            let x, y;
-
-            switch(side) {
-              case 0: x = Math.random() * this.width; y = 0; break;
-              case 1: x = this.width; y = Math.random() * this.height; break;
-              case 2: x = Math.random() * this.width; y = this.height; break;
-              case 3: x = 0; y = Math.random() * this.height; break;
-            }
-
-            this.particles.push(new Particle(x, y, dataVector));
-          }
-        }
-      }
-
-      update(dataVector) {
-        this.particles = this.particles.filter(p => p.update(dataVector));
-        this.spawn(dataVector);
-      }
-
-      draw() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-
-        // Draw connections between nearby particles
-        this.ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
-        this.ctx.lineWidth = 1;
-
-        for (let i = 0; i < this.particles.length; i++) {
-          for (let j = i + 1; j < this.particles.length; j++) {
-            const dx = this.particles[i].x - this.particles[j].x;
-            const dy = this.particles[i].y - this.particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 100) {
-              const alpha = (1 - dist / 100) * 0.3;
-              this.ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
-              this.ctx.beginPath();
-              this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-              this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-              this.ctx.stroke();
-            }
-          }
-        }
-
-        // Draw particles
-        this.particles.forEach(p => p.draw(this.ctx));
-      }
-    }
-
-    // Initialize systems
-    let ca = new CellularAutomata(caCtx, caCanvas.width, caCanvas.height);
-    let ts = new TopologySurface(tsCtx, tsCanvas.width, tsCanvas.height);
-    let ps = new ParticleSystem(psCtx, psCanvas.width, psCanvas.height);
-
-    let caUpdateCounter = 0;
-
-    // Main animation loop
-    function animate() {
-      dataStream.update();
-      const dataVector = dataStream.getVector();
-
-      // Update cellular automata every 5 frames
-      if (caUpdateCounter % 5 === 0) {
-        ca.update(dataVector);
-      }
-      ca.draw(dataVector);
-      caUpdateCounter++;
-
-      // Update topology surface
-      ts.draw(dataVector);
-
-      // Update particle system
-      ps.update(dataVector);
-      ps.draw();
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    // Handle resize
-    window.addEventListener('resize', () => {
-      resizeCanvases();
-      ca = new CellularAutomata(caCtx, caCanvas.width, caCanvas.height);
-      ts = new TopologySurface(tsCtx, tsCanvas.width, tsCanvas.height);
-      ps = new ParticleSystem(psCtx, psCanvas.width, psCanvas.height);
-    });
-  </script>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 BobGnarly420 | <a href="https://github.com/BobGnarly420">GitHub</a></p>
+  </footer>
 </body>
 </html>

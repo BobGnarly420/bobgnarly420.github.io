@@ -1,0 +1,41 @@
+name: Test Tools
+
+on:
+  push:
+    branches: [ main, 'claude/**' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Test Bundle Analyzer
+      run: |
+        cd projects/bundle-analyzer
+        npm test
+        echo "✅ Bundle Analyzer tests passed"
+
+    - name: Test Lighthouse Enforcer
+      run: |
+        cd projects/lighthouse-enforcer
+        npm test
+        echo "✅ Lighthouse Enforcer tests passed"
+
+    - name: Run Bundle Analyzer Demo
+      run: |
+        cd projects/bundle-analyzer
+        node cli.js --input demo/sample-bundle.js --budget 100
+
+    - name: Run Lighthouse Enforcer Demo
+      run: |
+        cd projects/lighthouse-enforcer
+        node cli.js --report demo/sample-report.json --budget demo/budget.json
