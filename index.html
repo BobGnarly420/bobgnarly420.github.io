@@ -3,1156 +3,769 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Physics Simulations | BobGnarly420 Portfolio</title>
+  <title>BobGnarly420 | Quantitative Mathematician & Visualization Architect</title>
 
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Interactive scientific visualizations and simulations showcasing computational physics, fluid dynamics, and mathematical modeling. Featuring three-chamber vapor extraction and 4D geometry visualizations." />
-  <meta name="keywords" content="physics simulation, computational fluid dynamics, scientific visualization, interactive simulation, vapor extraction, 4D geometry, WebGL, mathematical modeling" />
+  <meta name="description" content="Advanced mathematical visualizations exploring 4D data manifolds, topological optimization, and emergent computational systems." />
+  <meta name="keywords" content="quantitative mathematics, 4D visualization, topological optimization, cellular automata, particle systems, data science" />
   <meta name="author" content="BobGnarly420" />
   <link rel="canonical" href="https://bobgnarly420.github.io/" />
 
-  <!-- Open Graph Meta Tags for Social Media -->
-  <meta property="og:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
-  <meta property="og:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry. Explore three-chamber vapor extraction and hyperdimensional aquarium simulations." />
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="BobGnarly420 | Quantitative Mathematician" />
+  <meta property="og:description" content="Advanced mathematical visualizations and computational systems" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://bobgnarly420.github.io/" />
-  <meta property="og:site_name" content="BobGnarly420 Portfolio" />
 
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Interactive Physics Simulations | BobGnarly420 Portfolio" />
-  <meta name="twitter:description" content="Interactive scientific visualizations showcasing computational physics, fluid dynamics, and 4D geometry." />
-
-  <!-- Additional SEO -->
-  <meta name="robots" content="index, follow" />
-  <meta name="googlebot" content="index, follow" />
-
-  <!-- Structured Data (JSON-LD) -->
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "BobGnarly420 Portfolio",
+    "@type": "Person",
+    "name": "BobGnarly420",
     "url": "https://bobgnarly420.github.io/",
-    "description": "Interactive scientific visualizations and physics simulations",
-    "author": {
-      "@type": "Person",
-      "name": "BobGnarly420"
-    },
-    "mainEntity": {
-      "@type": "CreativeWork",
-      "@id": "https://bobgnarly420.github.io/#main-simulation",
-      "name": "Three-Chamber Vapor Extraction Simulator",
-      "description": "Interactive simulation of steam-assisted distillation of essential oils across coupled oil heating, water percolation, and vapor separation chambers",
-      "genre": "Scientific Visualization",
-      "keywords": ["fluid dynamics", "vapor extraction", "computational physics", "interactive simulation"]
-    }
+    "jobTitle": "Quantitative Mathematician & Visualization Architect",
+    "description": "Exploring hyperdimensional data through topological and computational methods"
   }
   </script>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #050712;
-      --bg-gradient-start: rgba(30, 64, 175, 0.25);
-      --bg-gradient-end: rgba(2, 6, 23, 0.98);
-      --panel: rgba(13, 25, 46, 0.88);
-      --panel-border: rgba(103, 232, 249, 0.2);
-      --accent: #22d3ee;
-      --accent-hover: #7dd3fc;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --oil: #f97316;
-      --water: #38bdf8;
-      --steam: #a855f7;
-      --extract: #facc15;
-      --nav-bg: rgba(5, 7, 18, 0.97);
-      --nav-border: rgba(103, 232, 249, 0.18);
-    }
 
+  <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 20% 20%, var(--bg-gradient-start), var(--bg-gradient-end)), var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      padding: 5.5rem 1.5rem 4rem;
-      overflow-x: hidden;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 5rem 1rem 3rem;
-      }
-    }
-
-    .app {
-      width: min(1200px, 100%);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    h1 {
-      margin: 0 0 0.35rem;
-      font-size: clamp(2rem, 3vw, 2.75rem);
-      letter-spacing: 0.02em;
-    }
-
-    p.lead {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 1.5rem;
-    }
-
-    @media (min-width: 1080px) {
-      .layout {
-        grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
-        align-items: start;
-      }
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 20px;
-      padding: clamp(1rem, 2.5vw, 1.5rem);
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(20px) saturate(120%);
-      -webkit-backdrop-filter: blur(20px) saturate(120%);
-    }
-
-    canvas {
-      width: 100%;
-      height: clamp(320px, 55vh, 480px);
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      background: #020617;
-      display: block;
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .status-bar,
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem 1.25rem;
-      align-items: center;
-      margin-top: 1rem;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0.75rem;
-      border-radius: 999px;
-      background: rgba(30, 64, 175, 0.18);
-      color: #e0f2fe;
-      font-size: 0.85rem;
-      letter-spacing: 0.02em;
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 999px;
-      padding: 0.65rem 1.3rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      color: #0f172a;
-      background: linear-gradient(135deg, var(--accent), #0ea5e9);
-      border: 1px solid rgba(125, 211, 252, 0.5);
-      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
-      position: relative;
+      font-family: 'Garamond', 'Georgia', serif;
+      background: #000;
+      color: #fff;
       overflow: hidden;
+      width: 100vw;
+      height: 100vh;
     }
 
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(34, 211, 238, 0.4), 0 3px 12px rgba(0, 0, 0, 0.25);
-    }
-
-    button:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    button.secondary {
-      background: rgba(71, 85, 105, 0.4);
-      color: var(--text);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    button.secondary:hover {
-      background: rgba(71, 85, 105, 0.5);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
-
-    .legend {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-top: 1.25rem;
-      font-size: 0.88rem;
-    }
-
-    .legend h3 {
-      margin: 0 0 0.65rem;
-      font-size: 1rem;
-      letter-spacing: 0.04em;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .legend-swatch {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-    }
-
-    .metric-card {
-      padding: 0.85rem 1rem;
-      border-radius: 14px;
-      border: 1px solid rgba(125, 211, 252, 0.12);
-      background: rgba(15, 23, 42, 0.55);
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .metric-label {
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.02em;
-    }
-
-    .metric-value {
-      font-weight: 600;
-      font-size: 1.05rem;
-    }
-
-    .legend-diagram {
-      margin-top: 1.5rem;
-      padding: 1rem 1.2rem;
-      border-radius: 14px;
-      border: 1px dashed rgba(148, 163, 184, 0.35);
-      background: rgba(2, 6, 23, 0.5);
-      font-family: "Fira Code", "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.8rem;
-      line-height: 1.4;
-      color: rgba(203, 213, 225, 0.85);
-      white-space: pre;
-    }
-
-    .error {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: 12px;
-      background: rgba(248, 113, 113, 0.12);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-      color: #fecaca;
-      font-size: 0.85rem;
-    }
-
-    /* Portfolio Navigation */
-    .portfolio-nav {
+    /* Canvas layers */
+    .canvas-layer {
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      background: var(--nav-bg);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border-bottom: 1px solid var(--nav-border);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-      padding: 1rem 2rem;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
-    .portfolio-nav h2 {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      background: linear-gradient(135deg, var(--accent), #88ffcc);
+    #cellular-automata {
+      z-index: 1;
+      opacity: 0.15;
+    }
+
+    #topology-surface {
+      z-index: 2;
+      opacity: 0.25;
+    }
+
+    #particle-system {
+      z-index: 3;
+      opacity: 0.6;
+    }
+
+    /* Monolith */
+    .monolith-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      perspective: 1500px;
+    }
+
+    .monolith {
+      width: 280px;
+      height: 520px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(240, 240, 255, 0.92) 25%,
+        rgba(255, 245, 255, 0.94) 50%,
+        rgba(245, 255, 255, 0.93) 75%,
+        rgba(255, 255, 255, 0.95) 100%
+      );
+      border-radius: 8px;
+      box-shadow:
+        0 0 80px rgba(255, 255, 255, 0.4),
+        0 0 40px rgba(200, 200, 255, 0.3),
+        inset 0 0 60px rgba(255, 255, 255, 0.2),
+        inset 0 0 20px rgba(180, 180, 255, 0.15);
+      position: relative;
+      animation: float 8s ease-in-out infinite;
+      transform-style: preserve-3d;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: rotateY(-2deg) rotateX(1deg) translateY(0);
+      }
+      50% {
+        transform: rotateY(2deg) rotateX(-1deg) translateY(-15px);
+      }
+    }
+
+    .monolith::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      background-size: 200% 200%;
+      animation: shimmer 3s ease-in-out infinite;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .monolith-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .monolith-title {
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e5a6 50%, #d4af37 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      font-family: 'Cinzel', 'Garamond', serif;
     }
 
-    .portfolio-nav nav {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .portfolio-nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.95rem;
+    .theorem {
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #1a1a2e;
       font-weight: 500;
-      padding: 0.5rem 0;
-      position: relative;
-      transition: color 0.3s ease;
+      letter-spacing: 0.02em;
     }
 
-    .portfolio-nav a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), #88ffcc);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
+    .theorem-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #d4af37;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
     }
 
-    .portfolio-nav a:hover {
-      color: var(--accent-hover);
+    .theorem-math {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      background: rgba(212, 175, 55, 0.08);
+      padding: 0.5rem;
+      border-radius: 4px;
+      border-left: 3px solid #d4af37;
+      margin-top: 0.5rem;
+      color: #2a2a3e;
     }
 
-    .portfolio-nav a.active {
-      color: var(--text);
+    /* Navigation */
+    nav {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 1.5rem;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .portfolio-nav a.active::after {
-      transform: scaleX(1);
+    nav a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    @media (max-width: 640px) {
-      .portfolio-nav {
-        padding: 0.85rem 1.25rem;
+    nav a:hover {
+      color: #d4af37;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Data stream info */
+    .data-info {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+      font-family: 'Courier New', monospace;
+      min-width: 200px;
+    }
+
+    .data-stream {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.5rem 0;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .data-label {
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .data-value {
+      color: #d4af37;
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .monolith {
+        width: 200px;
+        height: 400px;
       }
 
-      .portfolio-nav h2 {
-        font-size: 1rem;
+      .monolith-title {
+        font-size: 1.3rem;
       }
 
-      .portfolio-nav nav {
-        gap: 1.25rem;
+      .theorem {
+        font-size: 0.75rem;
       }
 
-      .portfolio-nav a {
-        font-size: 0.875rem;
+      .data-info {
+        top: 1rem;
+        right: 1rem;
+        font-size: 0.65rem;
+        padding: 1rem;
+      }
+
+      nav {
+        bottom: 1rem;
+        padding: 0.75rem 1.5rem;
+        gap: 1rem;
+      }
+
+      nav a {
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Portfolio Navigation -->
-  <div class="portfolio-nav">
-    <h2>BobGnarly420 Portfolio</h2>
-    <nav>
-      <a href="/" class="active">Vapor Simulator</a>
-      <a href="/aquarium.html">4D Aquarium</a>
-    </nav>
-  </div>
+  <!-- Multi-layer canvas system -->
+  <canvas id="cellular-automata" class="canvas-layer"></canvas>
+  <canvas id="topology-surface" class="canvas-layer"></canvas>
+  <canvas id="particle-system" class="canvas-layer"></canvas>
 
-  <div class="app">
-    <header>
-      <h1>Three-Chamber Vapor Extraction Simulator</h1>
-      <p class="lead">Steam-assisted distillation of essential oils across coupled oil heating, water percolation, and vapor separation chambers.</p>
-    </header>
+  <!-- Central monolith -->
+  <div class="monolith-container">
+    <div class="monolith">
+      <div class="monolith-text">
+        <h1 class="monolith-title">EMERGENCE</h1>
 
-    <div class="layout">
-      <section class="panel" aria-labelledby="sim-heading">
-        <div class="status-bar">
-          <span class="status-pill" id="temp-pill">🌡️ Oil Bath 393&nbsp;K</span>
-          <span class="status-pill" id="water-pill">💧 Water Bath 373&nbsp;K</span>
-          <span class="status-pill" id="pressure-pill">🌀 Suction 80&nbsp;kPa</span>
-          <span class="status-pill" id="time-pill">⏱️ Time 0.000&nbsp;s</span>
+        <div class="theorem">
+          <div class="theorem-label">Theorem I</div>
+          In hyperdimensional space, volatility manifests as curvature along temporal geodesics.
         </div>
 
-        <canvas id="sim-canvas" width="960" height="540" role="presentation"></canvas>
-
-        <div class="controls" role="toolbar" aria-label="Simulation controls">
-          <button id="run-toggle" type="button">▶️ Run</button>
-          <button id="reset" type="button" class="secondary">🔄 Reset</button>
-          <span class="metric-label" id="status-text">Status: idle</span>
+        <div class="theorem">
+          <div class="theorem-label">Theorem II</div>
+          <div class="theorem-math">
+            ∇⁴Ψ(v,r,ρ,τ) = λΨ
+          </div>
+          Risk propagates through 4-manifolds as eigenstates of the temporal Laplacian.
         </div>
 
-        <div class="metrics" aria-live="polite">
-          <div class="metric-card">
-            <span class="metric-label">Oil Volume Fraction</span>
-            <span class="metric-value" id="metric-oil">0.00</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Water Volume Fraction</span>
-            <span class="metric-value" id="metric-water">0.00</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Vapor Volume Fraction</span>
-            <span class="metric-value" id="metric-vapor">0.00</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-label">Extract Flux</span>
-            <span class="metric-value" id="metric-extract">0.000</span>
-          </div>
+        <div class="theorem">
+          <div class="theorem-label">Theorem III</div>
+          Return optimization converges to stable attractors in phase-space topology.
         </div>
 
-        <div id="error" class="error" style="display: none;" role="alert"></div>
-      </section>
-
-      <aside class="panel">
-        <h2 style="margin-top:0;margin-bottom:0.75rem;font-size:1.25rem;letter-spacing:0.03em;">Process Flow &amp; Legend</h2>
-        <div class="legend">
-          <div>
-            <h3>Chamber I</h3>
-            <div class="legend-item"><span class="legend-swatch" style="background: var(--oil);"></span> Heats the oil feed, nucleating vapor bubbles.</div>
-            <div class="legend-item"><span class="legend-swatch" style="background: #fb923c;"></span> Vapor-rich plumes driven upward.</div>
-          </div>
-          <div>
-            <h3>Chamber II</h3>
-            <div class="legend-item"><span class="legend-swatch" style="background: var(--water);"></span> Counter-flowing water bath percolates vapor.</div>
-            <div class="legend-item"><span class="legend-swatch" style="background: #a855f7;"></span> Steam entrains oil as droplets.</div>
-          </div>
-          <div>
-            <h3>Chamber III</h3>
-            <div class="legend-item"><span class="legend-swatch" style="background: var(--extract);"></span> Condenser separates vapor into extract.</div>
-            <div class="legend-item"><span class="legend-swatch" style="background: #fef08a;"></span> Solvent-rich condensate for collection.</div>
-          </div>
+        <div class="theorem">
+          <div class="theorem-label">Corollary</div>
+          Information density at decision boundaries exhibits fractal scaling: D = log N / log ε
         </div>
-        <div class="legend-diagram" aria-hidden="true">
-Oil Input  →  [ Heat ]  →  Vapor Lift ┐
-                                   │
-Water In   →  [ Percolate ]  ←──────┘
-                                   │
-Steam + Oil  →  [ Separate ]  →  Extract
-        </div>
-        <p class="lead" style="margin-top:1.25rem;font-size:0.9rem;line-height:1.6;">
-          The schematic shows three spherical chambers linked by tapered tubing. Colours represent volume fractions:
-          warm orange for oil, cyan for water, violet for steam, and amber for collected extract. Flow speed is hinted by streaked gradients along the connector tubes.
-        </p>
-      </aside>
+      </div>
     </div>
   </div>
 
+  <!-- Data stream display -->
+  <div class="data-info">
+    <div class="data-stream">
+      <span class="data-label">Volatility</span>
+      <span class="data-value" id="volatility">0.000</span>
+    </div>
+    <div class="data-stream">
+      <span class="data-label">Risk</span>
+      <span class="data-value" id="risk">0.000</span>
+    </div>
+    <div class="data-stream">
+      <span class="data-label">Return</span>
+      <span class="data-value" id="return">0.000</span>
+    </div>
+    <div class="data-stream">
+      <span class="data-label">Time</span>
+      <span class="data-value" id="time">0.000</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="/">HOME</a>
+    <a href="/data-viz.html">ANALYTICS</a>
+    <a href="https://github.com/BobGnarly420" target="_blank">GITHUB</a>
+  </nav>
+
   <script>
-    (function () {
-      'use strict';
+    // Initialize canvases
+    const caCanvas = document.getElementById('cellular-automata');
+    const tsCanvas = document.getElementById('topology-surface');
+    const psCanvas = document.getElementById('particle-system');
 
-      var chamber1_nx = 60;
-      var chamber1_ny = 40;
-      var chamber2_nx = 80;
-      var chamber2_ny = 60;
-      var chamber3_nx = 50;
-      var chamber3_ny = 30;
+    const caCtx = caCanvas.getContext('2d');
+    const tsCtx = tsCanvas.getContext('2d');
+    const psCtx = psCanvas.getContext('2d');
 
-      var params = {
-        inputTemp: 393.15,
-        waterTemp: 373.15,
-        exitTemp: 323.15,
-        oilFlowRate: 0.001,
-        waterFlowRate: 0.01,
-        suctionPressure: 80000,
-        heatInput: 75000,
-        dt: 0.001,
-        interfaceTension: 0.025,
-        percolationRate: 0.8
-      };
+    // Set canvas sizes
+    function resizeCanvases() {
+      [caCanvas, tsCanvas, psCanvas].forEach(canvas => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    }
+    resizeCanvases();
+    window.addEventListener('resize', resizeCanvases);
 
-      var state = {
-        chambers: null,
-        flowRates: { oil: 0, water: 0, vapor: 0, extract: 0 },
-        time: 0,
-        running: false,
-        animationFrameId: null,
-        error: null
-      };
-
-      var canvas = document.getElementById('sim-canvas');
-      var ctx = canvas.getContext('2d');
-      var runBtn = document.getElementById('run-toggle');
-      var resetBtn = document.getElementById('reset');
-      var statusText = document.getElementById('status-text');
-      var errorEl = document.getElementById('error');
-
-      var metricOil = document.getElementById('metric-oil');
-      var metricWater = document.getElementById('metric-water');
-      var metricVapor = document.getElementById('metric-vapor');
-      var metricExtract = document.getElementById('metric-extract');
-
-      var timePill = document.getElementById('time-pill');
-      var tempPill = document.getElementById('temp-pill');
-      var waterPill = document.getElementById('water-pill');
-      var pressurePill = document.getElementById('pressure-pill');
-
-      if (!ctx) {
-        showError('Canvas 2D context is unavailable in this browser. Please update Safari or try another device.');
-        return;
+    // === 4D DATA STREAM ===
+    class DataStream {
+      constructor() {
+        this.volatility = 0.5;
+        this.risk = 0.5;
+        this.return = 0.5;
+        this.time = 0;
+        this.dt = 0.001;
       }
 
-      function createFloatArray(size) {
-        return new Float32Array(size);
+      update() {
+        this.time += this.dt;
+
+        // Simulate market-like behavior with coupled oscillators
+        const noise = () => (Math.random() - 0.5) * 0.02;
+
+        // Volatility follows mean-reverting process
+        this.volatility += (0.5 - this.volatility) * 0.01 + noise();
+        this.volatility = Math.max(0, Math.min(1, this.volatility));
+
+        // Risk correlated with volatility
+        this.risk += (this.volatility - this.risk) * 0.05 + noise();
+        this.risk = Math.max(0, Math.min(1, this.risk));
+
+        // Return anti-correlated with risk (risk-return tradeoff)
+        const targetReturn = 1 - this.risk * 0.5 + Math.sin(this.time * 0.5) * 0.3;
+        this.return += (targetReturn - this.return) * 0.03 + noise();
+        this.return = Math.max(0, Math.min(1, this.return));
+
+        // Update display
+        document.getElementById('volatility').textContent = this.volatility.toFixed(3);
+        document.getElementById('risk').textContent = this.risk.toFixed(3);
+        document.getElementById('return').textContent = this.return.toFixed(3);
+        document.getElementById('time').textContent = (this.time % 10).toFixed(3);
       }
 
-      function createInitialChambers() {
-        var chambers = {
-          chamber1: {
-            temperature: createFloatArray(chamber1_nx * chamber1_ny),
-            pressure: createFloatArray(chamber1_nx * chamber1_ny),
-            oilDensity: createFloatArray(chamber1_nx * chamber1_ny),
-            vaporDensity: createFloatArray(chamber1_nx * chamber1_ny),
-            vof_oil: createFloatArray(chamber1_nx * chamber1_ny),
-            vof_vapor: createFloatArray(chamber1_nx * chamber1_ny),
-            velocityU: createFloatArray(chamber1_nx * chamber1_ny),
-            velocityV: createFloatArray(chamber1_nx * chamber1_ny),
-            nucleationRate: createFloatArray(chamber1_nx * chamber1_ny),
-            nx: chamber1_nx,
-            ny: chamber1_ny
-          },
-          chamber2: {
-            temperature: createFloatArray(chamber2_nx * chamber2_ny),
-            pressure: createFloatArray(chamber2_nx * chamber2_ny),
-            waterDensity: createFloatArray(chamber2_nx * chamber2_ny),
-            oilDensity: createFloatArray(chamber2_nx * chamber2_ny),
-            steamDensity: createFloatArray(chamber2_nx * chamber2_ny),
-            vof_water: createFloatArray(chamber2_nx * chamber2_ny),
-            vof_oil: createFloatArray(chamber2_nx * chamber2_ny),
-            vof_steam: createFloatArray(chamber2_nx * chamber2_ny),
-            velocityU: createFloatArray(chamber2_nx * chamber2_ny),
-            velocityV: createFloatArray(chamber2_nx * chamber2_ny),
-            interface_oil_water: createFloatArray(chamber2_nx * chamber2_ny),
-            massTransfer: createFloatArray(chamber2_nx * chamber2_ny),
-            nx: chamber2_nx,
-            ny: chamber2_ny
-          },
-          chamber3: {
-            temperature: createFloatArray(chamber3_nx * chamber3_ny),
-            pressure: createFloatArray(chamber3_nx * chamber3_ny),
-            vaporDensity: createFloatArray(chamber3_nx * chamber3_ny),
-            condensateDensity: createFloatArray(chamber3_nx * chamber3_ny),
-            oilConcentration: createFloatArray(chamber3_nx * chamber3_ny),
-            vof_vapor: createFloatArray(chamber3_nx * chamber3_ny),
-            vof_condensate: createFloatArray(chamber3_nx * chamber3_ny),
-            velocityU: createFloatArray(chamber3_nx * chamber3_ny),
-            velocityV: createFloatArray(chamber3_nx * chamber3_ny),
-            extractionRate: createFloatArray(chamber3_nx * chamber3_ny),
-            nx: chamber3_nx,
-            ny: chamber3_ny
-          }
-        };
+      getVector() {
+        return [this.volatility, this.risk, this.return, this.time % 1];
+      }
+    }
 
-        var i, j, idx, x, y;
+    const dataStream = new DataStream();
 
-        for (i = 0; i < chamber1_nx; i++) {
-          for (j = 0; j < chamber1_ny; j++) {
-            idx = i + j * chamber1_nx;
-            y = j / chamber1_ny;
-            chambers.chamber1.temperature[idx] = params.inputTemp - 30 * y;
-            chambers.chamber1.pressure[idx] = 101325 - 1000 * y;
-            chambers.chamber1.vof_oil[idx] = y < 0.6 ? 0.9 - y * 0.5 : 0.1;
-            chambers.chamber1.vof_vapor[idx] = 1 - chambers.chamber1.vof_oil[idx];
-            chambers.chamber1.oilDensity[idx] = 850 * chambers.chamber1.vof_oil[idx];
-            chambers.chamber1.vaporDensity[idx] = 2.0 * chambers.chamber1.vof_vapor[idx];
-            chambers.chamber1.velocityV[idx] = 0.5 * chambers.chamber1.vof_vapor[idx];
-            if (j < 5 && Math.random() < 0.05) {
-              chambers.chamber1.nucleationRate[idx] = 1.0;
-            }
+    // === CELLULAR AUTOMATA ===
+    class CellularAutomata {
+      constructor(ctx, width, height) {
+        this.ctx = ctx;
+        this.width = width;
+        this.height = height;
+        this.cellSize = 8;
+        this.cols = Math.ceil(width / this.cellSize);
+        this.rows = Math.ceil(height / this.cellSize);
+        this.grid = this.createGrid();
+        this.nextGrid = this.createGrid();
+        this.generation = 0;
+      }
+
+      createGrid() {
+        const grid = [];
+        for (let i = 0; i < this.cols; i++) {
+          grid[i] = [];
+          for (let j = 0; j < this.rows; j++) {
+            grid[i][j] = Math.random() > 0.7 ? 1 : 0;
           }
         }
+        return grid;
+      }
 
-        for (i = 0; i < chamber2_nx; i++) {
-          for (j = 0; j < chamber2_ny; j++) {
-            idx = i + j * chamber2_nx;
-            x = i / chamber2_nx;
-            y = j / chamber2_ny;
-            chambers.chamber2.temperature[idx] = params.waterTemp + 10 * (0.5 - Math.abs(y - 0.5));
-            chambers.chamber2.pressure[idx] = 101325 + 2000 * (0.5 - y);
-            if (x < 0.2 && y > 0.7) {
-              chambers.chamber2.vof_water[idx] = 0.8;
-              chambers.chamber2.vof_steam[idx] = 0.2;
-              chambers.chamber2.velocityV[idx] = -0.3;
-            } else if (x < 0.1) {
-              chambers.chamber2.vof_oil[idx] = 0.3;
-              chambers.chamber2.vof_steam[idx] = 0.7;
-              chambers.chamber2.velocityU[idx] = 0.4;
+      countNeighbors(x, y) {
+        let sum = 0;
+        for (let i = -1; i <= 1; i++) {
+          for (let j = -1; j <= 1; j++) {
+            if (i === 0 && j === 0) continue;
+            const col = (x + i + this.cols) % this.cols;
+            const row = (y + j + this.rows) % this.rows;
+            sum += this.grid[col][row];
+          }
+        }
+        return sum;
+      }
+
+      update(dataVector) {
+        // Use volatility to influence rules
+        const volatilityThreshold = 2 + Math.floor(dataVector[0] * 2);
+
+        for (let i = 0; i < this.cols; i++) {
+          for (let j = 0; j < this.rows; j++) {
+            const neighbors = this.countNeighbors(i, j);
+            const state = this.grid[i][j];
+
+            // Conway's Game of Life with volatility-based variation
+            if (state === 1 && (neighbors < 2 || neighbors > 3)) {
+              this.nextGrid[i][j] = 0;
+            } else if (state === 0 && neighbors === volatilityThreshold) {
+              this.nextGrid[i][j] = 1;
             } else {
-              chambers.chamber2.vof_water[idx] = 0.4 * (1 - x);
-              chambers.chamber2.vof_oil[idx] = 0.2 * x;
-              chambers.chamber2.vof_steam[idx] = 1 - chambers.chamber2.vof_water[idx] - chambers.chamber2.vof_oil[idx];
-            }
-            chambers.chamber2.waterDensity[idx] = 1000 * chambers.chamber2.vof_water[idx];
-            chambers.chamber2.oilDensity[idx] = 850 * chambers.chamber2.vof_oil[idx];
-            chambers.chamber2.steamDensity[idx] = 0.8 * chambers.chamber2.vof_steam[idx];
-            var oilGrad = Math.abs(chambers.chamber2.vof_oil[idx] - chambers.chamber2.vof_water[idx]);
-            chambers.chamber2.interface_oil_water[idx] = oilGrad > 0.1 ? 1.0 : 0.0;
-          }
-        }
-
-        for (i = 0; i < chamber3_nx; i++) {
-          for (j = 0; j < chamber3_ny; j++) {
-            idx = i + j * chamber3_nx;
-            x = i / chamber3_nx;
-            y = j / chamber3_ny;
-            chambers.chamber3.temperature[idx] = params.exitTemp + 50 * (1 - y);
-            chambers.chamber3.pressure[idx] = params.suctionPressure + 5000 * y;
-            if (x < 0.2) {
-              chambers.chamber3.vof_vapor[idx] = 0.9;
-              chambers.chamber3.oilConcentration[idx] = 0.15;
-              chambers.chamber3.velocityU[idx] = 0.6;
-            } else {
-              chambers.chamber3.vof_vapor[idx] = 0.7 * (1 - x) * y;
-              chambers.chamber3.vof_condensate[idx] = 1 - chambers.chamber3.vof_vapor[idx];
-              chambers.chamber3.oilConcentration[idx] = 0.08 + 0.1 * chambers.chamber3.vof_condensate[idx];
-            }
-            chambers.chamber3.vaporDensity[idx] = 1.2 * chambers.chamber3.vof_vapor[idx];
-            chambers.chamber3.condensateDensity[idx] = 900 * chambers.chamber3.vof_condensate[idx];
-            if (x > 0.8) {
-              chambers.chamber3.velocityU[idx] = 1.0;
-              chambers.chamber3.extractionRate[idx] = chambers.chamber3.oilConcentration[idx];
+              this.nextGrid[i][j] = state;
             }
           }
         }
 
-        return chambers;
+        [this.grid, this.nextGrid] = [this.nextGrid, this.grid];
+        this.generation++;
       }
 
-      function cloneFloat32Array(array) {
-        return new Float32Array(array);
+      draw(dataVector) {
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        const riskColor = Math.floor(dataVector[1] * 100);
+
+        for (let i = 0; i < this.cols; i++) {
+          for (let j = 0; j < this.rows; j++) {
+            if (this.grid[i][j] === 1) {
+              this.ctx.fillStyle = `rgba(${100 + riskColor}, ${150 + riskColor}, 255, 0.6)`;
+              this.ctx.fillRect(
+                i * this.cellSize,
+                j * this.cellSize,
+                this.cellSize - 1,
+                this.cellSize - 1
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // === TOPOLOGY SURFACE ===
+    class TopologySurface {
+      constructor(ctx, width, height) {
+        this.ctx = ctx;
+        this.width = width;
+        this.height = height;
+        this.resolution = 20;
+        this.time = 0;
       }
 
-      function cloneChambers(source) {
+      // Project 4D point to 3D using stereographic projection
+      project4Dto3D(x, y, z, w) {
+        const scale = 1 / (1 - w * 0.5);
+        return [x * scale, y * scale, z * scale];
+      }
+
+      // Map 3D to 2D screen space
+      project3Dto2D(x, y, z, rotX = 0.3, rotY = 0) {
+        // Apply rotation
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+
+        let y2 = y * cosX - z * sinX;
+        let z2 = y * sinX + z * cosX;
+
+        let x2 = x * cosY - z2 * sinY;
+        z2 = x * sinY + z2 * cosY;
+
+        // Perspective projection
+        const perspective = 500 / (500 + z2);
         return {
-          chamber1: {
-            temperature: cloneFloat32Array(source.chamber1.temperature),
-            pressure: cloneFloat32Array(source.chamber1.pressure),
-            oilDensity: cloneFloat32Array(source.chamber1.oilDensity),
-            vaporDensity: cloneFloat32Array(source.chamber1.vaporDensity),
-            vof_oil: cloneFloat32Array(source.chamber1.vof_oil),
-            vof_vapor: cloneFloat32Array(source.chamber1.vof_vapor),
-            velocityU: cloneFloat32Array(source.chamber1.velocityU),
-            velocityV: cloneFloat32Array(source.chamber1.velocityV),
-            nucleationRate: cloneFloat32Array(source.chamber1.nucleationRate),
-            nx: source.chamber1.nx,
-            ny: source.chamber1.ny
-          },
-          chamber2: {
-            temperature: cloneFloat32Array(source.chamber2.temperature),
-            pressure: cloneFloat32Array(source.chamber2.pressure),
-            waterDensity: cloneFloat32Array(source.chamber2.waterDensity),
-            oilDensity: cloneFloat32Array(source.chamber2.oilDensity),
-            steamDensity: cloneFloat32Array(source.chamber2.steamDensity),
-            vof_water: cloneFloat32Array(source.chamber2.vof_water),
-            vof_oil: cloneFloat32Array(source.chamber2.vof_oil),
-            vof_steam: cloneFloat32Array(source.chamber2.vof_steam),
-            velocityU: cloneFloat32Array(source.chamber2.velocityU),
-            velocityV: cloneFloat32Array(source.chamber2.velocityV),
-            interface_oil_water: cloneFloat32Array(source.chamber2.interface_oil_water),
-            massTransfer: cloneFloat32Array(source.chamber2.massTransfer),
-            nx: source.chamber2.nx,
-            ny: source.chamber2.ny
-          },
-          chamber3: {
-            temperature: cloneFloat32Array(source.chamber3.temperature),
-            pressure: cloneFloat32Array(source.chamber3.pressure),
-            vaporDensity: cloneFloat32Array(source.chamber3.vaporDensity),
-            condensateDensity: cloneFloat32Array(source.chamber3.condensateDensity),
-            oilConcentration: cloneFloat32Array(source.chamber3.oilConcentration),
-            vof_vapor: cloneFloat32Array(source.chamber3.vof_vapor),
-            vof_condensate: cloneFloat32Array(source.chamber3.vof_condensate),
-            velocityU: cloneFloat32Array(source.chamber3.velocityU),
-            velocityV: cloneFloat32Array(source.chamber3.velocityV),
-            extractionRate: cloneFloat32Array(source.chamber3.extractionRate),
-            nx: source.chamber3.nx,
-            ny: source.chamber3.ny
-          }
+          x: this.width / 2 + x2 * perspective * 200,
+          y: this.height / 2 + y2 * perspective * 200,
+          z: z2
         };
       }
 
-      function calculateSteamDistillation(T, P, oil_vof, water_vof) {
-        if (oil_vof < 0.1 || water_vof < 0.1) {
-          return 0;
-        }
-        var vapor_pressure_oil = 5000 * Math.exp(4000 * (1 / 373 - 1 / T));
-        var vapor_pressure_water = 101325 * Math.exp(6.8 * (1 - 373 / T));
-        var total_vapor_pressure = vapor_pressure_oil + vapor_pressure_water;
-        var driving_force = Math.max(0, total_vapor_pressure - P);
-        var k_mass = 0.001 * params.percolationRate;
-        return k_mass * driving_force * oil_vof * water_vof;
+      // 4D hypersurface function influenced by data stream
+      surface4D(u, v, dataVector) {
+        const [vol, risk, ret, time] = dataVector;
+
+        // Create a 4D torus-like surface with data-driven deformation
+        const R = 2 + vol * 0.5;
+        const r = 1 + risk * 0.3;
+
+        const x = (R + r * Math.cos(v)) * Math.cos(u);
+        const y = (R + r * Math.cos(v)) * Math.sin(u);
+        const z = r * Math.sin(v) + ret * Math.sin(u * 2) * 0.5;
+        const w = Math.sin(u + v + time * 2) * 0.3;
+
+        return [x, y, z, w];
       }
 
-      function updateSimulation() {
-        if (!state.chambers) {
-          return;
+      draw(dataVector) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        const points = [];
+        const res = this.resolution;
+
+        // Generate surface points
+        for (let i = 0; i < res; i++) {
+          for (let j = 0; j < res; j++) {
+            const u = (i / res) * Math.PI * 2;
+            const v = (j / res) * Math.PI * 2;
+
+            const point4D = this.surface4D(u, v, dataVector);
+            const point3D = this.project4Dto3D(...point4D);
+            const point2D = this.project3Dto2D(...point3D, 0.3, this.time * 0.2);
+
+            points.push({ ...point2D, i, j });
+          }
         }
 
-        var chambers = state.chambers;
-        var next = cloneChambers(chambers);
-        var i, j, idx, T, oil_vof, water_vof, P, vapor_vof, oil_conc, rho;
+        // Sort by depth
+        points.sort((a, b) => a.z - b.z);
 
-        for (i = 1; i < chamber1_nx - 1; i++) {
-          for (j = 1; j < chamber1_ny - 1; j++) {
-            idx = i + j * chamber1_nx;
-            T = chambers.chamber1.temperature[idx];
-            oil_vof = chambers.chamber1.vof_oil[idx];
-            var d2T = (chambers.chamber1.temperature[idx + 1] + chambers.chamber1.temperature[idx - 1] - 2 * T) * (chamber1_nx * chamber1_nx) +
-              (chambers.chamber1.temperature[idx + chamber1_nx] + chambers.chamber1.temperature[idx - chamber1_nx] - 2 * T) * (chamber1_ny * chamber1_ny);
-            var alpha = 1e-6;
-            next.chamber1.temperature[idx] = T + alpha * d2T * params.dt;
-            if (j === 0) {
-              next.chamber1.temperature[idx] = params.inputTemp;
-            }
-            if (T > 450 && oil_vof > 0.1) {
-              var vaporization_rate = 0.01 * (T - 450) / 100;
-              next.chamber1.vof_oil[idx] = Math.max(0, oil_vof - vaporization_rate * params.dt);
-              next.chamber1.vof_vapor[idx] = Math.min(1, chambers.chamber1.vof_vapor[idx] + vaporization_rate * params.dt);
-              next.chamber1.temperature[idx] -= vaporization_rate * 300000 * params.dt / 4186;
-            }
-            rho = chambers.chamber1.oilDensity[idx] + chambers.chamber1.vaporDensity[idx];
-            if (rho < 400) {
-              next.chamber1.velocityV[idx] = Math.min(1.0, chambers.chamber1.velocityV[idx] + 0.1 * params.dt);
+        // Draw triangles
+        this.ctx.strokeStyle = `rgba(212, 175, 55, 0.3)`;
+        this.ctx.lineWidth = 0.5;
+
+        for (const point of points) {
+          const i = point.i;
+          const j = point.j;
+
+          if (i < res - 1 && j < res - 1) {
+            const p1 = points.find(p => p.i === i && p.j === j);
+            const p2 = points.find(p => p.i === i + 1 && p.j === j);
+            const p3 = points.find(p => p.i === i && p.j === j + 1);
+
+            if (p1 && p2 && p3) {
+              const intensity = (p1.z + 300) / 600;
+              const color = Math.floor(intensity * 100);
+
+              this.ctx.beginPath();
+              this.ctx.moveTo(p1.x, p1.y);
+              this.ctx.lineTo(p2.x, p2.y);
+              this.ctx.lineTo(p3.x, p3.y);
+              this.ctx.closePath();
+
+              this.ctx.fillStyle = `rgba(${150 + color}, ${100 + color}, 255, ${0.1 + intensity * 0.15})`;
+              this.ctx.fill();
+              this.ctx.stroke();
             }
           }
         }
 
-        for (i = 1; i < chamber2_nx - 1; i++) {
-          for (j = 1; j < chamber2_ny - 1; j++) {
-            idx = i + j * chamber2_nx;
-            T = chambers.chamber2.temperature[idx];
-            P = chambers.chamber2.pressure[idx];
-            oil_vof = chambers.chamber2.vof_oil[idx];
-            water_vof = chambers.chamber2.vof_water[idx];
-            if (chambers.chamber2.interface_oil_water[idx] > 0.5) {
-              var mass_transfer = calculateSteamDistillation(T, P, oil_vof, water_vof);
-              var oil_to_steam = mass_transfer * params.dt;
-              next.chamber2.vof_oil[idx] = Math.max(0, oil_vof - oil_to_steam);
-              next.chamber2.vof_steam[idx] = Math.min(1, chambers.chamber2.vof_steam[idx] + oil_to_steam * 2);
-              next.chamber2.massTransfer[idx] = mass_transfer;
-            }
-            if (i < chamber2_nx * 0.3 && j > chamber2_ny * 0.8) {
-              next.chamber2.vof_water[idx] = 0.9;
-              next.chamber2.velocityV[idx] = -0.5;
-            }
-            if (i < 5) {
-              var vapor_input = 0.3 * (1 - j / chamber2_ny);
-              next.chamber2.vof_oil[idx] = Math.min(0.8, chambers.chamber2.vof_oil[idx] + vapor_input * params.dt);
-            }
-          }
-        }
-
-        for (i = 1; i < chamber3_nx - 1; i++) {
-          for (j = 1; j < chamber3_ny - 1; j++) {
-            idx = i + j * chamber3_nx;
-            T = chambers.chamber3.temperature[idx];
-            vapor_vof = chambers.chamber3.vof_vapor[idx];
-            oil_conc = chambers.chamber3.oilConcentration[idx];
-            if (T < 350 && vapor_vof > 0.1) {
-              var condensation_rate = 0.02 * vapor_vof * (350 - T) / 50;
-              next.chamber3.vof_vapor[idx] = Math.max(0, vapor_vof - condensation_rate * params.dt);
-              next.chamber3.vof_condensate[idx] = Math.min(1, chambers.chamber3.vof_condensate[idx] + condensation_rate * params.dt);
-              next.chamber3.oilConcentration[idx] = oil_conc * (1 + condensation_rate);
-            }
-            if (i < 8) {
-              var neighborIdx = Math.floor(chamber2_nx * 0.9) + j * chamber2_nx;
-              var steam_input = chambers.chamber2.vof_steam[neighborIdx] || 0;
-              next.chamber3.vof_vapor[idx] = Math.min(0.95, vapor_vof + steam_input * params.dt * 0.1);
-              next.chamber3.oilConcentration[idx] = Math.min(0.3, oil_conc + steam_input * 0.05 * params.dt);
-            }
-            if (i > chamber3_nx * 0.75) {
-              next.chamber3.velocityU[idx] = 2.0;
-              next.chamber3.extractionRate[idx] = oil_conc * next.chamber3.velocityU[idx];
-            }
-            next.chamber3.pressure[idx] = params.suctionPressure + (101325 - params.suctionPressure) * (i / chamber3_nx);
-          }
-        }
-
-        var totals = {
-          oil: 0,
-          water: 0,
-          vapor: 0,
-          extract: 0
-        };
-
-        var len1 = chamber1_nx * chamber1_ny;
-        var len2 = chamber2_nx * chamber2_ny;
-        var len3 = chamber3_nx * chamber3_ny;
-
-        for (i = 0; i < len1; i++) {
-          totals.oil += next.chamber1.vof_oil[i];
-        }
-        for (i = 0; i < len2; i++) {
-          totals.water += next.chamber2.vof_water[i];
-        }
-        for (i = 0; i < len3; i++) {
-          totals.vapor += next.chamber3.vof_vapor[i];
-          totals.extract += next.chamber3.extractionRate[i];
-        }
-
-        state.flowRates = {
-          oil: totals.oil / len1,
-          water: totals.water / len2,
-          vapor: totals.vapor / len3,
-          extract: totals.extract / len3
-        };
-
-        state.chambers = next;
-        state.time += params.dt;
+        this.time += 0.01;
       }
+    }
 
-      function squareToDisk(u, v) {
-        var a = 2 * u - 1;
-        var b = 2 * v - 1;
-        if (a === 0 && b === 0) {
-          return { x: 0, y: 0 };
-        }
-        var r;
-        var theta;
-        if (Math.abs(a) > Math.abs(b)) {
-          r = a;
-          theta = (Math.PI / 4) * (b / a);
-        } else {
-          r = b;
-          theta = (Math.PI / 2) - (Math.PI / 4) * (a / b);
-        }
-        return {
-          x: r * Math.cos(theta),
-          y: r * Math.sin(theta)
+    // === PARTICLE SYSTEM ===
+    class Particle {
+      constructor(x, y, dataVector) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.life = 1;
+        this.decay = 0.002 + Math.random() * 0.003;
+        this.size = 2 + Math.random() * 3;
+
+        // Particle behavior influenced by data
+        const [vol, risk, ret, time] = dataVector;
+        this.color = {
+          r: 150 + vol * 105,
+          g: 100 + risk * 155,
+          b: 200 + ret * 55
         };
       }
 
-      function lerp(a, b, t) {
-        return a + (b - a) * t;
+      update(dataVector) {
+        const [vol, risk, ret, time] = dataVector;
+
+        // Acceleration based on data stream
+        this.vx += (Math.random() - 0.5) * vol * 0.1;
+        this.vy += (Math.random() - 0.5) * risk * 0.1;
+
+        // Damping
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+
+        return this.life > 0;
       }
 
-      function drawConnector(start, end, color) {
-        ctx.save();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 8;
-        ctx.globalAlpha = 0.4;
+      draw(ctx) {
+        const alpha = this.life;
+        const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+        grd.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`);
+        grd.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+
+        ctx.fillStyle = grd;
         ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        var cp1 = { x: lerp(start.x, end.x, 0.35), y: start.y - 90 };
-        var cp2 = { x: lerp(start.x, end.x, 0.65), y: end.y + 90 };
-        ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
-        ctx.stroke();
-        ctx.lineWidth = 3;
-        ctx.globalAlpha = 0.9;
-        ctx.strokeStyle = '#bae6fd';
-        ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      function renderChamber(snapshot, layout) {
-        var chamber = snapshot[layout.key];
-        var nx = chamber.nx;
-        var ny = chamber.ny;
-        var radius = layout.radius;
-        var centerX = layout.center.x;
-        var centerY = layout.center.y;
-        var cellRadius = radius / Math.max(nx, ny) * 1.4;
-        var i, j, idx, u, v, pos, r, g, b, alpha;
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius + 12, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-        ctx.stroke();
-        ctx.clip();
+      }
+    }
 
-        for (j = 0; j < ny; j++) {
-          for (i = 0; i < nx; i++) {
-            idx = i + j * nx;
-            u = (i + 0.5) / nx;
-            v = (j + 0.5) / ny;
-            pos = squareToDisk(u, v);
-            var px = centerX + pos.x * radius * 0.95;
-            var py = centerY + pos.y * radius * 0.95;
+    class ParticleSystem {
+      constructor(ctx, width, height) {
+        this.ctx = ctx;
+        this.width = width;
+        this.height = height;
+        this.particles = [];
+        this.maxParticles = 500;
+        this.spawnRate = 5;
+      }
 
-            if (layout.key === 'chamber1') {
-              var T = chamber.temperature[idx];
-              var oil = chamber.vof_oil[idx];
-              var vapor = chamber.vof_vapor[idx];
-              if (oil > 0.5) {
-                var tempNorm = Math.min(1, Math.max(0, (T - 350) / 100));
-                r = Math.min(255, 100 + tempNorm * 155);
-                g = Math.min(100, tempNorm * 50);
-                b = 0;
-              } else {
-                r = Math.min(255, 200 + vapor * 55);
-                g = Math.min(255, 150 + vapor * 105);
-                b = Math.min(120, vapor * 120);
-              }
-              alpha = 0.78;
-            } else if (layout.key === 'chamber2') {
-              var water = chamber.vof_water[idx];
-              var oil2 = chamber.vof_oil[idx];
-              var steam = chamber.vof_steam[idx];
-              var interfaceVal = chamber.interface_oil_water[idx];
-              if (interfaceVal > 0.5) {
-                r = 255;
-                g = 255;
-                b = 150;
-                alpha = 0.92;
-              } else if (water > 0.5) {
-                r = 50;
-                g = 150;
-                b = Math.min(255, 220 + water * 55);
-                alpha = 0.82;
-              } else if (oil2 > 0.3) {
-                r = Math.min(255, 150 + oil2 * 105);
-                g = Math.min(150, oil2 * 100);
-                b = 0;
-                alpha = 0.78;
-              } else {
-                r = Math.min(255, 180 + steam * 75);
-                g = Math.min(255, 200 + steam * 55);
-                b = 255;
-                alpha = 0.78;
-              }
-            } else {
-              var vapor3 = chamber.vof_vapor[idx];
-              var condensate = chamber.vof_condensate[idx];
-              var extraction = chamber.extractionRate[idx];
-              var oilConc = chamber.oilConcentration[idx];
-              if (extraction > 0.1) {
-                r = Math.min(255, 200 + extraction * 220);
-                g = 255;
-                b = Math.min(220, extraction * 800);
-                alpha = 0.9;
-              } else if (condensate > 0.5) {
-                r = Math.min(255, 150 + oilConc * 400);
-                g = Math.min(220, 110 + oilConc * 280);
-                b = Math.min(255, 200 - oilConc * 220);
-                alpha = 0.86;
-              } else {
-                r = Math.min(255, 150 + vapor3 * 50);
-                g = Math.min(255, 180 + vapor3 * 30);
-                b = Math.min(255, 200 + vapor3 * 55);
-                alpha = 0.82;
-              }
+      spawn(dataVector) {
+        for (let i = 0; i < this.spawnRate; i++) {
+          if (this.particles.length < this.maxParticles) {
+            // Spawn from edges
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+
+            switch(side) {
+              case 0: x = Math.random() * this.width; y = 0; break;
+              case 1: x = this.width; y = Math.random() * this.height; break;
+              case 2: x = Math.random() * this.width; y = this.height; break;
+              case 3: x = 0; y = Math.random() * this.height; break;
             }
 
-            ctx.fillStyle = 'rgba(' + Math.round(r) + ', ' + Math.round(g) + ', ' + Math.round(b) + ', ' + alpha.toFixed(2) + ')';
-            ctx.beginPath();
-            ctx.arc(px, py, cellRadius, 0, Math.PI * 2);
-            ctx.fill();
+            this.particles.push(new Particle(x, y, dataVector));
+          }
+        }
+      }
+
+      update(dataVector) {
+        this.particles = this.particles.filter(p => p.update(dataVector));
+        this.spawn(dataVector);
+      }
+
+      draw() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
+        // Draw connections between nearby particles
+        this.ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+        this.ctx.lineWidth = 1;
+
+        for (let i = 0; i < this.particles.length; i++) {
+          for (let j = i + 1; j < this.particles.length; j++) {
+            const dx = this.particles[i].x - this.particles[j].x;
+            const dy = this.particles[i].y - this.particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 100) {
+              const alpha = (1 - dist / 100) * 0.3;
+              this.ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+              this.ctx.beginPath();
+              this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+              this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+              this.ctx.stroke();
+            }
           }
         }
 
-        ctx.restore();
-        ctx.save();
-        ctx.fillStyle = 'rgba(226, 232, 240, 0.8)';
-        ctx.font = '600 14px "Inter", "Segoe UI", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(layout.label, centerX, centerY + radius + 28);
-        ctx.restore();
+        // Draw particles
+        this.particles.forEach(p => p.draw(this.ctx));
       }
+    }
 
-      var lastCanvasWidth = 0;
-      var lastCanvasHeight = 0;
+    // Initialize systems
+    let ca = new CellularAutomata(caCtx, caCanvas.width, caCanvas.height);
+    let ts = new TopologySurface(tsCtx, tsCanvas.width, tsCanvas.height);
+    let ps = new ParticleSystem(psCtx, psCanvas.width, psCanvas.height);
 
-      function render() {
-        if (!state.chambers) {
-          return;
-        }
-        var dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for performance
-        var rect = canvas.getBoundingClientRect();
-        var width = Math.floor(rect.width);
-        var height = Math.floor(rect.height);
+    let caUpdateCounter = 0;
 
-        // Only update canvas dimensions if they changed
-        if (width !== lastCanvasWidth || height !== lastCanvasHeight) {
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-          canvas.style.width = width + 'px';
-          canvas.style.height = height + 'px';
-          lastCanvasWidth = width;
-          lastCanvasHeight = height;
-        }
+    // Main animation loop
+    function animate() {
+      dataStream.update();
+      const dataVector = dataStream.getVector();
 
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#020617';
-        ctx.fillRect(0, 0, width, height);
-
-        var layout = [
-          { key: 'chamber1', center: { x: width * 0.26, y: height * 0.62 }, radius: Math.min(width, height) * 0.24, label: 'Chamber I · Oil Heating' },
-          { key: 'chamber2', center: { x: width * 0.52, y: height * 0.4 }, radius: Math.min(width, height) * 0.27, label: 'Chamber II · Water Percolation' },
-          { key: 'chamber3', center: { x: width * 0.78, y: height * 0.58 }, radius: Math.min(width, height) * 0.22, label: 'Chamber III · Vapor Separation' }
-        ];
-
-        drawConnector(layout[0].center, layout[1].center, 'rgba(56, 189, 248, 0.6)');
-        drawConnector(layout[1].center, layout[2].center, 'rgba(250, 204, 21, 0.6)');
-
-        drawChamber(state.chambers, layout[0]);
-        drawChamber(state.chambers, layout[1]);
-        drawChamber(state.chambers, layout[2]);
+      // Update cellular automata every 5 frames
+      if (caUpdateCounter % 5 === 0) {
+        ca.update(dataVector);
       }
+      ca.draw(dataVector);
+      caUpdateCounter++;
 
-      function updateHud() {
-        timePill.textContent = '⏱️ Time ' + state.time.toFixed(3) + '\u00a0s';
-        tempPill.textContent = '🌡️ Oil Bath ' + params.inputTemp.toFixed(0) + '\u00a0K';
-        waterPill.textContent = '💧 Water Bath ' + params.waterTemp.toFixed(0) + '\u00a0K';
-        pressurePill.textContent = '🌀 Suction ' + (params.suctionPressure / 1000).toFixed(0) + '\u00a0kPa';
+      // Update topology surface
+      ts.draw(dataVector);
 
-        metricOil.textContent = state.flowRates.oil.toFixed(2);
-        metricWater.textContent = state.flowRates.water.toFixed(2);
-        metricVapor.textContent = state.flowRates.vapor.toFixed(2);
-        metricExtract.textContent = state.flowRates.extract.toFixed(3);
-      }
+      // Update particle system
+      ps.update(dataVector);
+      ps.draw();
 
-      function showError(message) {
-        state.error = message;
-        errorEl.style.display = 'block';
-        errorEl.textContent = message;
-      }
+      requestAnimationFrame(animate);
+    }
 
-      function clearError() {
-        state.error = null;
-        errorEl.style.display = 'none';
-      }
+    animate();
 
-      var lastTime = 0;
-      var accumulator = 0;
-      var frameInterval = 1000 / 60; // 60 FPS target
-
-      function animate(currentTime) {
-        if (!state.running) {
-          return;
-        }
-
-        var deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-        accumulator += deltaTime;
-
-        // Update simulation at fixed timestep
-        while (accumulator >= frameInterval) {
-          try {
-            updateSimulation();
-            accumulator -= frameInterval;
-          } catch (err) {
-            stopSimulation();
-            showError('Simulation halted: ' + err.message);
-            return;
-          }
-        }
-
-        // Always render at display refresh rate
-        render();
-        updateHud();
-
-        state.animationFrameId = requestAnimationFrame(animate);
-      }
-
-      function startSimulation() {
-        if (state.running) {
-          return;
-        }
-        state.running = true;
-        clearError();
-        statusText.textContent = 'Status: running';
-        runBtn.textContent = '⏸️ Pause';
-        lastTime = performance.now();
-        accumulator = 0;
-        state.animationFrameId = requestAnimationFrame(animate);
-      }
-
-      function stopSimulation() {
-        if (!state.running) {
-          return;
-        }
-        state.running = false;
-        statusText.textContent = 'Status: paused';
-        runBtn.textContent = '▶️ Run';
-        if (state.animationFrameId) {
-          cancelAnimationFrame(state.animationFrameId);
-          state.animationFrameId = null;
-        }
-      }
-
-      function resetSimulation() {
-        stopSimulation();
-        state.chambers = createInitialChambers();
-        state.flowRates = { oil: 0, water: 0, vapor: 0, extract: 0 };
-        state.time = 0;
-        statusText.textContent = 'Status: idle';
-        clearError();
-        render();
-        updateHud();
-      }
-
-      runBtn.addEventListener('click', function () {
-        if (state.running) {
-          stopSimulation();
-        } else {
-          startSimulation();
-        }
-      });
-
-      resetBtn.addEventListener('click', function () {
-        resetSimulation();
-      });
-
-      window.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-          stopSimulation();
-        }
-      });
-
-      window.addEventListener('resize', function () {
-        render();
-      });
-
-      resetSimulation();
-    })();
+    // Handle resize
+    window.addEventListener('resize', () => {
+      resizeCanvases();
+      ca = new CellularAutomata(caCtx, caCanvas.width, caCanvas.height);
+      ts = new TopologySurface(tsCtx, tsCanvas.width, tsCanvas.height);
+      ps = new ParticleSystem(psCtx, psCanvas.width, psCanvas.height);
+    });
   </script>
 </body>
 </html>
