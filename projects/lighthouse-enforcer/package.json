@@ -1,0 +1,23 @@
+{
+  "name": "@bobgnarly420/lighthouse-enforcer",
+  "version": "1.0.0",
+  "description": "Enforce performance budgets from Lighthouse audit reports",
+  "main": "enforcer.js",
+  "type": "module",
+  "bin": {
+    "lighthouse-enforce": "./cli.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node cli.js --report demo/sample-report.json --budget demo/budget.json"
+  },
+  "keywords": [
+    "lighthouse",
+    "performance",
+    "budget",
+    "ci",
+    "web-vitals"
+  ],
+  "author": "BobGnarly420",
+  "license": "MIT"
+}

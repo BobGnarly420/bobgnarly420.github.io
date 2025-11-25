@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BobGnarly420 | Systems Engineer & Tool Builder</title>
+
+  <meta name="description" content="Systems engineer building production-ready tools. Portfolio showcases dependency mapping, performance budgets, and reproducible engineering." />
+  <meta name="keywords" content="systems engineer, devtools, performance, ci/cd, software architecture" />
+
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --text: #e4e6eb;
+      --text-muted: #9095a1;
+      --accent: #00d4ff;
+      --border: rgba(255, 255, 255, 0.08);
+      --code-bg: #1a1e2e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 3rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
+      color: var(--accent);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    code {
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      background: var(--code-bg);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      border-left: 3px solid var(--accent);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    /* Hero */
+    .hero {
+      margin: 4rem 0;
+      max-width: 700px;
+    }
+
+    .thesis {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    /* Project Cards */
+    .project-grid {
+      display: grid;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      background: rgba(0, 212, 255, 0.03);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .project-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .project-links a {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .project-links a:hover {
+      border-color: var(--accent);
+      background: rgba(0, 212, 255, 0.05);
+    }
+
+    .problem-statement {
+      background: rgba(0, 212, 255, 0.05);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .problem-statement strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .metric {
+      padding: 1rem;
+      background: var(--code-bg);
+      border-radius: 6px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tech-tag {
+      padding: 0.3rem 0.8rem;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 6rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .project-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Systems Engineer & Tool Builder</h1>
+    <div class="thesis">
+      <p>I build systems that map complexity into legible decisions.</p>
+
+      <p>My work traces causal chains from problem constraints to architecture to measured outcomes. Each project includes dependency maps, decision timelines, and reproducible demos—no black boxes.</p>
+
+      <p>I prioritize: clarity over cleverness, production readiness over prototypes, and inspectable reasoning over claims. Code ships with tests, metrics, and deployment notes. Trade-offs are documented, not hidden.</p>
+
+      <p>Below: systems that simplified decision surfaces, reduced cognitive load, or shipped under real constraints. Each includes architecture diagrams, key pivots, and a way to run it yourself.</p>
+    </div>
+  </header>
+
+  <section>
+    <h2>Production Tools</h2>
+
+    <div class="project-grid">
+      <!-- Project 1: Bundle Analyzer -->
+      <article class="project-card">
+        <div class="project-header">
+          <h3 class="project-title">Bundle Analyzer</h3>
+          <div class="project-links">
+            <a href="projects/bundle-analyzer/README.md">Docs</a>
+            <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/bundle-analyzer">Code</a>
+          </div>
+        </div>
+
+        <div class="problem-statement">
+          <strong>Problem → Constraint → Lever → Result</strong>
+          JavaScript bundles grow silently until they kill performance. Manual audits are slow and inconsistent. <strong>Constraint:</strong> Must run in CI without external dependencies. <strong>Lever:</strong> Static analysis of bundle structure + configurable budgets. <strong>Result:</strong> Automated size tracking with actionable recommendations, zero config required.
+        </div>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Key Metrics (Demo Bundle)</h4>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Bundle Size</div>
+            <div class="metric-value">5.2 KB</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Analysis Time</div>
+            <div class="metric-value">12 ms</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Memory Used</div>
+            <div class="metric-value">8 MB</div>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Quick Start</h4>
+        <pre><code>cd projects/bundle-analyzer
+node cli.js --input demo/sample-bundle.js --budget 100</code></pre>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Architecture</h4>
+        <p>Pure Node.js with regex-based parsing (vs 500KB+ Babel dependency). Analyzes bundle structure, detects patterns (duplication, large functions), enforces configurable size budgets. Designed for CI integration with exit codes.</p>
+
+        <div class="tech-list">
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">Zero Dependencies</span>
+          <span class="tech-tag">CLI</span>
+          <span class="tech-tag">CI/CD Ready</span>
+        </div>
+      </article>
+
+      <!-- Project 2: Lighthouse Enforcer -->
+      <article class="project-card">
+        <div class="project-header">
+          <h3 class="project-title">Lighthouse Budget Enforcer</h3>
+          <div class="project-links">
+            <a href="projects/lighthouse-enforcer/README.md">Docs</a>
+            <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/lighthouse-enforcer">Code</a>
+          </div>
+        </div>
+
+        <div class="problem-statement">
+          <strong>Problem → Constraint → Lever → Result</strong>
+          Lighthouse audits generate reports, but without enforcement they're just numbers. <strong>Constraint:</strong> Must integrate with existing CI/CD without external services. <strong>Lever:</strong> JSON-based budget validation with configurable thresholds. <strong>Result:</strong> Automated performance gates that fail builds on regression, zero dependencies.
+        </div>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Key Metrics (Demo Report)</h4>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Performance Score</div>
+            <div class="metric-value">92/100</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">LCP</div>
+            <div class="metric-value">1.85s</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">CLS</div>
+            <div class="metric-value">0.045</div>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Quick Start</h4>
+        <pre><code>cd projects/lighthouse-enforcer
+node cli.js --report demo/sample-report.json --budget demo/budget.json</code></pre>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Architecture</h4>
+        <p>Post-audit validator (not a runner). Extracts metrics from Lighthouse JSON reports, compares against configurable budgets (Core Web Vitals, scores, resource limits), categorizes violations by severity, and fails CI builds when thresholds exceeded.</p>
+
+        <h4 style="margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Decision: Validator vs Runner</h4>
+        <p><strong>Trade-off:</strong> Separated enforcement from audit execution. Lighthouse CLI already excellent; adding Chrome/Puppeteer would bloat tool 250MB+. Result: 8KB tool that works with any Lighthouse source (CLI, CI service, PageSpeed API).</p>
+
+        <div class="tech-list">
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">Zero Dependencies</span>
+          <span class="tech-tag">Lighthouse</span>
+          <span class="tech-tag">Core Web Vitals</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Approach</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li style="margin: 1rem 0; padding-left: 1.5rem; border-left: 3px solid var(--accent);">
+        <strong>Diagram-first:</strong> Architecture and decision timelines appear before prose. Systems thinkers parse visuals faster than paragraphs.
+      </li>
+      <li style="margin: 1rem 0; padding-left: 1.5rem; border-left: 3px solid var(--accent);">
+        <strong>Reproducibility over rhetoric:</strong> Every project includes runnable demos. Clone, install, run. "Trust but verify" is the implicit contract.
+      </li>
+      <li style="margin: 1rem 0; padding-left: 1.5rem; border-left: 3px solid var(--accent);">
+        <strong>Inline rationale:</strong> Decisions explained in 1-2 sentences next to diagrams/code, not hidden in separate blog posts. Reasoning is a first-class artifact.
+      </li>
+      <li style="margin: 1rem 0; padding-left: 1.5rem; border-left: 3px solid var(--accent);">
+        <strong>Performance as proof:</strong> Tools are fast, dependency-free, and observable. Demonstrates systems thinking through execution, not claims.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Tech Stack (This Site)</h2>
+    <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.8rem 0; font-weight: 600;">Approach</td>
+        <td style="padding: 0.8rem 0; color: var(--text-muted);">Static HTML + Vanilla CSS</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.8rem 0; font-weight: 600;">Page Weight</td>
+        <td style="padding: 0.8rem 0; color: var(--text-muted);">&lt; 15KB (uncompressed)</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.8rem 0; font-weight: 600;">JavaScript</td>
+        <td style="padding: 0.8rem 0; color: var(--text-muted);">0 KB</td>
+      </tr>
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 0.8rem 0; font-weight: 600;">Build Time</td>
+        <td style="padding: 0.8rem 0; color: var(--text-muted);">0ms (no build step)</td>
+      </tr>
+      <tr>
+        <td style="padding: 0.8rem 0; font-weight: 600;">Hosting</td>
+        <td style="padding: 0.8rem 0; color: var(--text-muted);">GitHub Pages (CDN, auto-SSL)</td>
+      </tr>
+    </table>
+    <p style="margin-top: 1rem;"><strong>Rationale:</strong> Portfolio eats its own dog food. Fast by default, inspectable source, works without JavaScript.</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 BobGnarly420 | <a href="https://github.com/BobGnarly420">GitHub</a> | MIT License</p>
+  </footer>
+</body>
+</html>

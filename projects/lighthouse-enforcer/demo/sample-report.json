@@ -1,0 +1,120 @@
+{
+  "lighthouseVersion": "10.4.0",
+  "requestedUrl": "https://example.com",
+  "finalUrl": "https://example.com",
+  "fetchTime": "2024-01-15T10:30:00.000Z",
+  "categories": {
+    "performance": {
+      "id": "performance",
+      "title": "Performance",
+      "score": 0.92
+    },
+    "accessibility": {
+      "id": "accessibility",
+      "title": "Accessibility",
+      "score": 0.95
+    },
+    "best-practices": {
+      "id": "best-practices",
+      "title": "Best Practices",
+      "score": 0.88
+    },
+    "seo": {
+      "id": "seo",
+      "title": "SEO",
+      "score": 1.0
+    }
+  },
+  "audits": {
+    "largest-contentful-paint": {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "description": "Largest Contentful Paint marks the time at which the largest text or image is painted.",
+      "score": 0.95,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 1845,
+      "numericUnit": "millisecond",
+      "displayValue": "1.8 s"
+    },
+    "max-potential-fid": {
+      "id": "max-potential-fid",
+      "title": "Max Potential First Input Delay",
+      "description": "The maximum potential First Input Delay that your users could experience.",
+      "score": 0.98,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 65,
+      "numericUnit": "millisecond",
+      "displayValue": "65 ms"
+    },
+    "cumulative-layout-shift": {
+      "id": "cumulative-layout-shift",
+      "title": "Cumulative Layout Shift",
+      "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport.",
+      "score": 0.96,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 0.045,
+      "numericUnit": "unitless",
+      "displayValue": "0.045"
+    },
+    "first-contentful-paint": {
+      "id": "first-contentful-paint",
+      "title": "First Contentful Paint",
+      "description": "First Contentful Paint marks the time at which the first text or image is painted.",
+      "score": 0.94,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 1250,
+      "numericUnit": "millisecond",
+      "displayValue": "1.3 s"
+    },
+    "interactive": {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "description": "Time to interactive is the amount of time it takes for the page to become fully interactive.",
+      "score": 0.89,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 3200,
+      "numericUnit": "millisecond",
+      "displayValue": "3.2 s"
+    },
+    "total-blocking-time": {
+      "id": "total-blocking-time",
+      "title": "Total Blocking Time",
+      "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms.",
+      "score": 0.91,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 180,
+      "numericUnit": "millisecond",
+      "displayValue": "180 ms"
+    },
+    "speed-index": {
+      "id": "speed-index",
+      "title": "Speed Index",
+      "description": "Speed Index shows how quickly the contents of a page are visibly populated.",
+      "score": 0.93,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 2100,
+      "numericUnit": "millisecond",
+      "displayValue": "2.1 s"
+    },
+    "total-byte-weight": {
+      "id": "total-byte-weight",
+      "title": "Total Byte Weight",
+      "description": "Large network payloads cost users real money and are highly correlated with long load times.",
+      "score": 0.87,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 425000,
+      "numericUnit": "byte",
+      "displayValue": "415 KiB"
+    },
+    "dom-size": {
+      "id": "dom-size",
+      "title": "DOM Size",
+      "description": "A large DOM will increase memory usage, cause longer style calculations, and produce costly layout reflows.",
+      "score": 0.92,
+      "scoreDisplayMode": "numeric",
+      "numericValue": 850,
+      "numericUnit": "element",
+      "displayValue": "850 elements"
+    }
+  }
+}
