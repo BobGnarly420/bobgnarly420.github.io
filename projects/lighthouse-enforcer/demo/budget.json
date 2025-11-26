@@ -1,0 +1,15 @@
+{
+  "performance_score": 90,
+  "lcp": 2500,
+  "fid": 100,
+  "cls": 0.1,
+  "fcp": 1500,
+  "tti": 3500,
+  "tbt": 200,
+  "si": 3000,
+  "total_byte_weight": 512000,
+  "dom_size": 1000,
+  "accessibility_score": 90,
+  "best_practices_score": 85,
+  "seo_score": 95
+}

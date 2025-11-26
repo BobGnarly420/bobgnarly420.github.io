@@ -1,0 +1,27 @@
+{
+  "name": "@bobgnarly420/bundle-analyzer",
+  "version": "1.0.0",
+  "description": "Analyze JavaScript bundle sizes and identify optimization opportunities",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "bundle-analyze": "./cli.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "analyze": "node cli.js",
+    "demo": "node cli.js --input demo/sample-bundle.js --budget 100"
+  },
+  "keywords": [
+    "bundle",
+    "webpack",
+    "vite",
+    "size",
+    "performance",
+    "ci"
+  ],
+  "author": "BobGnarly420",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
