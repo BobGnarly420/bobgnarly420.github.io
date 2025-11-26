@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT Toolchain - Client-Side Intelligence Gathering</title>
+  <meta name="description" content="Comprehensive client-side OSINT toolchain for domain analysis, social media intelligence, and security research.">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0d1117;
+      --secondary: #161b22;
+      --accent: #58a6ff;
+      --success: #3fb950;
+      --warning: #d29922;
+      --danger: #f85149;
+      --text: #c9d1d9;
+      --text-secondary: #8b949e;
+      --border: #30363d;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--primary);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.3rem;
+      color: var(--accent);
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(88, 166, 255, 0.1);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .tool-card {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .tool-card h3 {
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    .tool-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      background: var(--primary);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .input-group textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'SF Mono', Monaco, monospace;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: var(--primary);
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #4a96e8;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #3d444d;
+    }
+
+    .result-box {
+      background: var(--primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .result-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .result-box .success {
+      color: var(--success);
+    }
+
+    .result-box .warning {
+      color: var(--warning);
+    }
+
+    .result-box .error {
+      color: var(--danger);
+    }
+
+    .result-box .info {
+      color: var(--accent);
+    }
+
+    .link-list {
+      list-style: none;
+    }
+
+    .link-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .link-list li:last-child {
+      border-bottom: none;
+    }
+
+    .link-list a {
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .link-list a:hover {
+      text-decoration: underline;
+    }
+
+    .link-list .desc {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    .badge-free {
+      background: var(--success);
+      color: var(--primary);
+    }
+
+    .badge-api {
+      background: var(--warning);
+      color: var(--primary);
+    }
+
+    .badge-paid {
+      background: var(--danger);
+      color: white;
+    }
+
+    .info-banner {
+      background: rgba(88, 166, 255, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+
+    .info-banner strong {
+      color: var(--accent);
+    }
+
+    .copy-btn {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .copy-btn:hover {
+      background: #3d444d;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-tabs {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔍 OSINT Toolchain</h1>
+    <p>Client-Side Open Source Intelligence Gathering & Analysis</p>
+  </div>
+
+  <div class="container">
+    <div class="info-banner">
+      <strong>⚠️ Legal Notice:</strong> These tools are for authorized security research, penetration testing, CTF competitions, and educational purposes only. Always obtain proper authorization before conducting any reconnaissance activities. Unauthorized access or data gathering may be illegal in your jurisdiction.
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('domain')">Domain/IP Intel</button>
+      <button class="tab-btn" onclick="switchTab('social')">Social Media</button>
+      <button class="tab-btn" onclick="switchTab('email')">Email Intel</button>
+      <button class="tab-btn" onclick="switchTab('hash')">Hash Analysis</button>
+      <button class="tab-btn" onclick="switchTab('network')">Network Tools</button>
+      <button class="tab-btn" onclick="switchTab('metadata')">Metadata</button>
+      <button class="tab-btn" onclick="switchTab('resources')">OSINT Resources</button>
+    </nav>
+
+    <!-- Domain/IP Intelligence Tab -->
+    <div id="domain" class="tab-content active">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>DNS Lookup</h3>
+          <p>Query DNS records for a domain (A, AAAA, MX, TXT, NS, CNAME)</p>
+          <div class="input-group">
+            <label>Domain:</label>
+            <input type="text" id="dns-domain" placeholder="example.com">
+          </div>
+          <div class="input-group">
+            <label>Record Type:</label>
+            <select id="dns-type">
+              <option value="A">A (IPv4)</option>
+              <option value="AAAA">AAAA (IPv6)</option>
+              <option value="MX">MX (Mail)</option>
+              <option value="TXT">TXT (Text)</option>
+              <option value="NS">NS (Nameserver)</option>
+              <option value="CNAME">CNAME (Canonical)</option>
+            </select>
+          </div>
+          <button class="btn" onclick="performDNSLookup()">Query DNS</button>
+          <div id="dns-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>IP Geolocation</h3>
+          <p>Get geographic location and ISP information for an IP address</p>
+          <div class="input-group">
+            <label>IP Address:</label>
+            <input type="text" id="ip-address" placeholder="8.8.8.8">
+          </div>
+          <button class="btn" onclick="performIPLookup()">Lookup IP</button>
+          <div id="ip-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>SSL Certificate Info</h3>
+          <p>Analyze SSL certificate details for a domain</p>
+          <div class="input-group">
+            <label>Domain:</label>
+            <input type="text" id="ssl-domain" placeholder="example.com">
+          </div>
+          <button class="btn" onclick="checkSSL()">Check SSL</button>
+          <div id="ssl-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Subdomain Finder</h3>
+          <p>Generate common subdomain combinations to test</p>
+          <div class="input-group">
+            <label>Domain:</label>
+            <input type="text" id="subdomain-domain" placeholder="example.com">
+          </div>
+          <button class="btn" onclick="generateSubdomains()">Generate List</button>
+          <div id="subdomain-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>URL Analyzer</h3>
+          <p>Parse and analyze URL components and parameters</p>
+          <div class="input-group">
+            <label>URL:</label>
+            <input type="text" id="url-input" placeholder="https://example.com/path?param=value">
+          </div>
+          <button class="btn" onclick="analyzeURL()">Analyze URL</button>
+          <div id="url-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Port Reference</h3>
+          <p>Common port numbers and their associated services</p>
+          <div class="input-group">
+            <label>Port Number:</label>
+            <input type="number" id="port-number" placeholder="80">
+          </div>
+          <button class="btn" onclick="lookupPort()">Lookup Port</button>
+          <div id="port-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Media Tab -->
+    <div id="social" class="tab-content">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>Username Search Generator</h3>
+          <p>Generate links to check username availability across platforms</p>
+          <div class="input-group">
+            <label>Username:</label>
+            <input type="text" id="username" placeholder="johndoe">
+          </div>
+          <button class="btn" onclick="searchUsername()">Generate Links</button>
+          <div id="username-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Social Media Profile Links</h3>
+          <p>Quick links to major social media platforms</p>
+          <div class="input-group">
+            <label>Handle/Username:</label>
+            <input type="text" id="social-handle" placeholder="username">
+          </div>
+          <button class="btn" onclick="generateSocialLinks()">Generate Links</button>
+          <div id="social-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Profile Image Search</h3>
+          <p>Generate reverse image search URLs for profile pictures</p>
+          <div class="input-group">
+            <label>Image URL:</label>
+            <input type="text" id="image-url" placeholder="https://example.com/image.jpg">
+          </div>
+          <button class="btn" onclick="reverseImageSearch()">Generate Searches</button>
+          <div id="image-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>GitHub OSINT</h3>
+          <p>Generate GitHub search queries for user analysis</p>
+          <div class="input-group">
+            <label>GitHub Username:</label>
+            <input type="text" id="github-user" placeholder="username">
+          </div>
+          <button class="btn" onclick="githubOSINT()">Generate Queries</button>
+          <div id="github-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Intelligence Tab -->
+    <div id="email" class="tab-content">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>Email Header Analyzer</h3>
+          <p>Parse and analyze email headers for investigation</p>
+          <div class="input-group">
+            <label>Email Headers:</label>
+            <textarea id="email-headers" placeholder="Paste email headers here..."></textarea>
+          </div>
+          <button class="btn" onclick="analyzeEmailHeaders()">Analyze Headers</button>
+          <div id="email-header-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Email Validator</h3>
+          <p>Check email format and extract domain information</p>
+          <div class="input-group">
+            <label>Email Address:</label>
+            <input type="email" id="email-address" placeholder="user@example.com">
+          </div>
+          <button class="btn" onclick="validateEmail()">Validate Email</button>
+          <div id="email-validate-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Disposable Email Detector</h3>
+          <p>Check if an email uses a temporary/disposable email service</p>
+          <div class="input-group">
+            <label>Email Address:</label>
+            <input type="email" id="disposable-email" placeholder="user@tempmail.com">
+          </div>
+          <button class="btn" onclick="checkDisposableEmail()">Check Email</button>
+          <div id="disposable-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Email Permutator</h3>
+          <p>Generate possible email address variations</p>
+          <div class="input-group">
+            <label>First Name:</label>
+            <input type="text" id="first-name" placeholder="John">
+          </div>
+          <div class="input-group">
+            <label>Last Name:</label>
+            <input type="text" id="last-name" placeholder="Doe">
+          </div>
+          <div class="input-group">
+            <label>Domain:</label>
+            <input type="text" id="email-domain" placeholder="example.com">
+          </div>
+          <button class="btn" onclick="generateEmailPermutations()">Generate</button>
+          <div id="email-permute-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hash Analysis Tab -->
+    <div id="hash" class="tab-content">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>Hash Identifier</h3>
+          <p>Identify hash type based on format and length</p>
+          <div class="input-group">
+            <label>Hash:</label>
+            <input type="text" id="hash-input" placeholder="5d41402abc4b2a76b9719d911017c592">
+          </div>
+          <button class="btn" onclick="identifyHash()">Identify Hash</button>
+          <div id="hash-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Base64 Encoder/Decoder</h3>
+          <p>Encode or decode Base64 strings</p>
+          <div class="input-group">
+            <label>Input:</label>
+            <textarea id="base64-input" placeholder="Enter text or Base64..."></textarea>
+          </div>
+          <button class="btn" onclick="encodeBase64()">Encode</button>
+          <button class="btn btn-secondary" onclick="decodeBase64()">Decode</button>
+          <div id="base64-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Client-Side Hash Generator</h3>
+          <p>Generate cryptographic hashes (MD5, SHA-1, SHA-256)</p>
+          <div class="input-group">
+            <label>Input Text:</label>
+            <textarea id="hash-text" placeholder="Text to hash..."></textarea>
+          </div>
+          <div class="input-group">
+            <label>Hash Type:</label>
+            <select id="hash-algorithm">
+              <option value="SHA-256">SHA-256</option>
+              <option value="SHA-1">SHA-1</option>
+              <option value="SHA-512">SHA-512</option>
+            </select>
+          </div>
+          <button class="btn" onclick="generateHash()">Generate Hash</button>
+          <div id="hash-gen-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>JWT Decoder</h3>
+          <p>Decode and analyze JSON Web Tokens</p>
+          <div class="input-group">
+            <label>JWT Token:</label>
+            <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+          </div>
+          <button class="btn" onclick="decodeJWT()">Decode JWT</button>
+          <div id="jwt-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Tools Tab -->
+    <div id="network" class="tab-content">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>HTTP Headers Viewer</h3>
+          <p>View HTTP headers returned by a URL (requires CORS support)</p>
+          <div class="input-group">
+            <label>URL:</label>
+            <input type="text" id="headers-url" placeholder="https://example.com">
+          </div>
+          <button class="btn" onclick="viewHeaders()">View Headers</button>
+          <div id="headers-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>IP Address Info</h3>
+          <p>Get your current IP address and basic network info</p>
+          <button class="btn" onclick="getMyIP()">Get My IP</button>
+          <div id="myip-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>User Agent Analyzer</h3>
+          <p>Parse and analyze user agent strings</p>
+          <div class="input-group">
+            <label>User Agent:</label>
+            <textarea id="useragent-input" placeholder="Paste user agent string..."></textarea>
+          </div>
+          <button class="btn" onclick="analyzeUserAgent()">Analyze</button>
+          <button class="btn btn-secondary" onclick="showMyUserAgent()">Show My UA</button>
+          <div id="useragent-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>CIDR Calculator</h3>
+          <p>Calculate IP ranges from CIDR notation</p>
+          <div class="input-group">
+            <label>CIDR:</label>
+            <input type="text" id="cidr-input" placeholder="192.168.1.0/24">
+          </div>
+          <button class="btn" onclick="calculateCIDR()">Calculate</button>
+          <div id="cidr-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>MAC Address Lookup</h3>
+          <p>Identify vendor from MAC address OUI</p>
+          <div class="input-group">
+            <label>MAC Address:</label>
+            <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E">
+          </div>
+          <button class="btn" onclick="lookupMAC()">Lookup Vendor</button>
+          <div id="mac-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Timestamp Converter</h3>
+          <p>Convert between Unix timestamp and human-readable date</p>
+          <div class="input-group">
+            <label>Unix Timestamp:</label>
+            <input type="text" id="timestamp-input" placeholder="1234567890">
+          </div>
+          <button class="btn" onclick="convertTimestamp()">Convert</button>
+          <button class="btn btn-secondary" onclick="getCurrentTimestamp()">Current Time</button>
+          <div id="timestamp-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metadata Tab -->
+    <div id="metadata" class="tab-content">
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>EXIF Data Info</h3>
+          <p>Information about image metadata extraction</p>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">
+            EXIF data contains metadata like camera settings, GPS coordinates, timestamps, and software used.
+            Client-side extraction requires JavaScript libraries like exif-js.
+          </p>
+          <div class="result-box">
+            <pre><span class="info">Common EXIF Fields:</span>
+• Camera Make/Model
+• Date/Time Original
+• GPS Latitude/Longitude
+• Software Used
+• Image Dimensions
+• ISO Speed
+• Focal Length
+• Exposure Time
+
+<span class="info">Recommended Tools:</span>
+• exiftool (command line)
+• Jeffrey's Image Metadata Viewer
+• Exif Pilot (Windows)
+• Photo Investigator (macOS)</pre>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3>Document Metadata</h3>
+          <p>Information about document metadata analysis</p>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">
+            PDF, Office docs, and other files contain metadata about creation, modification, and authors.
+          </p>
+          <div class="result-box">
+            <pre><span class="info">Common Metadata Fields:</span>
+• Author/Creator
+• Creation Date
+• Modification Date
+• Software Used
+• Company/Organization
+• Comments/Keywords
+• Edit History
+• Template Used
+
+<span class="info">Analysis Tools:</span>
+• FOCA (Fingerprinting Organizations)
+• pdfinfo (command line)
+• ExifTool (multi-format)
+• Metadata Extraction Tool</pre>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3>File Hash Calculator</h3>
+          <p>Calculate file hashes client-side (drag and drop)</p>
+          <div class="input-group">
+            <label>Select File:</label>
+            <input type="file" id="file-input" style="color: var(--text);">
+          </div>
+          <button class="btn" onclick="calculateFileHash()">Calculate Hashes</button>
+          <div id="file-hash-result" class="result-box" style="display:none;"></div>
+        </div>
+
+        <div class="tool-card">
+          <h3>String Extractor</h3>
+          <p>Extract readable strings from files</p>
+          <div class="input-group">
+            <label>Select File:</label>
+            <input type="file" id="string-file-input" style="color: var(--text);">
+          </div>
+          <div class="input-group">
+            <label>Min String Length:</label>
+            <input type="number" id="min-string-length" value="4" min="1">
+          </div>
+          <button class="btn" onclick="extractStrings()">Extract Strings</button>
+          <div id="string-result" class="result-box" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OSINT Resources Tab -->
+    <div id="resources" class="tab-content">
+      <div class="tool-card">
+        <h3>Essential OSINT Frameworks</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://osintframework.com/" target="_blank">
+              OSINT Framework
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Comprehensive collection of OSINT tools organized by category</div>
+          </li>
+          <li>
+            <a href="https://github.com/jivoi/awesome-osint" target="_blank">
+              Awesome OSINT (GitHub)
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Curated list of OSINT resources and tools</div>
+          </li>
+          <li>
+            <a href="https://start.me/p/DPYPMz/the-ultimate-osint-collection" target="_blank">
+              Ultimate OSINT Collection
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Massive collection of OSINT bookmarks and resources</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tool-card">
+        <h3>Search Engines & Databases</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://www.shodan.io/" target="_blank">
+              Shodan
+              <span class="badge badge-api">API</span>
+            </a>
+            <div class="desc">Search engine for Internet-connected devices</div>
+          </li>
+          <li>
+            <a href="https://censys.io/" target="_blank">
+              Censys
+              <span class="badge badge-api">API</span>
+            </a>
+            <div class="desc">Internet-wide scanning and certificate search</div>
+          </li>
+          <li>
+            <a href="https://www.zoomeye.org/" target="_blank">
+              ZoomEye
+              <span class="badge badge-api">API</span>
+            </a>
+            <div class="desc">Cyberspace search engine</div>
+          </li>
+          <li>
+            <a href="https://haveibeenpwned.com/" target="_blank">
+              Have I Been Pwned
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Check if email has been in a data breach</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tool-card">
+        <h3>Domain & Network Intel</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://securitytrails.com/" target="_blank">
+              SecurityTrails
+              <span class="badge badge-api">API</span>
+            </a>
+            <div class="desc">Historical DNS data and domain research</div>
+          </li>
+          <li>
+            <a href="https://crt.sh/" target="_blank">
+              crt.sh
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Certificate transparency log search</div>
+          </li>
+          <li>
+            <a href="https://dnsdumpster.com/" target="_blank">
+              DNSDumpster
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">DNS reconnaissance and subdomain discovery</div>
+          </li>
+          <li>
+            <a href="https://urlscan.io/" target="_blank">
+              urlscan.io
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">URL and website scanner</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tool-card">
+        <h3>Social Media OSINT</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://github.com/sherlock-project/sherlock" target="_blank">
+              Sherlock
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Hunt down social media accounts by username</div>
+          </li>
+          <li>
+            <a href="https://github.com/megadose/holehe" target="_blank">
+              Holehe
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Check if email is used on different sites</div>
+          </li>
+          <li>
+            <a href="https://osint.industries/" target="_blank">
+              OSINT Industries
+              <span class="badge badge-api">API</span>
+            </a>
+            <div class="desc">Search for leaked data and credentials</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tool-card">
+        <h3>Image & Video OSINT</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://images.google.com/" target="_blank">
+              Google Images
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Reverse image search</div>
+          </li>
+          <li>
+            <a href="https://yandex.com/images/" target="_blank">
+              Yandex Images
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Alternative reverse image search (often better than Google)</div>
+          </li>
+          <li>
+            <a href="https://tineye.com/" target="_blank">
+              TinEye
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Reverse image search engine</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tool-card">
+        <h3>GitHub Intelligence</h3>
+        <ul class="link-list">
+          <li>
+            <a href="https://github.com/search/advanced" target="_blank">
+              GitHub Advanced Search
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Advanced code and repository search</div>
+          </li>
+          <li>
+            <a href="https://github.com/trufflesecurity/trufflehog" target="_blank">
+              TruffleHog
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Find secrets in Git repositories</div>
+          </li>
+          <li>
+            <a href="https://grep.app/" target="_blank">
+              grep.app
+              <span class="badge badge-free">FREE</span>
+            </a>
+            <div class="desc">Search across GitHub repositories</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Helper functions
+    function showResult(elementId, content, type = 'info') {
+      const element = document.getElementById(elementId);
+      element.style.display = 'block';
+      element.innerHTML = `<pre class="${type}">${content}</pre>`;
+      addCopyButton(element);
+    }
+
+    function addCopyButton(element) {
+      if (!element.querySelector('.copy-btn')) {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy to Clipboard';
+        btn.onclick = function() {
+          const text = element.querySelector('pre').textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy to Clipboard', 2000);
+          });
+        };
+        element.appendChild(btn);
+      }
+    }
+
+    // DNS Lookup
+    async function performDNSLookup() {
+      const domain = document.getElementById('dns-domain').value.trim();
+      const type = document.getElementById('dns-type').value;
+
+      if (!domain) {
+        showResult('dns-result', 'Please enter a domain', 'error');
+        return;
+      }
+
+      showResult('dns-result', 'Querying DNS records...\n\nNote: Client-side DNS queries are limited.\nFor full DNS queries, use:\n• dig command: dig ' + domain + ' ' + type + '\n• nslookup: nslookup -type=' + type + ' ' + domain + '\n• Online tools: dnsdumpster.com, mxtoolbox.com', 'info');
+    }
+
+    // IP Geolocation
+    async function performIPLookup() {
+      const ip = document.getElementById('ip-address').value.trim();
+
+      if (!ip) {
+        showResult('ip-result', 'Please enter an IP address', 'error');
+        return;
+      }
+
+      showResult('ip-result', `Looking up: ${ip}\n\nRecommended free APIs:\n• ipapi.co: https://ipapi.co/${ip}/json/\n• ip-api.com: http://ip-api.com/json/${ip}\n• ipinfo.io: https://ipinfo.io/${ip}/json\n\nNote: Most IP geolocation APIs require server-side calls or API keys.`, 'info');
+    }
+
+    // SSL Certificate Check
+    function checkSSL() {
+      const domain = document.getElementById('ssl-domain').value.trim();
+
+      if (!domain) {
+        showResult('ssl-result', 'Please enter a domain', 'error');
+        return;
+      }
+
+      showResult('ssl-result', `SSL Certificate Analysis for: ${domain}\n\nClient-side SSL inspection is limited by browser security.\n\nRecommended tools:\n• SSLLabs: https://www.ssllabs.com/ssltest/analyze.html?d=${domain}\n• Certificate Search: https://crt.sh/?q=${domain}\n• OpenSSL CLI: openssl s_client -connect ${domain}:443 -showcerts`, 'info');
+    }
+
+    // Subdomain Generator
+    function generateSubdomains() {
+      const domain = document.getElementById('subdomain-domain').value.trim();
+
+      if (!domain) {
+        showResult('subdomain-result', 'Please enter a domain', 'error');
+        return;
+      }
+
+      const commonSubs = [
+        'www', 'mail', 'ftp', 'localhost', 'webmail', 'smtp', 'pop', 'ns1', 'ns2',
+        'admin', 'blog', 'dev', 'staging', 'api', 'test', 'portal', 'vpn',
+        'cdn', 'shop', 'store', 'support', 'forum', 'mobile', 'secure', 'beta',
+        'git', 'jenkins', 'jira', 'wiki', 'dashboard', 'monitoring', 'app',
+        'cpanel', 'webdisk', 'cloud', 'backup', 'mx', 'mysql', 'db', 'database'
+      ];
+
+      let output = `Common subdomains for ${domain}:\n\n`;
+      commonSubs.forEach(sub => {
+        output += `${sub}.${domain}\n`;
+      });
+      output += `\n\nRecommended Tools:\n• Sublist3r: https://github.com/aboul3la/Sublist3r\n• Amass: https://github.com/OWASP/Amass\n• crt.sh: https://crt.sh/?q=%25.${domain}`;
+
+      showResult('subdomain-result', output, 'success');
+    }
+
+    // URL Analyzer
+    function analyzeURL() {
+      const urlInput = document.getElementById('url-input').value.trim();
+
+      if (!urlInput) {
+        showResult('url-result', 'Please enter a URL', 'error');
+        return;
+      }
+
+      try {
+        const url = new URL(urlInput);
+        let output = `URL Analysis:\n\n`;
+        output += `Protocol: ${url.protocol}\n`;
+        output += `Hostname: ${url.hostname}\n`;
+        output += `Port: ${url.port || '(default)'}\n`;
+        output += `Pathname: ${url.pathname}\n`;
+        output += `Search: ${url.search || '(none)'}\n`;
+        output += `Hash: ${url.hash || '(none)'}\n\n`;
+
+        if (url.search) {
+          output += `Query Parameters:\n`;
+          url.searchParams.forEach((value, key) => {
+            output += `  ${key} = ${value}\n`;
+          });
+        }
+
+        showResult('url-result', output, 'success');
+      } catch (e) {
+        showResult('url-result', 'Invalid URL format', 'error');
+      }
+    }
+
+    // Port Lookup
+    function lookupPort() {
+      const port = parseInt(document.getElementById('port-number').value);
+
+      const commonPorts = {
+        20: 'FTP Data Transfer',
+        21: 'FTP Control',
+        22: 'SSH',
+        23: 'Telnet',
+        25: 'SMTP',
+        53: 'DNS',
+        80: 'HTTP',
+        110: 'POP3',
+        143: 'IMAP',
+        443: 'HTTPS',
+        445: 'SMB',
+        3306: 'MySQL',
+        3389: 'RDP',
+        5432: 'PostgreSQL',
+        5900: 'VNC',
+        6379: 'Redis',
+        8080: 'HTTP Alternate',
+        8443: 'HTTPS Alternate',
+        27017: 'MongoDB'
+      };
+
+      let output = `Port ${port}:\n\n`;
+      if (commonPorts[port]) {
+        output += `Service: ${commonPorts[port]}\n`;
+        output += `Status: Well-known port\n`;
+      } else if (port < 1024) {
+        output += `Range: System/Well-known ports (0-1023)\n`;
+      } else if (port < 49152) {
+        output += `Range: Registered ports (1024-49151)\n`;
+      } else {
+        output += `Range: Dynamic/Private ports (49152-65535)\n`;
+      }
+
+      showResult('port-result', output, 'info');
+    }
+
+    // Username Search
+    function searchUsername() {
+      const username = document.getElementById('username').value.trim();
+
+      if (!username) {
+        showResult('username-result', 'Please enter a username', 'error');
+        return;
+      }
+
+      const platforms = [
+        { name: 'GitHub', url: `https://github.com/${username}` },
+        { name: 'Twitter/X', url: `https://twitter.com/${username}` },
+        { name: 'Instagram', url: `https://instagram.com/${username}` },
+        { name: 'Reddit', url: `https://reddit.com/user/${username}` },
+        { name: 'LinkedIn', url: `https://linkedin.com/in/${username}` },
+        { name: 'TikTok', url: `https://tiktok.com/@${username}` },
+        { name: 'YouTube', url: `https://youtube.com/@${username}` },
+        { name: 'Medium', url: `https://medium.com/@${username}` },
+        { name: 'Twitch', url: `https://twitch.tv/${username}` },
+        { name: 'Pinterest', url: `https://pinterest.com/${username}` },
+        { name: 'DeviantArt', url: `https://www.deviantart.com/${username}` },
+        { name: 'Telegram', url: `https://t.me/${username}` }
+      ];
+
+      let output = `Username Search: ${username}\n\nCheck these platforms:\n\n`;
+      platforms.forEach(p => {
+        output += `${p.name}: ${p.url}\n`;
+      });
+      output += `\n\nAutomated Tools:\n• Sherlock: https://github.com/sherlock-project/sherlock\n• WhatsMyName: https://whatsmyname.app/\n• Namechk: https://namechk.com/`;
+
+      showResult('username-result', output, 'info');
+    }
+
+    // Social Media Links
+    function generateSocialLinks() {
+      const handle = document.getElementById('social-handle').value.trim();
+
+      if (!handle) {
+        showResult('social-result', 'Please enter a handle/username', 'error');
+        return;
+      }
+
+      let output = `Social Media Profile Links for: ${handle}\n\n`;
+      output += `Twitter/X: https://twitter.com/${handle}\n`;
+      output += `Instagram: https://instagram.com/${handle}\n`;
+      output += `Facebook: https://facebook.com/${handle}\n`;
+      output += `LinkedIn: https://linkedin.com/in/${handle}\n`;
+      output += `GitHub: https://github.com/${handle}\n`;
+      output += `TikTok: https://tiktok.com/@${handle}\n`;
+      output += `YouTube: https://youtube.com/@${handle}\n`;
+      output += `Snapchat: https://snapchat.com/add/${handle}\n`;
+
+      showResult('social-result', output, 'info');
+    }
+
+    // Reverse Image Search
+    function reverseImageSearch() {
+      const imageUrl = document.getElementById('image-url').value.trim();
+
+      if (!imageUrl) {
+        showResult('image-result', 'Please enter an image URL', 'error');
+        return;
+      }
+
+      const encodedUrl = encodeURIComponent(imageUrl);
+      let output = `Reverse Image Search URLs:\n\n`;
+      output += `Google Images:\nhttps://www.google.com/searchbyimage?image_url=${encodedUrl}\n\n`;
+      output += `Yandex:\nhttps://yandex.com/images/search?url=${encodedUrl}&rpt=imageview\n\n`;
+      output += `TinEye:\nhttps://tineye.com/search?url=${encodedUrl}\n\n`;
+      output += `Bing:\nhttps://www.bing.com/images/search?view=detailv2&iss=sbi&q=imgurl:${encodedUrl}`;
+
+      showResult('image-result', output, 'info');
+    }
+
+    // GitHub OSINT
+    function githubOSINT() {
+      const user = document.getElementById('github-user').value.trim();
+
+      if (!user) {
+        showResult('github-result', 'Please enter a GitHub username', 'error');
+        return;
+      }
+
+      let output = `GitHub OSINT for: ${user}\n\n`;
+      output += `Profile: https://github.com/${user}\n`;
+      output += `Repositories: https://github.com/${user}?tab=repositories\n`;
+      output += `Stars: https://github.com/${user}?tab=stars\n`;
+      output += `Followers: https://github.com/${user}?tab=followers\n`;
+      output += `Following: https://github.com/${user}?tab=following\n\n`;
+      output += `Advanced Searches:\n`;
+      output += `• All commits: https://github.com/search?q=author:${user}\n`;
+      output += `• All issues: https://github.com/search?q=author:${user}+type:issue\n`;
+      output += `• All PRs: https://github.com/search?q=author:${user}+type:pr\n`;
+      output += `• Code search: https://github.com/search?q=user:${user}\n`;
+
+      showResult('github-result', output, 'info');
+    }
+
+    // Email Header Analyzer
+    function analyzeEmailHeaders() {
+      const headers = document.getElementById('email-headers').value.trim();
+
+      if (!headers) {
+        showResult('email-header-result', 'Please paste email headers', 'error');
+        return;
+      }
+
+      let output = 'Email Header Analysis:\n\n';
+
+      // Extract common fields
+      const patterns = {
+        'From': /^From: (.+)$/mi,
+        'To': /^To: (.+)$/mi,
+        'Subject': /^Subject: (.+)$/mi,
+        'Date': /^Date: (.+)$/mi,
+        'Return-Path': /^Return-Path: (.+)$/mi,
+        'Message-ID': /^Message-ID: (.+)$/mi,
+        'X-Originating-IP': /^X-Originating-IP: \[?(.+?)\]?$/mi,
+        'Received': /^Received: (.+)$/mi
+      };
+
+      for (const [field, pattern] of Object.entries(patterns)) {
+        const match = headers.match(pattern);
+        if (match) {
+          output += `${field}: ${match[1]}\n`;
+        }
+      }
+
+      // Extract all Received headers (mail path)
+      const received = headers.match(/^Received: .+$/gmi);
+      if (received && received.length > 0) {
+        output += `\nMail Path (${received.length} hops):\n`;
+        received.forEach((r, i) => {
+          output += `${i + 1}. ${r.substring(10)}\n`;
+        });
+      }
+
+      showResult('email-header-result', output, 'success');
+    }
+
+    // Email Validator
+    function validateEmail() {
+      const email = document.getElementById('email-address').value.trim();
+
+      if (!email) {
+        showResult('email-validate-result', 'Please enter an email address', 'error');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValid = emailRegex.test(email);
+
+      let output = `Email Validation:\n\n`;
+      output += `Email: ${email}\n`;
+      output += `Format: ${isValid ? '✓ Valid' : '✗ Invalid'}\n\n`;
+
+      if (isValid) {
+        const [local, domain] = email.split('@');
+        output += `Local Part: ${local}\n`;
+        output += `Domain: ${domain}\n\n`;
+        output += `Further Checks:\n`;
+        output += `• MX Record Lookup: dig ${domain} MX\n`;
+        output += `• WHOIS: whois ${domain}\n`;
+        output += `• Breach Check: https://haveibeenpwned.com/`;
+      }
+
+      showResult('email-validate-result', output, isValid ? 'success' : 'error');
+    }
+
+    // Disposable Email Checker
+    function checkDisposableEmail() {
+      const email = document.getElementById('disposable-email').value.trim();
+
+      if (!email) {
+        showResult('disposable-result', 'Please enter an email address', 'error');
+        return;
+      }
+
+      const domain = email.split('@')[1];
+
+      // Common disposable email domains
+      const disposableDomains = [
+        'tempmail.com', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+        'throwaway.email', 'temp-mail.org', 'fakeinbox.com', 'maildrop.cc',
+        'yopmail.com', 'trashmail.com', 'getnada.com', 'sharklasers.com'
+      ];
+
+      const isDisposable = disposableDomains.includes(domain.toLowerCase());
+
+      let output = `Email: ${email}\n`;
+      output += `Domain: ${domain}\n`;
+      output += `Disposable: ${isDisposable ? '⚠️ Yes (likely)' : '✓ No (not in common list)'}\n\n`;
+      output += `Note: This is a basic check against common providers.\n`;
+      output += `For comprehensive checking, use:\n`;
+      output += `• https://disposable.debounce.io/\n`;
+      output += `• https://github.com/disposable-email-domains/disposable-email-domains`;
+
+      showResult('disposable-result', output, isDisposable ? 'warning' : 'success');
+    }
+
+    // Email Permutator
+    function generateEmailPermutations() {
+      const first = document.getElementById('first-name').value.trim().toLowerCase();
+      const last = document.getElementById('last-name').value.trim().toLowerCase();
+      const domain = document.getElementById('email-domain').value.trim().toLowerCase();
+
+      if (!first || !last || !domain) {
+        showResult('email-permute-result', 'Please fill in all fields', 'error');
+        return;
+      }
+
+      const permutations = [
+        `${first}@${domain}`,
+        `${last}@${domain}`,
+        `${first}.${last}@${domain}`,
+        `${first}_${last}@${domain}`,
+        `${first}${last}@${domain}`,
+        `${last}.${first}@${domain}`,
+        `${last}${first}@${domain}`,
+        `${first[0]}${last}@${domain}`,
+        `${first}${last[0]}@${domain}`,
+        `${first[0]}.${last}@${domain}`,
+        `${first}.${last[0]}@${domain}`,
+        `${last}${first[0]}@${domain}`,
+        `${first}${last.substring(0, 3)}@${domain}`,
+        `${first.substring(0, 3)}${last}@${domain}`
+      ];
+
+      let output = `Email Permutations for ${first} ${last} @${domain}:\n\n`;
+      permutations.forEach((email, i) => {
+        output += `${i + 1}. ${email}\n`;
+      });
+
+      showResult('email-permute-result', output, 'success');
+    }
+
+    // Hash Identifier
+    function identifyHash() {
+      const hash = document.getElementById('hash-input').value.trim();
+
+      if (!hash) {
+        showResult('hash-result', 'Please enter a hash', 'error');
+        return;
+      }
+
+      const len = hash.length;
+      const hasOnlyHex = /^[a-fA-F0-9]+$/.test(hash);
+
+      let output = `Hash Analysis:\n\n`;
+      output += `Length: ${len} characters\n`;
+      output += `Format: ${hasOnlyHex ? 'Hexadecimal' : 'Mixed/Unknown'}\n\n`;
+
+      if (hasOnlyHex) {
+        output += `Possible Hash Types:\n`;
+        switch(len) {
+          case 32:
+            output += '• MD5 (most likely)\n• NTLM\n• MD4\n';
+            break;
+          case 40:
+            output += '• SHA-1 (most likely)\n• RIPEMD-160\n';
+            break;
+          case 56:
+            output += '• SHA-224\n';
+            break;
+          case 64:
+            output += '• SHA-256 (most likely)\n• BLAKE2s-256\n';
+            break;
+          case 96:
+            output += '• SHA-384\n';
+            break;
+          case 128:
+            output += '• SHA-512 (most likely)\n• BLAKE2b-512\n';
+            break;
+          default:
+            output += `• Unknown (uncommon length: ${len})\n`;
+        }
+      } else {
+        output += 'Possible Non-Hex Formats:\n';
+        if (hash.includes('$')) {
+          output += '• Unix password hash (with salt)\n';
+        }
+        if (hash.match(/^[A-Za-z0-9+/]+=*$/)) {
+          output += '• Base64 encoded\n';
+        }
+      }
+
+      output += `\nHash Lookup Tools:\n`;
+      output += `• CrackStation: https://crackstation.net/\n`;
+      output += `• Hashes.com: https://hashes.com/\n`;
+      output += `• hashcat (offline): hashcat -m [mode] hash.txt wordlist.txt`;
+
+      showResult('hash-result', output, 'info');
+    }
+
+    // Base64 Encode/Decode
+    function encodeBase64() {
+      const input = document.getElementById('base64-input').value;
+
+      if (!input) {
+        showResult('base64-result', 'Please enter text to encode', 'error');
+        return;
+      }
+
+      try {
+        const encoded = btoa(input);
+        showResult('base64-result', `Encoded:\n${encoded}`, 'success');
+      } catch (e) {
+        showResult('base64-result', 'Error encoding: ' + e.message, 'error');
+      }
+    }
+
+    function decodeBase64() {
+      const input = document.getElementById('base64-input').value.trim();
+
+      if (!input) {
+        showResult('base64-result', 'Please enter Base64 to decode', 'error');
+        return;
+      }
+
+      try {
+        const decoded = atob(input);
+        showResult('base64-result', `Decoded:\n${decoded}`, 'success');
+      } catch (e) {
+        showResult('base64-result', 'Error decoding: Invalid Base64', 'error');
+      }
+    }
+
+    // Hash Generator
+    async function generateHash() {
+      const text = document.getElementById('hash-text').value;
+      const algorithm = document.getElementById('hash-algorithm').value;
+
+      if (!text) {
+        showResult('hash-gen-result', 'Please enter text to hash', 'error');
+        return;
+      }
+
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest(algorithm, data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        let output = `${algorithm} Hash:\n\n${hashHex}\n\n`;
+        output += `Input length: ${text.length} characters\n`;
+        output += `Hash length: ${hashHex.length} characters`;
+
+        showResult('hash-gen-result', output, 'success');
+      } catch (e) {
+        showResult('hash-gen-result', 'Error generating hash: ' + e.message, 'error');
+      }
+    }
+
+    // JWT Decoder
+    function decodeJWT() {
+      const jwt = document.getElementById('jwt-input').value.trim();
+
+      if (!jwt) {
+        showResult('jwt-result', 'Please enter a JWT token', 'error');
+        return;
+      }
+
+      try {
+        const parts = jwt.split('.');
+        if (parts.length !== 3) {
+          throw new Error('Invalid JWT format');
+        }
+
+        const header = JSON.parse(atob(parts[0]));
+        const payload = JSON.parse(atob(parts[1]));
+
+        let output = 'JWT Decoded:\n\n';
+        output += '=== HEADER ===\n';
+        output += JSON.stringify(header, null, 2);
+        output += '\n\n=== PAYLOAD ===\n';
+        output += JSON.stringify(payload, null, 2);
+        output += '\n\n=== SIGNATURE ===\n';
+        output += parts[2];
+
+        if (payload.exp) {
+          const expDate = new Date(payload.exp * 1000);
+          const now = new Date();
+          output += '\n\n=== EXPIRATION ===\n';
+          output += `Expires: ${expDate.toISOString()}\n`;
+          output += `Status: ${expDate > now ? 'Valid' : 'Expired'}`;
+        }
+
+        showResult('jwt-result', output, 'success');
+      } catch (e) {
+        showResult('jwt-result', 'Error decoding JWT: ' + e.message, 'error');
+      }
+    }
+
+    // HTTP Headers Viewer
+    async function viewHeaders() {
+      const url = document.getElementById('headers-url').value.trim();
+
+      if (!url) {
+        showResult('headers-result', 'Please enter a URL', 'error');
+        return;
+      }
+
+      try {
+        showResult('headers-result', 'Fetching headers...\n\nNote: This may fail due to CORS restrictions.\nFor unrestricted header viewing, use:\n• curl -I ' + url + '\n• Browser DevTools Network tab\n• Postman/Insomnia', 'info');
+
+        const response = await fetch(url, { method: 'HEAD' });
+        let output = `Headers for: ${url}\n\nStatus: ${response.status} ${response.statusText}\n\n`;
+
+        response.headers.forEach((value, key) => {
+          output += `${key}: ${value}\n`;
+        });
+
+        showResult('headers-result', output, 'success');
+      } catch (e) {
+        showResult('headers-result', `Error: ${e.message}\n\nCORS restrictions prevent direct header viewing.\n\nUse instead:\n• curl -I ${url}\n• Browser DevTools Network tab\n• wget --server-response --spider ${url}`, 'error');
+      }
+    }
+
+    // Get My IP
+    async function getMyIP() {
+      showResult('myip-result', 'Fetching your IP information...', 'info');
+
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+
+        let output = `Your Public IP: ${data.ip}\n\n`;
+        output += `Browser: ${navigator.userAgent}\n`;
+        output += `Platform: ${navigator.platform}\n`;
+        output += `Language: ${navigator.language}\n`;
+        output += `Screen: ${screen.width}x${screen.height}\n`;
+        output += `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n\n`;
+        output += `For detailed geolocation:\n`;
+        output += `• https://ipapi.co/${data.ip}/json/\n`;
+        output += `• https://ipinfo.io/${data.ip}/json`;
+
+        showResult('myip-result', output, 'success');
+      } catch (e) {
+        showResult('myip-result', 'Error fetching IP. Check your internet connection.', 'error');
+      }
+    }
+
+    // User Agent Analyzer
+    function analyzeUserAgent() {
+      const ua = document.getElementById('useragent-input').value.trim();
+
+      if (!ua) {
+        showResult('useragent-result', 'Please enter a user agent string', 'error');
+        return;
+      }
+
+      let output = `User Agent Analysis:\n\n`;
+      output += `${ua}\n\n`;
+
+      // Basic parsing
+      if (ua.includes('Windows')) output += 'OS: Windows\n';
+      if (ua.includes('Mac OS X')) output += 'OS: macOS\n';
+      if (ua.includes('Linux')) output += 'OS: Linux\n';
+      if (ua.includes('Android')) output += 'OS: Android\n';
+      if (ua.includes('iPhone') || ua.includes('iPad')) output += 'OS: iOS\n';
+
+      if (ua.includes('Chrome')) output += 'Browser: Chrome\n';
+      if (ua.includes('Firefox')) output += 'Browser: Firefox\n';
+      if (ua.includes('Safari') && !ua.includes('Chrome')) output += 'Browser: Safari\n';
+      if (ua.includes('Edge')) output += 'Browser: Edge\n';
+
+      if (ua.includes('Mobile')) output += 'Type: Mobile Device\n';
+      if (ua.includes('Tablet')) output += 'Type: Tablet\n';
+
+      showResult('useragent-result', output, 'info');
+    }
+
+    function showMyUserAgent() {
+      document.getElementById('useragent-input').value = navigator.userAgent;
+      analyzeUserAgent();
+    }
+
+    // CIDR Calculator
+    function calculateCIDR() {
+      const cidr = document.getElementById('cidr-input').value.trim();
+
+      if (!cidr) {
+        showResult('cidr-result', 'Please enter CIDR notation', 'error');
+        return;
+      }
+
+      try {
+        const [ip, bits] = cidr.split('/');
+        const bitsNum = parseInt(bits);
+
+        if (!bitsNum || bitsNum < 0 || bitsNum > 32) {
+          throw new Error('Invalid CIDR bits');
+        }
+
+        const hosts = Math.pow(2, 32 - bitsNum) - 2;
+        const netmask = 32 - bitsNum;
+
+        let output = `CIDR Analysis: ${cidr}\n\n`;
+        output += `Network: ${ip}\n`;
+        output += `CIDR Bits: /${bitsNum}\n`;
+        output += `Usable Hosts: ${hosts > 0 ? hosts : 1}\n`;
+        output += `Total Addresses: ${Math.pow(2, 32 - bitsNum)}\n`;
+        output += `Subnet Mask Bits: ${bitsNum}\n`;
+        output += `Host Bits: ${32 - bitsNum}\n\n`;
+        output += `For detailed calculation:\n`;
+        output += `• ipcalc ${cidr}\n`;
+        output += `• https://www.subnet-calculator.com/`;
+
+        showResult('cidr-result', output, 'success');
+      } catch (e) {
+        showResult('cidr-result', 'Invalid CIDR format. Use: 192.168.1.0/24', 'error');
+      }
+    }
+
+    // MAC Address Lookup
+    function lookupMAC() {
+      const mac = document.getElementById('mac-input').value.trim().toUpperCase();
+
+      if (!mac) {
+        showResult('mac-result', 'Please enter a MAC address', 'error');
+        return;
+      }
+
+      const oui = mac.replace(/[:-]/g, '').substring(0, 6);
+
+      let output = `MAC Address: ${mac}\n`;
+      output += `OUI (first 3 bytes): ${oui}\n\n`;
+      output += `The OUI identifies the manufacturer.\n\n`;
+      output += `Lookup Tools:\n`;
+      output += `• https://maclookup.app/macaddress/${oui}\n`;
+      output += `• https://www.wireshark.org/tools/oui-lookup.html\n`;
+      output += `• https://api.macvendors.com/${mac}`;
+
+      showResult('mac-result', output, 'info');
+    }
+
+    // Timestamp Converter
+    function convertTimestamp() {
+      const timestamp = document.getElementById('timestamp-input').value.trim();
+
+      if (!timestamp) {
+        showResult('timestamp-result', 'Please enter a timestamp', 'error');
+        return;
+      }
+
+      try {
+        const ts = parseInt(timestamp);
+        const date = new Date(ts * 1000);
+
+        let output = `Timestamp: ${ts}\n\n`;
+        output += `UTC: ${date.toUTCString()}\n`;
+        output += `ISO: ${date.toISOString()}\n`;
+        output += `Local: ${date.toLocaleString()}\n`;
+        output += `Locale Date: ${date.toLocaleDateString()}\n`;
+        output += `Locale Time: ${date.toLocaleTimeString()}\n`;
+
+        showResult('timestamp-result', output, 'success');
+      } catch (e) {
+        showResult('timestamp-result', 'Invalid timestamp format', 'error');
+      }
+    }
+
+    function getCurrentTimestamp() {
+      const now = Math.floor(Date.now() / 1000);
+      document.getElementById('timestamp-input').value = now;
+      convertTimestamp();
+    }
+
+    // File Hash Calculator
+    async function calculateFileHash() {
+      const fileInput = document.getElementById('file-input');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        showResult('file-hash-result', 'Please select a file', 'error');
+        return;
+      }
+
+      showResult('file-hash-result', `Calculating hashes for: ${file.name}\nSize: ${file.size} bytes\n\nPlease wait...`, 'info');
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+
+        const sha256 = await crypto.subtle.digest('SHA-256', arrayBuffer);
+        const sha256Array = Array.from(new Uint8Array(sha256));
+        const sha256Hex = sha256Array.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        const sha1 = await crypto.subtle.digest('SHA-1', arrayBuffer);
+        const sha1Array = Array.from(new Uint8Array(sha1));
+        const sha1Hex = sha1Array.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        let output = `File: ${file.name}\n`;
+        output += `Size: ${file.size} bytes\n`;
+        output += `Type: ${file.type || 'unknown'}\n`;
+        output += `Modified: ${new Date(file.lastModified).toLocaleString()}\n\n`;
+        output += `SHA-256:\n${sha256Hex}\n\n`;
+        output += `SHA-1:\n${sha1Hex}\n\n`;
+        output += `Search hashes on:\n`;
+        output += `• VirusTotal: https://www.virustotal.com/\n`;
+        output += `• Hybrid Analysis: https://hybrid-analysis.com/`;
+
+        showResult('file-hash-result', output, 'success');
+      } catch (e) {
+        showResult('file-hash-result', 'Error calculating hash: ' + e.message, 'error');
+      }
+    }
+
+    // String Extractor
+    async function extractStrings() {
+      const fileInput = document.getElementById('string-file-input');
+      const file = fileInput.files[0];
+      const minLength = parseInt(document.getElementById('min-string-length').value) || 4;
+
+      if (!file) {
+        showResult('string-result', 'Please select a file', 'error');
+        return;
+      }
+
+      showResult('string-result', `Extracting strings from: ${file.name}\nMin length: ${minLength}\n\nPlease wait...`, 'info');
+
+      try {
+        const text = await file.text();
+        const printableRegex = new RegExp(`[ -~]{${minLength},}`, 'g');
+        const strings = text.match(printableRegex) || [];
+
+        // Limit output
+        const maxStrings = 500;
+        const displayStrings = strings.slice(0, maxStrings);
+
+        let output = `File: ${file.name}\n`;
+        output += `Size: ${file.size} bytes\n`;
+        output += `Strings found: ${strings.length}\n`;
+        output += `Showing: ${displayStrings.length}\n\n`;
+        output += displayStrings.join('\n');
+
+        if (strings.length > maxStrings) {
+          output += `\n\n... (${strings.length - maxStrings} more strings not shown)`;
+        }
+
+        showResult('string-result', output, 'success');
+      } catch (e) {
+        showResult('string-result', 'Error extracting strings: ' + e.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>
