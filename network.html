@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NET_INTERCEPT // Network Analysis</title>
+    <meta name="description" content="Browser-based network traffic analyzer. Inspect HTTP headers, performance metrics, and connection details.">
+    <!-- Accessibility -->
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="canonical" href="https://bobgnarly420.github.io/network.html">
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            border: 2px solid #3b82f6;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: #000;
+        }
+
+        h1 {
+            color: #3b82f6;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .nav {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .nav a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            color: #fff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #0f0f0f;
+            border: 2px solid #333;
+            padding: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: #3b82f6;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: #3b82f6;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .panel {
+            border: 2px solid #333;
+            background: #0f0f0f;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel h2 {
+            color: #3b82f6;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #3b82f6;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        button {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .info {
+            background: #1a1a1a;
+            border-left: 3px solid #3b82f6;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .info code {
+            background: #000;
+            color: #3b82f6;
+            padding: 0.2rem 0.4rem;
+            border: 1px solid #333;
+        }
+
+        pre {
+            background: #000;
+            border: 1px solid #333;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .status {
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #333;
+            background: #000;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .status.success {
+            display: block;
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .status.error {
+            display: block;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .log-entry {
+            padding: 0.75rem;
+            border-bottom: 1px solid #222;
+            font-size: 0.85rem;
+        }
+
+        .log-entry:hover {
+            background: #1a1a1a;
+        }
+
+        .log-time {
+            color: #666;
+            margin-right: 1rem;
+        }
+
+        .log-method {
+            color: #3b82f6;
+            margin-right: 1rem;
+            font-weight: 700;
+        }
+
+        .log-url {
+            color: #888;
+        }
+
+        .log-status {
+            color: #22c55e;
+            margin-left: 1rem;
+        }
+
+        .connections-list {
+            background: #000;
+            border: 1px solid #333;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 0.75rem;
+            background: #000;
+            color: #3b82f6;
+            border-bottom: 2px solid #333;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1rem;
+        }
+
+        .table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #222;
+            color: #888;
+        }
+
+        .table tr:hover {
+            background: #1a1a1a;
+        }
+
+        @media (max-width: 968px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="main-heading">📡 NET_INTERCEPT</h1>
+            <p class="subtitle" role="doc-subtitle">Network Analysis // HTTP Inspector // Performance Monitor</p>
+            <div class="nav">
+                <a href="/" aria-label="Return to portfolio homepage">← Back to Portfolio</a>
+            </div>
+        </header>
+
+        <div class="info" role="note" aria-label="Tool information">
+            <strong>OPERATIONAL PROTOCOL:</strong> This tool monitors and analyzes network traffic from your browser.
+            It displays HTTP headers, connection details, and performance metrics using the <code>Performance API</code> and <code>Fetch API</code>.
+            <strong>Privacy:</strong> All analysis happens client-side. No data is sent to external servers.
+            <br><br>
+            <strong>CORS Limitation:</strong> Due to browser security (CORS policy), this tool can only analyze URLs that allow cross-origin requests. Some APIs (like GitHub API) work, but many websites block cross-origin analysis.
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Active Connections</div>
+                <div class="stat-value" id="activeConnections">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Requests Logged</div>
+                <div class="stat-value" id="requestCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Data Transfer</div>
+                <div class="stat-value" id="dataTransfer">0 KB</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Response Time</div>
+                <div class="stat-value" id="avgResponseTime">0 ms</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>[ PROBE ] Analyze URL</h2>
+
+            <div class="form-group">
+                <label for="targetUrl">Target URL</label>
+                <input
+                    type="url"
+                    id="targetUrl"
+                    name="targetUrl"
+                    placeholder="https://example.com"
+                    value="https://api.github.com/users/github"
+                    aria-describedby="url-help"
+                    required>
+                <small id="url-help" style="color: #666; font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                    Enter a URL that allows CORS (e.g., public APIs)
+                </small>
+            </div>
+
+            <button onclick="analyzeUrl()" aria-label="Analyze the target URL">ANALYZE REQUEST</button>
+
+            <div class="status" id="analyzeStatus"></div>
+
+            <div id="analysisResults"></div>
+        </div>
+
+        <div class="grid">
+            <div class="panel">
+                <h2>[ MONITOR ] Request Log</h2>
+                <div class="connections-list" id="requestLog">
+                    <div style="color: #666; text-align: center; padding: 2rem;">
+                        No requests logged yet. Analyze a URL to begin monitoring.
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>[ METRICS ] Performance Resources</h2>
+                <div class="connections-list" id="performanceResources">
+                    <div style="color: #666; text-align: center; padding: 2rem;">
+                        Loading performance metrics...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let requestCounter = 0;
+        let totalDataTransfer = 0;
+        let responseTimes = [];
+
+        function updateStats() {
+            document.getElementById('requestCount').textContent = requestCounter;
+            document.getElementById('dataTransfer').textContent = (totalDataTransfer / 1024).toFixed(2) + ' KB';
+
+            if (responseTimes.length > 0) {
+                const avg = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+                document.getElementById('avgResponseTime').textContent = avg.toFixed(0) + ' ms';
+            }
+        }
+
+        function addLogEntry(method, url, status, responseTime, size) {
+            const logContainer = document.getElementById('requestLog');
+
+            if (requestCounter === 0) {
+                logContainer.innerHTML = '';
+            }
+
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+
+            const time = new Date().toLocaleTimeString();
+            const statusColor = status >= 200 && status < 300 ? '#22c55e' : '#ef4444';
+
+            entry.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-method">${method}</span>
+                <span class="log-url">${url.substring(0, 60)}${url.length > 60 ? '...' : ''}</span>
+                <span class="log-status" style="color: ${statusColor}">${status}</span>
+                <span class="log-time">${responseTime}ms</span>
+            `;
+
+            logContainer.insertBefore(entry, logContainer.firstChild);
+
+            requestCounter++;
+            totalDataTransfer += size || 0;
+            responseTimes.push(responseTime);
+            updateStats();
+        }
+
+        async function analyzeUrl() {
+            const url = document.getElementById('targetUrl').value;
+            const status = document.getElementById('analyzeStatus');
+            const results = document.getElementById('analysisResults');
+
+            status.className = 'status';
+            status.style.display = 'none';
+            results.innerHTML = '';
+
+            if (!url) {
+                status.className = 'status error';
+                status.textContent = 'ERROR: Please enter a URL';
+                return;
+            }
+
+            try {
+                const startTime = performance.now();
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const endTime = performance.now();
+                const responseTime = Math.round(endTime - startTime);
+                const data = await response.text();
+                const size = new Blob([data]).size;
+
+                // Log the request
+                addLogEntry('GET', url, response.status, responseTime, size);
+
+                // Display results
+                status.className = 'status success';
+                status.textContent = `SUCCESS: Received ${response.status} ${response.statusText} in ${responseTime}ms`;
+
+                // Headers
+                let headersHtml = '<h3 style="color: #3b82f6; margin-top: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; font-size: 1rem;">Response Headers</h3>';
+                headersHtml += '<table class="table"><thead><tr><th>Header</th><th>Value</th></tr></thead><tbody>';
+
+                response.headers.forEach((value, key) => {
+                    headersHtml += `<tr><td>${key}</td><td>${value}</td></tr>`;
+                });
+                headersHtml += '</tbody></table>';
+
+                // Connection info
+                let infoHtml = '<h3 style="color: #3b82f6; margin-top: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; font-size: 1rem;">Connection Details</h3>';
+                infoHtml += '<table class="table"><tbody>';
+                infoHtml += `<tr><td>URL</td><td>${response.url}</td></tr>`;
+                infoHtml += `<tr><td>Status</td><td>${response.status} ${response.statusText}</td></tr>`;
+                infoHtml += `<tr><td>Type</td><td>${response.type}</td></tr>`;
+                infoHtml += `<tr><td>Redirected</td><td>${response.redirected ? 'Yes' : 'No'}</td></tr>`;
+                infoHtml += `<tr><td>Response Time</td><td>${responseTime} ms</td></tr>`;
+                infoHtml += `<tr><td>Content Size</td><td>${(size / 1024).toFixed(2)} KB</td></tr>`;
+                infoHtml += '</tbody></table>';
+
+                // Response preview (first 500 chars)
+                let previewHtml = '<h3 style="color: #3b82f6; margin-top: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; font-size: 1rem;">Response Preview</h3>';
+                previewHtml += `<pre>${data.substring(0, 500)}${data.length > 500 ? '...' : ''}</pre>`;
+
+                results.innerHTML = infoHtml + headersHtml + previewHtml;
+
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent = 'ERROR: ' + error.message;
+
+                addLogEntry('GET', url, 0, 0, 0);
+            }
+        }
+
+        // Load performance resources
+        function loadPerformanceResources() {
+            const container = document.getElementById('performanceResources');
+            const resources = performance.getEntriesByType('resource');
+
+            if (resources.length === 0) {
+                setTimeout(loadPerformanceResources, 1000);
+                return;
+            }
+
+            let html = '<table class="table"><thead><tr><th>Resource</th><th>Type</th><th>Duration</th><th>Size</th></tr></thead><tbody>';
+
+            resources.slice(0, 20).forEach(resource => {
+                const name = resource.name.split('/').pop() || resource.name;
+                const duration = Math.round(resource.duration);
+                const size = resource.transferSize ? (resource.transferSize / 1024).toFixed(2) + ' KB' : 'cached';
+                const type = resource.initiatorType;
+
+                html += `<tr>
+                    <td>${name.substring(0, 30)}${name.length > 30 ? '...' : ''}</td>
+                    <td>${type}</td>
+                    <td>${duration}ms</td>
+                    <td>${size}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            document.getElementById('activeConnections').textContent = resources.length;
+        }
+
+        // Current browser info
+        function displayBrowserInfo() {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+            if (connection) {
+                console.log('Connection type:', connection.effectiveType);
+                console.log('Downlink:', connection.downlink, 'Mbps');
+                console.log('RTT:', connection.rtt, 'ms');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            loadPerformanceResources();
+            displayBrowserInfo();
+        });
+
+        // Auto-refresh performance metrics every 5 seconds
+        setInterval(loadPerformanceResources, 5000);
+    </script>
+</body>
+</html>

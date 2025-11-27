@@ -1,486 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BobGnarly420 - OSINT Toolchain & Security Research</title>
-  <meta name="description" content="Client-side OSINT toolchain with 30+ intelligence gathering tools. Domain analysis, social media OSINT, email intelligence, hash analysis, and more.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BobGnarly420 // SYSTEM_READY</title>
+    <meta name="description" content="Client-side OSINT toolchain, performance tooling, and security research. Building the tools that build the web.">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 
-    body {
-      font-family: 'Courier New', Courier, monospace;
-      line-height: 1.6;
-      color: #00ff00;
-      background: #000000;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      letter-spacing: 0.5px;
-    }
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    header {
-      margin-bottom: 3rem;
-      padding: 2rem;
-      border: 3px solid #00ff00;
-      background: #000000;
-      position: relative;
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    header::before {
-      content: "█████████████████████████████████████████████████";
-      display: block;
-      color: #ffffff;
-      font-size: 0.6rem;
-      margin-bottom: 1rem;
-      overflow: hidden;
-      white-space: nowrap;
-    }
+    <!-- Google Fonts: JetBrains Mono for that dev/hacker aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: 0.3rem;
-    }
+    <style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+        }
 
-    .subtitle {
-      font-size: 1.2rem;
-      color: #00ff00;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-    }
+        .glitch-text {
+            position: relative;
+        }
 
-    .contact-links {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
-    .contact-links a {
-      color: #00ff00;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 0.5rem 1rem;
-      border: 2px solid #00ff00;
-      text-transform: uppercase;
-      transition: all 0.3s;
-    }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
 
-    .contact-links a:hover {
-      background: #00ff00;
-      color: #000000;
-    }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
 
-    h2 {
-      font-size: 2rem;
-      margin: 3rem 0 1.5rem;
-      font-weight: 700;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: 0.2rem;
-      border-bottom: 2px solid #00ff00;
-      padding-bottom: 0.5rem;
-    }
+        @keyframes glitch-anim {
+            0% { clip: rect(13px, 9999px, 81px, 0); }
+            5% { clip: rect(89px, 9999px, 12px, 0); }
+            10% { clip: rect(48px, 9999px, 63px, 0); }
+            100% { clip: rect(1px, 9999px, 1px, 0); }
+        }
 
-    h2::before {
-      content: ">> ";
-      color: #00ff00;
-    }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 11px, 0); }
+            5% { clip: rect(23px, 9999px, 76px, 0); }
+            10% { clip: rect(8px, 9999px, 32px, 0); }
+            100% { clip: rect(1px, 9999px, 1px, 0); }
+        }
 
-    .project {
-      margin-bottom: 3rem;
-      padding: 2rem;
-      border: 3px solid #ffffff;
-      background: #0a0a0a;
-      position: relative;
-    }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(51, 255, 0, 0.02) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
 
-    .project::before {
-      content: "CRITICAL ALERT: PROJECT DATA";
-      position: absolute;
-      top: -1rem;
-      left: 1rem;
-      background: #000000;
-      padding: 0 1rem;
-      color: #ffffff;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1rem;
-    }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100%; }
+        }
 
-    .project h3 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: 0.15rem;
-    }
-
-    .project-meta {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .project-meta a {
-      color: #000000;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 0.5rem 1rem;
-      border: 2px solid #00ff00;
-      background: #00ff00;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      transition: all 0.3s;
-    }
-
-    .project-meta a:hover {
-      background: #000000;
-      color: #00ff00;
-    }
-
-    .project p {
-      margin-bottom: 1rem;
-      color: #ffffff;
-    }
-
-    .project strong {
-      color: #00ff00;
-    }
-
-    .tech-stack {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid #333;
-    }
-
-    .tech-tag {
-      padding: 0.4rem 1rem;
-      background: #000000;
-      border: 1px solid #00ff00;
-      font-size: 0.85rem;
-      color: #00ff00;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 1.5rem;
-    }
-
-    .skill-category {
-      border: 2px solid #00ff00;
-      padding: 1.5rem;
-      background: #0a0a0a;
-    }
-
-    .skill-category h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: 0.1rem;
-      border-bottom: 1px solid #00ff00;
-      padding-bottom: 0.5rem;
-    }
-
-    .skill-category ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .skill-category li {
-      padding: 0.5rem 0;
-      color: #00ff00;
-    }
-
-    .skill-category li:before {
-      content: "[ ]> ";
-      color: #ffffff;
-      font-weight: bold;
-    }
-
-    code {
-      background: #0a0a0a;
-      padding: 0.2rem 0.4rem;
-      border: 1px solid #333;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.9em;
-      color: #00ff00;
-    }
-
-    pre {
-      background: #0a0a0a;
-      padding: 1.5rem;
-      border: 2px solid #00ff00;
-      overflow-x: auto;
-      margin: 1rem 0;
-      color: #00ff00;
-    }
-
-    pre code {
-      background: none;
-      padding: 0;
-      border: none;
-    }
-
-    footer {
-      margin-top: 4rem;
-      padding: 2rem;
-      border: 2px solid #ffffff;
-      text-align: center;
-      color: #ffffff;
-      font-size: 0.9rem;
-      background: #0a0a0a;
-    }
-
-    footer::before {
-      content: "END OF TRANSMISSION";
-      display: block;
-      margin-bottom: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.2rem;
-    }
-
-    footer a {
-      color: #00ff00;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    ul {
-      margin-left: 2rem;
-      margin-bottom: 1rem;
-      color: #ffffff;
-    }
-
-    ul li {
-      margin: 0.5rem 0;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-        letter-spacing: 0.2rem;
-      }
-
-      .contact-links {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .skills-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22c55e;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>BobGnarly420</h1>
-    <p class="subtitle">OSINT Tools & Security Research | Full-Stack Developer</p>
-    <div class="contact-links">
-      <a href="/osint.html" style="background: #0066cc; color: white; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 600;">🔍 Launch OSINT Toolchain</a>
-      <a href="https://github.com/BobGnarly420">GitHub</a>
-      <a href="mailto:contact@example.com">Email</a>
-    </div>
-  </header>
+    <div id="root"></div>
 
-  <section>
-    <h2>Featured: OSINT Toolchain</h2>
-    <div class="project" style="border: 2px solid #0066cc;">
-      <h3>🔍 Client-Side OSINT Toolchain</h3>
-      <div class="project-meta">
-        <a href="/osint.html" style="background: #0066cc; color: white; border: none;">Launch Toolchain</a>
-      </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-      <p><strong>Description:</strong> Comprehensive web-based Open Source Intelligence (OSINT) gathering and analysis platform. All tools run entirely client-side in your browser - no backend required.</p>
+        // --- Inline Icon Components (Replaces external dependency for reliability) ---
+        const IconBase = ({ children, size = 24, className = "" }) => (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={size}
+                height={size}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={className}
+            >
+                {children}
+            </svg>
+        );
 
-      <p><strong>Categories:</strong></p>
-      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
-        <li><strong>Domain/IP Intelligence:</strong> DNS lookup, IP geolocation, SSL certificates, subdomain finder, URL analyzer, port reference</li>
-        <li><strong>Social Media OSINT:</strong> Username search across 12+ platforms, profile link generator, reverse image search, GitHub intelligence</li>
-        <li><strong>Email Intelligence:</strong> Header analyzer, validator, disposable email detector, email permutator</li>
-        <li><strong>Hash Analysis:</strong> Hash identifier, Base64 encoder/decoder, hash generator (SHA-256/SHA-1/SHA-512), JWT decoder</li>
-        <li><strong>Network Tools:</strong> HTTP headers viewer, IP lookup, user agent analyzer, CIDR calculator, MAC address lookup, timestamp converter</li>
-        <li><strong>Metadata & Files:</strong> EXIF info, document metadata analysis, file hash calculator, string extractor</li>
-        <li><strong>OSINT Resources:</strong> Curated links to 30+ external tools and frameworks</li>
-      </ul>
+        const Icons = {
+            Shield: (props) => (
+                <IconBase {...props}>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </IconBase>
+            ),
+            Activity: (props) => (
+                <IconBase {...props}>
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </IconBase>
+            ),
+            Cpu: (props) => (
+                <IconBase {...props}>
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+                    <rect x="9" y="9" width="6" height="6"/>
+                    <line x1="9" y1="1" x2="9" y2="4"/>
+                    <line x1="15" y1="1" x2="15" y2="4"/>
+                    <line x1="9" y1="20" x2="9" y2="23"/>
+                    <line x1="15" y1="20" x2="15" y2="23"/>
+                    <line x1="20" y1="9" x2="23" y2="9"/>
+                    <line x1="20" y1="14" x2="23" y2="14"/>
+                    <line x1="1" y1="9" x2="4" y2="9"/>
+                    <line x1="1" y1="14" x2="4" y2="14"/>
+                </IconBase>
+            ),
+            Lock: (props) => (
+                <IconBase {...props}>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </IconBase>
+            ),
+            Database: (props) => (
+                <IconBase {...props}>
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </IconBase>
+            ),
+            Eye: (props) => (
+                <IconBase {...props}>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </IconBase>
+            ),
+            Layers: (props) => (
+                <IconBase {...props}>
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                </IconBase>
+            ),
+            BarChart2: (props) => (
+                <IconBase {...props}>
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </IconBase>
+            ),
+            FileCode: (props) => (
+                <IconBase {...props}>
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <path d="m10 13-2 2 2 2"/>
+                    <path d="m14 17 2-2-2-2"/>
+                </IconBase>
+            ),
+            Wifi: (props) => (
+                <IconBase {...props}>
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                </IconBase>
+            ),
+            ExternalLink: (props) => (
+                <IconBase {...props}>
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </IconBase>
+            ),
+            Terminal: (props) => (
+                <IconBase {...props}>
+                    <polyline points="4 17 10 11 4 5"/>
+                    <line x1="12" y1="19" x2="20" y2="19"/>
+                </IconBase>
+            ),
+            Github: (props) => (
+                <IconBase {...props}>
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                </IconBase>
+            )
+        };
 
-      <p><strong>Features:</strong></p>
-      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
-        <li>30+ OSINT tools in one interface</li>
-        <li>100% client-side - runs entirely in browser</li>
-        <li>Dark theme optimized for extended use</li>
-        <li>Copy results to clipboard</li>
-        <li>No data sent to external servers</li>
-        <li>Mobile responsive design</li>
-        <li>Educational resources included</li>
-      </ul>
+        const { Terminal, Shield, Eye, BarChart2, Cpu, FileCode, ExternalLink, Lock, Activity, Layers, Wifi, Database, Github } = Icons;
 
-      <div class="tech-stack">
-        <span class="tech-tag">OSINT</span>
-        <span class="tech-tag">Security Research</span>
-        <span class="tech-tag">JavaScript</span>
-        <span class="tech-tag">Web Crypto API</span>
-        <span class="tech-tag">Client-Side</span>
-      </div>
-    </div>
-  </section>
+        // --- Mock Data simulating a "Recursive" system check ---
+        const useSystemStats = () => {
+            const [stats, setStats] = useState({
+                fps: 60,
+                memory: '14.2 MB',
+                integrity: '100%',
+                threats: 0
+            });
 
-  <section>
-    <h2>Additional Projects</h2>
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setStats(prev => ({
+                        fps: Math.floor(58 + Math.random() * 4),
+                        memory: (12 + Math.random() * 3).toFixed(1) + ' MB',
+                        integrity: '100%',
+                        threats: prev.threats
+                    }));
+                }, 2000);
+                return () => clearInterval(interval);
+            }, []);
 
-    <div class="project">
-      <h3>Bundle Analyzer</h3>
-      <div class="project-meta">
-        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/blob/main/projects/bundle-analyzer/README.md">View README</a>
-        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/bundle-analyzer">Source Code</a>
-      </div>
+            return stats;
+        };
 
-      <p><strong>Problem:</strong> JavaScript bundles grow over time without visibility into what's causing size increases. Manual analysis is time-consuming.</p>
+        const ProjectCard = ({ title, role, desc, tags, link, icon: Icon, stat, statLabel }) => (
+            <div className="group relative border border-zinc-800 bg-zinc-900/50 p-6 hover:border-green-500/50 transition-all duration-300 overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Icon size={64} />
+                </div>
 
-      <p><strong>Solution:</strong> CLI tool that analyzes bundle files, detects optimization opportunities (large functions, duplicate code, excessive dependencies), and enforces size budgets in CI/CD.</p>
+                <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-2 text-green-500 font-bold text-xs tracking-widest uppercase">
+                        <span className="w-2 h-2 bg-green-500 animate-pulse rounded-full"></span>
+                        {role}
+                    </div>
+                    <code className="text-zinc-500 text-xs">ID: {Math.floor(Math.random() * 9000) + 1000}</code>
+                </div>
 
-      <p><strong>Features:</strong></p>
-      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
-        <li>Zero dependencies - pure Node.js</li>
-        <li>Identifies large functions and duplicate code patterns</li>
-        <li>Configurable size budgets with CI/CD exit codes</li>
-        <li>JSON and text output formats</li>
-        <li>Tested with Node.js test runner</li>
-      </ul>
+                <h3 className="text-xl font-bold text-zinc-100 mb-2 group-hover:text-green-400 transition-colors">
+                    {title}
+                </h3>
 
-      <p><strong>Quick Start:</strong></p>
-      <pre><code>cd projects/bundle-analyzer
-node cli.js --input demo/sample-bundle.js --budget 100
-npm test</code></pre>
+                <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
+                    {desc}
+                </p>
 
-      <div class="tech-stack">
-        <span class="tech-tag">Node.js</span>
-        <span class="tech-tag">CLI</span>
-        <span class="tech-tag">CI/CD</span>
-        <span class="tech-tag">Testing</span>
-      </div>
-    </div>
+                <div className="grid grid-cols-2 gap-4 mb-6 border-t border-b border-zinc-800 py-3">
+                    <div>
+                        <div className="text-xs text-zinc-600 uppercase tracking-wider">Status</div>
+                        <div className="text-green-400 text-sm font-bold">ACTIVE</div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-xs text-zinc-600 uppercase tracking-wider">{statLabel}</div>
+                        <div className="text-zinc-300 text-sm font-bold font-mono">{stat}</div>
+                    </div>
+                </div>
 
-    <div class="project">
-      <h3>Lighthouse Budget Enforcer</h3>
-      <div class="project-meta">
-        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/blob/main/projects/lighthouse-enforcer/README.md">View README</a>
-        <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/lighthouse-enforcer">Source Code</a>
-      </div>
+                <div className="flex flex-wrap gap-2 mb-6">
+                    {tags.map(tag => (
+                        <span key={tag} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-400 border border-zinc-700">
+                            {tag}
+                        </span>
+                    ))}
+                </div>
 
-      <p><strong>Problem:</strong> Lighthouse generates performance reports, but without automated enforcement, metrics can regress without anyone noticing.</p>
+                <a href={link} className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-green-400 transition-colors uppercase tracking-widest font-bold">
+                    Initialize Protocol <ExternalLink size={14} />
+                </a>
+            </div>
+        );
 
-      <p><strong>Solution:</strong> Tool that validates Lighthouse audit reports against configurable performance budgets (Core Web Vitals, scores, resource limits) and fails CI builds when thresholds are exceeded.</p>
+        const App = () => {
+            const stats = useSystemStats();
+            const [activeTab, setActiveTab] = useState('projects');
+            const [text, setText] = useState('');
+            const fullText = "INITIALIZING BOBGNARLY420... ACCESS GRANTED.";
 
-      <p><strong>Features:</strong></p>
-      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
-        <li>Validates Core Web Vitals (LCP, FID, CLS)</li>
-        <li>Checks performance, accessibility, SEO scores</li>
-        <li>Categorizes violations by severity</li>
-        <li>CI/CD integration with exit codes</li>
-        <li>Tested with Node.js test runner</li>
-      </ul>
+            useEffect(() => {
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (i < fullText.length) {
+                        setText(prev => prev + fullText.charAt(i));
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, 30);
+                return () => clearInterval(timer);
+            }, []);
 
-      <p><strong>Quick Start:</strong></p>
-      <pre><code>cd projects/lighthouse-enforcer
-node cli.js --report demo/sample-report.json --budget demo/budget.json
-npm test</code></pre>
+            return (
+                <div className="min-h-screen bg-[#050505] text-zinc-300 relative selection:bg-green-900 selection:text-green-100">
+                    <div className="scanline"></div>
 
-      <div class="tech-stack">
-        <span class="tech-tag">Node.js</span>
-        <span class="tech-tag">Lighthouse</span>
-        <span class="tech-tag">Performance</span>
-        <span class="tech-tag">Testing</span>
-      </div>
-    </div>
+                    {/* Header / HUD */}
+                    <header className="fixed top-0 left-0 w-full z-50 border-b border-zinc-800 bg-[#050505]/90 backdrop-blur-sm">
+                        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 flex items-center justify-center text-green-500">
+                                    <Shield size={16} />
+                                </div>
+                                <div className="font-bold tracking-widest text-lg text-white">
+                                    BOB<span className="text-green-500">GNARLY</span>420
+                                </div>
+                            </div>
 
-    <div class="project">
-      <h3>Interactive Data Dashboard</h3>
-      <div class="project-meta">
-        <a href="/data-viz.html">Live Demo</a>
-      </div>
+                            <div className="hidden md:flex gap-8 text-xs font-mono tracking-widest text-zinc-500">
+                                <div className="flex items-center gap-2">
+                                    <Activity size={12} className="text-green-500" />
+                                    FPS: {stats.fps}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Cpu size={12} className="text-green-500" />
+                                    MEM: {stats.memory}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Lock size={12} className="text-green-500" />
+                                    SECURE
+                                </div>
+                            </div>
+                        </div>
+                    </header>
 
-      <p><strong>Description:</strong> Real-time analytics dashboard featuring multiple chart types (line, bar, doughnut, radar) built with Chart.js. Includes animated stat counters, activity feed, and data refresh capabilities.</p>
+                    <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+                        {/* Hero Section */}
+                        <section className="mb-24 relative">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full pointer-events-none"></div>
 
-      <p><strong>Features:</strong></p>
-      <ul style="margin-left: 2rem; margin-bottom: 1rem;">
-        <li>Multiple visualization types with Chart.js</li>
-        <li>Responsive design for mobile and desktop</li>
-        <li>Interactive controls and real-time updates</li>
-        <li>Clean, professional UI</li>
-      </ul>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 border border-green-900/50 bg-green-900/10 text-green-400 text-xs tracking-widest mb-6">
+                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                SYSTEM STATUS: ONLINE
+                            </div>
 
-      <div class="tech-stack">
-        <span class="tech-tag">JavaScript</span>
-        <span class="tech-tag">Chart.js</span>
-        <span class="tech-tag">HTML/CSS</span>
-        <span class="tech-tag">Data Visualization</span>
-      </div>
-    </div>
-  </section>
+                            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 glitch-text leading-tight max-w-4xl" data-text="OSINT // SECURITY // TOOLING">
+                                OSINT // SECURITY<br />
+                                <span className="text-zinc-600">TOOLING_</span>
+                            </h1>
 
-  <section>
-    <h2>Skills</h2>
-    <div class="skills-grid">
-      <div class="skill-category">
-        <h3>Languages</h3>
-        <ul>
-          <li>JavaScript (ES6+)</li>
-          <li>Node.js</li>
-          <li>HTML5/CSS3</li>
-        </ul>
-      </div>
+                            <p className="max-w-xl text-zinc-400 text-lg leading-relaxed mb-8 border-l-2 border-green-500 pl-6">
+                                Advanced client-side intelligence gathering and performance enforcement.
+                                Building the tools that build the web, while watching the watchers.
+                            </p>
 
-      <div class="skill-category">
-        <h3>Tools & Frameworks</h3>
-        <ul>
-          <li>Git & GitHub</li>
-          <li>Chart.js</li>
-          <li>CI/CD (GitHub Actions)</li>
-          <li>Command Line Tools</li>
-        </ul>
-      </div>
+                            <div className="flex flex-wrap gap-4">
+                                <a href="https://github.com/BobGnarly420" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 font-bold text-sm tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2">
+                                    <Github size={18} />
+                                    GITHUB_ACCESS
+                                </a>
+                                <button onClick={() => window.scrollTo({top: 1000, behavior: 'smooth'})} className="border border-zinc-700 px-6 py-3 font-bold text-sm tracking-widest text-zinc-400 hover:border-green-500 hover:text-green-400 transition-colors">
+                                    VIEW_PROTOCOLS
+                                </button>
+                            </div>
+                        </section>
 
-      <div class="skill-category">
-        <h3>Focus Areas</h3>
-        <ul>
-          <li>Build Tools & Automation</li>
-          <li>Performance Optimization</li>
-          <li>Data Visualization</li>
-          <li>Developer Tooling</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+                        {/* Recursive Diagnostic Strip */}
+                        <div className="w-full border-y border-zinc-800 bg-zinc-900/20 py-4 mb-24 overflow-hidden">
+                            <div className="flex items-center justify-between gap-12 font-mono text-xs text-zinc-500 whitespace-nowrap overflow-x-auto px-4">
+                                <span>CURRENT_BUILD: v2.0.4 (RECURSIVE)</span>
+                                <span>RENDER_ENGINE: REACT_18</span>
+                                <span>TAILWIND: ENABLED</span>
+                                <span className="hidden md:inline">USER_AGENT: {navigator.userAgent.substring(0, 30)}...</span>
+                                <span>COORDINATES: REDACTED</span>
+                            </div>
+                        </div>
 
-  <footer>
-    <p>&copy; 2024 BobGnarly420 | <a href="https://github.com/BobGnarly420">GitHub</a></p>
-  </footer>
+                        {/* Projects Grid */}
+                        <section>
+                            <div className="flex items-end justify-between mb-12">
+                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                                    <Database className="text-green-500" />
+                                    ACTIVE PROTOCOLS
+                                </h2>
+                                <span className="hidden md:block text-zinc-600 font-mono text-xs">DIR: /usr/local/projects</span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Project 1: OSINT */}
+                                <ProjectCard
+                                    title="GHOST_CHAIN"
+                                    role="Intelligence"
+                                    desc="Client-side Open Source Intelligence suite. Zero-backend architecture ensures operator anonymity. Capable of domain reconnaissance, social graph mapping, and metadata extraction."
+                                    tags={['JS', 'Crypto API', 'Forensics']}
+                                    link="/osint.html"
+                                    icon={Eye}
+                                    stat="30+"
+                                    statLabel="Modules"
+                                />
+
+                                {/* Project 2: Bundle Analyzer */}
+                                <ProjectCard
+                                    title="BUNDLE_AUTOPSY"
+                                    role="Diagnostics"
+                                    desc="CLI forensic tool for JavaScript bundles. Detects bloating patterns, duplicate function signatures, and dependency creep before deployment."
+                                    tags={['Node.js', 'CLI', 'CI/CD']}
+                                    link="/projects/bundle-analyzer"
+                                    icon={Layers}
+                                    stat="0ms"
+                                    statLabel="Latency"
+                                />
+
+                                {/* Project 3: Lighthouse Enforcer */}
+                                <ProjectCard
+                                    title="LIGHTHOUSE_SENTINEL"
+                                    role="Enforcement"
+                                    desc="Automated quality gatekeeper. Validates Core Web Vitals and accessibility scores against strict budgets. Fails build pipelines upon regression."
+                                    tags={['Performance', 'Automation']}
+                                    link="/projects/lighthouse-enforcer"
+                                    icon={BarChart2}
+                                    stat="100%"
+                                    statLabel="Coverage"
+                                />
+
+                                {/* Project 4: Recursive/Meta */}
+                                <ProjectCard
+                                    title="SELF_INDEX"
+                                    role="Meta-Structure"
+                                    desc="The architecture you are currently viewing. A recursive React application that monitors its own rendering performance and displays its source logic."
+                                    tags={['React', 'Recursion', 'Quine']}
+                                    link="https://github.com/BobGnarly420/bobgnarly420.github.io"
+                                    icon={FileCode}
+                                    stat="SELF"
+                                    statLabel="Target"
+                                />
+
+                                {/* Project 5: Steganography */}
+                                <ProjectCard
+                                    title="WHISPER_KEY"
+                                    role="Cryptography"
+                                    desc="Browser-based image steganography tool. Embeds encrypted text payloads into pixel data using least significant bit (LSB) encoding."
+                                    tags={['JavaScript', 'Crypto', 'LSB']}
+                                    link="/stego.html"
+                                    icon={Lock}
+                                    stat="AES-256"
+                                    statLabel="Encryption"
+                                />
+
+                                {/* Project 6: Network Analyzer */}
+                                <ProjectCard
+                                    title="NET_INTERCEPT"
+                                    role="Network"
+                                    desc="Real-time network traffic analyzer for HTTP headers and performance metrics. Monitor requests, inspect connections, and analyze response times entirely in the browser."
+                                    tags={['Performance API', 'Fetch API', 'Network']}
+                                    link="/network.html"
+                                    icon={Wifi}
+                                    stat="Real-time"
+                                    statLabel="Mode"
+                                />
+                            </div>
+                        </section>
+
+                        {/* Skills Section */}
+                        <section className="mt-24">
+                            <div className="flex items-end justify-between mb-12">
+                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                                    <Terminal className="text-green-500" />
+                                    CAPABILITIES
+                                </h2>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
+                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Languages</h3>
+                                    <ul className="space-y-2 text-sm text-zinc-400">
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            JavaScript (ES6+)
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Node.js
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            HTML5/CSS3
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            React
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
+                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Tools & Frameworks</h3>
+                                    <ul className="space-y-2 text-sm text-zinc-400">
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Git & GitHub
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Chart.js
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            CI/CD Pipelines
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Command Line Tools
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
+                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Focus Areas</h3>
+                                    <ul className="space-y-2 text-sm text-zinc-400">
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            OSINT & Security
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Performance Optimization
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Build Automation
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                                            Developer Tooling
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="border-t border-zinc-800 bg-zinc-900 py-12 px-6">
+                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="text-zinc-500 font-mono text-sm">
+                                © 2024 BOB_GNARLY_420. ALL RIGHTS RESERVED.
+                            </div>
+                            <div className="flex gap-6">
+                                <a href="https://github.com/BobGnarly420/bobgnarly420.github.io" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Source</a>
+                                <a href="https://github.com/BobGnarly420" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">GitHub</a>
+                                <a href="#" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Contact</a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
