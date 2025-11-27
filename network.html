@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NET_INTERCEPT // Network Analysis</title>
     <meta name="description" content="Browser-based network traffic analyzer. Inspect HTTP headers, performance metrics, and connection details.">
+    <!-- Accessibility -->
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="canonical" href="https://bobgnarly420.github.io/network.html">
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
@@ -305,17 +308,19 @@
 <body>
     <div class="container">
         <header>
-            <h1>📡 NET_INTERCEPT</h1>
-            <p class="subtitle">Network Analysis // HTTP Inspector // Performance Monitor</p>
+            <h1 id="main-heading">📡 NET_INTERCEPT</h1>
+            <p class="subtitle" role="doc-subtitle">Network Analysis // HTTP Inspector // Performance Monitor</p>
             <div class="nav">
-                <a href="/">← Back to Portfolio</a>
+                <a href="/" aria-label="Return to portfolio homepage">← Back to Portfolio</a>
             </div>
         </header>
 
-        <div class="info">
+        <div class="info" role="note" aria-label="Tool information">
             <strong>OPERATIONAL PROTOCOL:</strong> This tool monitors and analyzes network traffic from your browser.
             It displays HTTP headers, connection details, and performance metrics using the <code>Performance API</code> and <code>Fetch API</code>.
             <strong>Privacy:</strong> All analysis happens client-side. No data is sent to external servers.
+            <br><br>
+            <strong>CORS Limitation:</strong> Due to browser security (CORS policy), this tool can only analyze URLs that allow cross-origin requests. Some APIs (like GitHub API) work, but many websites block cross-origin analysis.
         </div>
 
         <div class="stats-grid">
@@ -341,11 +346,21 @@
             <h2>[ PROBE ] Analyze URL</h2>
 
             <div class="form-group">
-                <label>Target URL</label>
-                <input type="url" id="targetUrl" placeholder="https://example.com" value="https://api.github.com/users/github">
+                <label for="targetUrl">Target URL</label>
+                <input
+                    type="url"
+                    id="targetUrl"
+                    name="targetUrl"
+                    placeholder="https://example.com"
+                    value="https://api.github.com/users/github"
+                    aria-describedby="url-help"
+                    required>
+                <small id="url-help" style="color: #666; font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                    Enter a URL that allows CORS (e.g., public APIs)
+                </small>
             </div>
 
-            <button onclick="analyzeUrl()">ANALYZE REQUEST</button>
+            <button onclick="analyzeUrl()" aria-label="Analyze the target URL">ANALYZE REQUEST</button>
 
             <div class="status" id="analyzeStatus"></div>
 

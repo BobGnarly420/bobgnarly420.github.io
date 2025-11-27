@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WHISPER_KEY // Steganography Tool</title>
-    <meta name="description" content="Browser-based image steganography. Embed and extract encrypted messages in images using LSB encoding.">
+    <meta name="description" content="Browser-based image steganography. Embed and extract encrypted messages in images using LSB encoding and AES-256-GCM encryption.">
+    <!-- Accessibility -->
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="canonical" href="https://bobgnarly420.github.io/stego.html">
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
@@ -256,17 +259,20 @@
 <body>
     <div class="container">
         <header>
-            <h1>🔐 WHISPER_KEY</h1>
-            <p class="subtitle">Image Steganography // LSB Encoding // AES-256</p>
+            <h1 id="main-heading">🔐 WHISPER_KEY</h1>
+            <p class="subtitle" role="doc-subtitle">Image Steganography // LSB Encoding // AES-256-GCM</p>
             <div class="nav">
-                <a href="/">← Back to Portfolio</a>
+                <a href="/" aria-label="Return to portfolio homepage">← Back to Portfolio</a>
             </div>
         </header>
 
-        <div class="info">
+        <div class="info" role="note" aria-label="Tool information">
             <strong>OPERATIONAL PROTOCOL:</strong> This tool uses <code>Least Significant Bit (LSB)</code> encoding to hide encrypted messages within PNG images.
-            Messages are AES-256 encrypted before embedding. The visual appearance of the image remains virtually unchanged.
-            <strong>Privacy guarantee:</strong> All operations run entirely client-side in your browser.
+            Messages are encrypted using <code>AES-256-GCM</code> (Web Crypto API) before embedding. The visual appearance of the image remains virtually unchanged.
+            <strong>Privacy guarantee:</strong> All operations run entirely client-side in your browser. No data is transmitted to any server.
+            <br><br>
+            <strong>Technical Details:</strong> Encryption uses PBKDF2 (100,000 iterations) for key derivation from your password. Each encryption operation generates a unique random salt and IV.
+            <strong>Limitations:</strong> Maximum message size depends on image dimensions. Larger images can hide longer messages.
         </div>
 
         <div class="grid">
@@ -358,31 +364,116 @@
             }
         });
 
-        // Simple XOR encryption (placeholder for AES)
-        function simpleEncrypt(text, password) {
+        // ===== REAL AES-256-GCM ENCRYPTION USING WEB CRYPTO API =====
+
+        /**
+         * Derives a cryptographic key from a password using PBKDF2
+         * @param {string} password - User password
+         * @param {Uint8Array} salt - Random salt (16 bytes)
+         * @returns {Promise<CryptoKey>} - AES-GCM key
+         */
+        async function deriveKey(password, salt) {
+            const encoder = new TextEncoder();
+            const passwordBuffer = encoder.encode(password);
+
+            // Import password as key material
+            const keyMaterial = await window.crypto.subtle.importKey(
+                'raw',
+                passwordBuffer,
+                'PBKDF2',
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+
+            // Derive AES-GCM key using PBKDF2 with 100,000 iterations
+            return await window.crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        /**
+         * Encrypts text using AES-256-GCM
+         * @param {string} text - Plaintext message
+         * @param {string} password - User password
+         * @returns {Promise<string>} - Base64 encoded: salt(16) + iv(12) + ciphertext
+         */
+        async function aesEncrypt(text, password) {
             if (!password) return text;
-            let result = '';
-            for (let i = 0; i < text.length; i++) {
-                result += String.fromCharCode(text.charCodeAt(i) ^ password.charCodeAt(i % password.length));
-            }
-            return btoa(result); // Base64 encode
+
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+
+            // Generate random salt and IV
+            const salt = window.crypto.getRandomValues(new Uint8Array(16));
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+            // Derive key
+            const key = await deriveKey(password, salt);
+
+            // Encrypt
+            const ciphertext = await window.crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                data
+            );
+
+            // Concatenate salt + iv + ciphertext
+            const combined = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
+            combined.set(salt, 0);
+            combined.set(iv, salt.length);
+            combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
+
+            // Return base64
+            return btoa(String.fromCharCode(...combined));
         }
 
-        function simpleDecrypt(encrypted, password) {
+        /**
+         * Decrypts AES-256-GCM encrypted text
+         * @param {string} encrypted - Base64 encoded encrypted data
+         * @param {string} password - User password
+         * @returns {Promise<string>} - Decrypted plaintext
+         */
+        async function aesDecrypt(encrypted, password) {
             if (!password) return encrypted;
+
             try {
-                const decoded = atob(encrypted);
-                let result = '';
-                for (let i = 0; i < decoded.length; i++) {
-                    result += String.fromCharCode(decoded.charCodeAt(i) ^ password.charCodeAt(i % password.length));
-                }
-                return result;
+                // Decode base64
+                const combined = new Uint8Array(
+                    atob(encrypted).split('').map(c => c.charCodeAt(0))
+                );
+
+                // Extract salt, IV, and ciphertext
+                const salt = combined.slice(0, 16);
+                const iv = combined.slice(16, 28);
+                const ciphertext = combined.slice(28);
+
+                // Derive key
+                const key = await deriveKey(password, salt);
+
+                // Decrypt
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    ciphertext
+                );
+
+                const decoder = new TextDecoder();
+                return decoder.decode(decrypted);
             } catch (e) {
-                throw new Error('Decryption failed');
+                throw new Error('Decryption failed - incorrect password or corrupted data');
             }
         }
 
-        function encodeMessage() {
+        async function encodeMessage() {
             const fileInput = document.getElementById('encodeImage');
             const message = document.getElementById('secretMessage').value;
             const password = document.getElementById('encodePassword').value;
@@ -391,6 +482,7 @@
             status.className = 'status';
             status.style.display = 'none';
 
+            // Input validation
             if (!fileInput.files[0]) {
                 status.className = 'status error';
                 status.textContent = 'ERROR: No image selected';
@@ -403,10 +495,21 @@
                 return;
             }
 
+            if (message.length > 10000) {
+                status.className = 'status error';
+                status.textContent = 'ERROR: Message too long (max 10,000 characters)';
+                return;
+            }
+
+            // Show loading state
+            status.className = 'status';
+            status.style.display = 'block';
+            status.textContent = 'Processing... Encrypting and embedding message...';
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const img = new Image();
-                img.onload = function() {
+                img.onload = async function() {
                     try {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
@@ -417,8 +520,8 @@
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         const data = imageData.data;
 
-                        // Encrypt message if password provided
-                        const messageToHide = password ? simpleEncrypt(message, password) : message;
+                        // Encrypt message if password provided (using real AES-256-GCM)
+                        const messageToHide = password ? await aesEncrypt(message, password) : message;
 
                         // Add length header
                         const fullMessage = messageToHide.length + ':' + messageToHide;
@@ -470,7 +573,7 @@
             reader.readAsDataURL(fileInput.files[0]);
         }
 
-        function decodeMessage() {
+        async function decodeMessage() {
             const fileInput = document.getElementById('decodeImage');
             const password = document.getElementById('decodePassword').value;
             const status = document.getElementById('decodeStatus');
@@ -486,10 +589,15 @@
                 return;
             }
 
+            // Show loading state
+            status.className = 'status';
+            status.style.display = 'block';
+            status.textContent = 'Processing... Extracting and decrypting message...';
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const img = new Image();
-                img.onload = function() {
+                img.onload = async function() {
                     try {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
@@ -532,8 +640,8 @@
                             throw new Error('No hidden message found');
                         }
 
-                        // Decrypt if password provided
-                        const finalMessage = password ? simpleDecrypt(extractedText, password) : extractedText;
+                        // Decrypt if password provided (using real AES-256-GCM)
+                        const finalMessage = password ? await aesDecrypt(extractedText, password) : extractedText;
 
                         outputArea.value = finalMessage;
                         status.className = 'status success';

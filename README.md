@@ -1,8 +1,16 @@
 # BobGnarly420 Portfolio
 
-Developer portfolio showcasing build tools, performance optimization, and web development projects.
+Developer portfolio showcasing OSINT tools, security research, cryptography, and performance optimization.
 
 **Live Site:** [bobgnarly420.github.io](https://bobgnarly420.github.io)
+
+## Featured Projects
+
+- **🔍 OSINT Toolchain** - 30+ intelligence gathering tools (domain analysis, social media OSINT, hash analysis)
+- **🔐 Steganography** - AES-256-GCM encrypted message hiding in images via LSB encoding
+- **📡 Network Analyzer** - Real-time HTTP header and performance monitoring
+- **🔬 Bundle Analyzer** - JavaScript bundle size analysis and CI/CD enforcement
+- **🎯 Lighthouse Enforcer** - Performance budget validation for Core Web Vitals
 
 ---
 
@@ -28,20 +36,39 @@ Tool for validating Lighthouse audit reports against performance budgets.
 
 [View README](projects/lighthouse-enforcer/README.md)
 
-### 3. Interactive Data Dashboard
-Real-time analytics dashboard with multiple visualization types.
+### 3. OSINT Toolchain (GHOST_CHAIN)
+Comprehensive Open Source Intelligence gathering suite with 30+ tools.
 
-- **Location:** `data-viz.html`
-- **Live Demo:** [View Dashboard](https://bobgnarly420.github.io/data-viz.html)
-- **Tech:** Chart.js, vanilla JavaScript
+- **Location:** `osint.html`
+- **Live Demo:** [Launch Toolchain](https://bobgnarly420.github.io/osint.html)
+- **Categories:** Domain/IP intelligence, social media OSINT, email intelligence, hash analysis, network tools, metadata extraction
+- **Privacy:** 100% client-side, no backend, no data transmission
+
+### 4. Steganography Tool (WHISPER_KEY)
+Image steganography with AES-256-GCM encryption for hiding encrypted messages in PNG images.
+
+- **Location:** `stego.html`
+- **Live Demo:** [Launch Tool](https://bobgnarly420.github.io/stego.html)
+- **Encryption:** AES-256-GCM via Web Crypto API, PBKDF2 key derivation (100,000 iterations)
+- **Method:** LSB (Least Significant Bit) encoding
+- **Features:** Encode/decode, password protection, client-side only
+
+### 5. Network Analyzer (NET_INTERCEPT)
+Real-time network traffic analyzer for HTTP headers and performance metrics.
+
+- **Location:** `network.html`
+- **Live Demo:** [Launch Analyzer](https://bobgnarly420.github.io/network.html)
+- **Features:** HTTP header inspection, performance metrics, request logging, resource monitoring
+- **APIs:** Fetch API, Performance API
 
 ---
 
 ## Tech Stack
 
-- **Languages:** JavaScript (ES6+), Node.js, HTML/CSS
-- **Tools:** Git, GitHub Actions, Chart.js
-- **Focus:** Build tools, performance, CI/CD automation
+- **Languages:** JavaScript (ES6+), Node.js, HTML/CSS, React
+- **Web APIs:** Web Crypto API (AES-256-GCM), Canvas API, Performance API, Fetch API
+- **Tools:** Git, GitHub Actions, Tailwind CSS
+- **Focus:** OSINT, security tools, build tools, performance, CI/CD automation
 
 ---
 
