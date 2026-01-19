@@ -282,38 +282,41 @@
             );
         };
 
+        // Security: Sanitize HTML to prevent XSS attacks
+        const sanitizeHTML = (str) => {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        };
+
         // Music Projects Component
         const MusicProjects = () => {
-            const tracks = [
-                {
-                    id: 1,
-                    title: "Midnight Dreams",
-                    type: "Electronic",
-                    year: "2024",
-                    description: "Ambient electronic composition exploring nocturnal themes"
-                },
-                {
-                    id: 2,
-                    title: "Urban Rhythm",
-                    type: "Hip-Hop Beat",
-                    year: "2024",
-                    description: "City-inspired beat with jazzy undertones"
-                },
-                {
-                    id: 3,
-                    title: "Digital Waves",
-                    type: "Synthwave",
-                    year: "2023",
-                    description: "Retro-futuristic synth journey"
-                },
-                {
-                    id: 4,
-                    title: "Acoustic Memories",
-                    type: "Indie Folk",
-                    year: "2023",
-                    description: "Intimate guitar-driven storytelling"
-                }
-            ];
+            const [tracks, setTracks] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
+
+            useEffect(() => {
+                fetch('/music-data.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load music data');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.music && Array.isArray(data.music)) {
+                            setTracks(data.music);
+                        } else {
+                            throw new Error('Invalid music data format');
+                        }
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error('Error loading music:', err);
+                        setError(err.message);
+                        setLoading(false);
+                    });
+            }, []);
 
             return (
                 <section id="music" className="py-20 px-6">
@@ -323,21 +326,54 @@
                             <h2 className="text-4xl font-bold heading-font">Music Projects</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {tracks.map((track) => (
-                                <div key={track.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div>
-                                            <h3 className="text-xl font-semibold mb-1">{track.title}</h3>
-                                            <p className="text-sm text-gray-500">{track.type} • {track.year}</p>
+                        {loading ? (
+                            <div className="text-center py-12">
+                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+                                <p className="mt-4 text-gray-600">Loading music...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded">
+                                <p className="text-red-800">Unable to load music content. Please try again later.</p>
+                            </div>
+                        ) : tracks.length === 0 ? (
+                            <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                                <Music className="text-gray-400 mx-auto mb-4" size={48} />
+                                <p className="text-gray-600">No music tracks yet. Check back soon!</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {tracks.map((track) => (
+                                    <div key={track.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                                        {track.embedCode && track.embedCode.trim() !== '' && (
+                                            <div className="aspect-video bg-gray-100" dangerouslySetInnerHTML={{ __html: track.embedCode }} />
+                                        )}
+                                        <div className="p-6">
+                                            <div className="flex items-start justify-between mb-4">
+                                                <div>
+                                                    <h3 className="text-xl font-semibold mb-1">{track.title}</h3>
+                                                    <p className="text-sm text-gray-500">{track.type} • {track.year}</p>
+                                                </div>
+                                                <Music className="text-pink-400" size={24} />
+                                            </div>
+                                            <p className="text-gray-600 mb-4">{track.description}</p>
+                                            {track.link && track.link.trim() !== '' && (
+                                                <a
+                                                    href={track.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-medium"
+                                                >
+                                                    Listen Now <ExternalLink size={16} />
+                                                </a>
+                                            )}
+                                            {(!track.link || track.link.trim() === '') && (!track.embedCode || track.embedCode.trim() === '') && (
+                                                <div className="bg-gradient-to-r from-pink-500 to-purple-500 h-1 rounded-full w-full"></div>
+                                            )}
                                         </div>
-                                        <Music className="text-pink-400" size={24} />
                                     </div>
-                                    <p className="text-gray-600 mb-4">{track.description}</p>
-                                    <div className="bg-gradient-to-r from-pink-500 to-purple-500 h-1 rounded-full w-full"></div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </section>
             );
