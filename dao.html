@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGENT_DAO // LANGCHAIN + SOLIDITY</title>
+  <meta name="description" content="Agentic DAO implementation using Solidity governance rails and a LangChain orchestration layer." />
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; background: #080808; color: #efefef; font-family: "JetBrains Mono", monospace; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .line { border: 1px solid #2d2d2d; padding: .6rem .8rem; margin-bottom: 1rem; color: #9b9b9b; text-transform: uppercase; font-size: .8rem; }
+    h1 { margin: 0 0 .6rem; font-size: clamp(1.4rem, 4vw, 2.4rem); letter-spacing: .08em; text-transform: uppercase; }
+    h2 { margin: 0 0 .55rem; color: #2dff9a; font-size: .9rem; text-transform: uppercase; }
+    p { color: #d5d5d5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1rem; margin: 1rem 0; }
+    .card { border: 1px solid #2d2d2d; padding: .9rem; background: #0d0d0d; }
+    pre { margin: 0; border: 1px solid #2d2d2d; background: #060606; padding: .9rem; white-space: pre-wrap; overflow-x: auto; }
+    a { color: #2dff9a; text-decoration: none; border-bottom: 1px dotted #2dff9a; }
+    ul { margin: 0; padding-left: 1rem; color: #c5c5c5; }
+    li { margin-bottom: .32rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="line">mode: production_scaffold / stack: solidity + langchain / ui: puretext_brutalist</div>
+    <h1>Agentic Autonomous DAO</h1>
+    <p>
+      This is now a real implementation scaffold, not just a concept page. The governance rail lives in Solidity and the
+      autonomous decision pipeline runs via LangChain agents.
+    </p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>On-chain</h2>
+        <ul>
+          <li><code>projects/agentic-dao/contracts/AgenticDAO.sol</code></li>
+          <li>Proposal lifecycle + quorum + timelock</li>
+          <li>Simulation/adversarial gates</li>
+          <li>Guardian kill-switch</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2>Off-chain</h2>
+        <ul>
+          <li><code>projects/agentic-dao/agents/governance_agent.py</code></li>
+          <li>LangChain structured proposal compiler</li>
+          <li>Simulation + adversarial reviewer agents</li>
+          <li>Web3 transaction submission</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h2>Docs</h2>
+        <ul>
+          <li><a href="/projects/agentic-dao/README.md">Implementation README</a></li>
+          <li><a href="/projects/agentic-dao/contracts/AgenticDAO.sol">Solidity contract</a></li>
+          <li><a href="/projects/agentic-dao/agents/governance_agent.py">LangChain orchestration</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <h2>Execution Topology</h2>
+    <pre>[INTENT]
+  -> LangChain Proposal Compiler
+  -> Simulation Agent
+  -> Adversarial Agent
+  -> submitAgentReview(...) on AgenticDAO.sol
+  -> member votes + finalize
+  -> queueProposal (timelock)
+  -> executeProposal (on-chain call)</pre>
+
+    <h2>Quick Start</h2>
+    <pre>cd projects/agentic-dao/agents
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp ../.env.example ../.env
+python governance_agent.py</pre>
+
+    <p><a href="/">return_to_root</a></p>
+  </main>
+</body>
+</html>
