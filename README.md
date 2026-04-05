@@ -11,6 +11,7 @@ Developer portfolio showcasing OSINT tools, security research, cryptography, and
 - **📡 Network Analyzer** - Real-time HTTP header and performance monitoring
 - **🔬 Bundle Analyzer** - JavaScript bundle size analysis and CI/CD enforcement
 - **🎯 Lighthouse Enforcer** - Performance budget validation for Core Web Vitals
+- **🤖 Agentic DAO Blueprint** - LangChain + Solidity autonomous governance scaffold
 
 ---
 
@@ -60,6 +61,14 @@ Real-time network traffic analyzer for HTTP headers and performance metrics.
 - **Live Demo:** [Launch Analyzer](https://bobgnarly420.github.io/network.html)
 - **Features:** HTTP header inspection, performance metrics, request logging, resource monitoring
 - **APIs:** Fetch API, Performance API
+
+### 6. Agentic Autonomous DAO (AGENT_DAO)
+LangChain + Solidity implementation scaffold for autonomous governance, with agent orchestration, simulation/adversarial checks, and on-chain timelocked execution controls.
+
+- **Location:** `dao.html`, `projects/agentic-dao/`
+- **Live Demo:** [Launch Blueprint](https://bobgnarly420.github.io/dao.html)
+- **Implementation:** Solidity contract + LangChain orchestration agent
+- **Focus:** Agent orchestration, quorum logic, treasury safety, rollback protocols
 
 ---
 
