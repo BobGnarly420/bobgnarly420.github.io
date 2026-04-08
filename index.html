@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BobGnarly420 // SYSTEM_READY</title>
-    <meta name="description" content="Client-side OSINT toolchain, performance tooling, and security research. Building the tools that build the web.">
+    <title>Ev - Creative Portfolio</title>
+    <meta name="description" content="Ev's creative portfolio - Art, Code, and Music">
 
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -16,87 +16,60 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts: JetBrains Mono for that dev/hacker aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'JetBrains Mono', monospace;
-            background-color: #0a0a0a;
-            color: #e5e5e5;
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
         }
 
-        .glitch-text {
-            position: relative;
+        .heading-font {
+            font-family: 'Playfair Display', serif;
         }
 
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
         }
 
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -1px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -1px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-anim {
-            0% { clip: rect(13px, 9999px, 81px, 0); }
-            5% { clip: rect(89px, 9999px, 12px, 0); }
-            10% { clip: rect(48px, 9999px, 63px, 0); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
-
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 11px, 0); }
-            5% { clip: rect(23px, 9999px, 76px, 0); }
-            10% { clip: rect(8px, 9999px, 32px, 0); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
-
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 10;
-            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(51, 255, 0, 0.02) 50%, rgba(0,0,0,0) 100%);
-            opacity: 0.1;
-            position: absolute;
-            bottom: 100%;
-            animation: scanline 10s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes scanline {
-            0% { bottom: 100%; }
-            100% { bottom: -100%; }
-        }
-
-        /* Custom Scrollbar */
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: #333;
+            background: #888;
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #22c55e;
+            background: #555;
+        }
+
+        /* Image hover effect */
+        .gallery-item {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-item img {
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
@@ -106,7 +79,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- Inline Icon Components (Replaces external dependency for reliability) ---
+        // Icon Components
         const IconBase = ({ children, size = 24, className = "" }) => (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,77 +98,37 @@
         );
 
         const Icons = {
-            Shield: (props) => (
+            Palette: (props) => (
                 <IconBase {...props}>
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <circle cx="13.5" cy="6.5" r=".5"/>
+                    <circle cx="17.5" cy="10.5" r=".5"/>
+                    <circle cx="8.5" cy="7.5" r=".5"/>
+                    <circle cx="6.5" cy="12.5" r=".5"/>
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
                 </IconBase>
             ),
-            Activity: (props) => (
+            Code: (props) => (
                 <IconBase {...props}>
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
                 </IconBase>
             ),
-            Cpu: (props) => (
+            Music: (props) => (
                 <IconBase {...props}>
-                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-                    <rect x="9" y="9" width="6" height="6"/>
-                    <line x1="9" y1="1" x2="9" y2="4"/>
-                    <line x1="15" y1="1" x2="15" y2="4"/>
-                    <line x1="9" y1="20" x2="9" y2="23"/>
-                    <line x1="15" y1="20" x2="15" y2="23"/>
-                    <line x1="20" y1="9" x2="23" y2="9"/>
-                    <line x1="20" y1="14" x2="23" y2="14"/>
-                    <line x1="1" y1="9" x2="4" y2="9"/>
-                    <line x1="1" y1="14" x2="4" y2="14"/>
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <circle cx="18" cy="16" r="3"/>
                 </IconBase>
             ),
-            Lock: (props) => (
+            Mail: (props) => (
                 <IconBase {...props}>
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
                 </IconBase>
             ),
-            Database: (props) => (
+            Github: (props) => (
                 <IconBase {...props}>
-                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                </IconBase>
-            ),
-            Eye: (props) => (
-                <IconBase {...props}>
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </IconBase>
-            ),
-            Layers: (props) => (
-                <IconBase {...props}>
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                    <polyline points="2 17 12 22 22 17"/>
-                    <polyline points="2 12 12 17 22 12"/>
-                </IconBase>
-            ),
-            BarChart2: (props) => (
-                <IconBase {...props}>
-                    <line x1="18" y1="20" x2="18" y2="10"/>
-                    <line x1="12" y1="20" x2="12" y2="4"/>
-                    <line x1="6" y1="20" x2="6" y2="14"/>
-                </IconBase>
-            ),
-            FileCode: (props) => (
-                <IconBase {...props}>
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <path d="m10 13-2 2 2 2"/>
-                    <path d="m14 17 2-2-2-2"/>
-                </IconBase>
-            ),
-            Wifi: (props) => (
-                <IconBase {...props}>
-                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-                    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
                 </IconBase>
             ),
             ExternalLink: (props) => (
@@ -205,361 +138,368 @@
                     <line x1="10" y1="14" x2="21" y2="3"/>
                 </IconBase>
             ),
-            Terminal: (props) => (
+            Menu: (props) => (
                 <IconBase {...props}>
-                    <polyline points="4 17 10 11 4 5"/>
-                    <line x1="12" y1="19" x2="20" y2="19"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
                 </IconBase>
             ),
-            Github: (props) => (
+            X: (props) => (
                 <IconBase {...props}>
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
                 </IconBase>
             )
         };
 
-        const { Terminal, Shield, Eye, BarChart2, Cpu, FileCode, ExternalLink, Lock, Activity, Layers, Wifi, Database, Github } = Icons;
+        const { Palette, Code, Music, Mail, Github, ExternalLink, Menu, X } = Icons;
 
-        // --- Mock Data simulating a "Recursive" system check ---
-        const useSystemStats = () => {
-            const [stats, setStats] = useState({
-                fps: 60,
-                memory: '14.2 MB',
-                integrity: '100%',
-                threats: 0
-            });
+        // Art Gallery Component
+        const ArtGallery = () => {
+            const artworks = [
+                {
+                    id: 1,
+                    title: "Digital Dreams",
+                    medium: "Digital Art",
+                    year: "2024",
+                    description: "Exploring the intersection of technology and emotion"
+                },
+                {
+                    id: 2,
+                    title: "Urban Sketches",
+                    medium: "Mixed Media",
+                    year: "2023",
+                    description: "City life captured through abstract compositions"
+                },
+                {
+                    id: 3,
+                    title: "Nature's Palette",
+                    medium: "Watercolor",
+                    year: "2024",
+                    description: "Finding beauty in natural forms and colors"
+                },
+                {
+                    id: 4,
+                    title: "Geometric Harmony",
+                    medium: "Vector Art",
+                    year: "2024",
+                    description: "Balance and symmetry in modern design"
+                }
+            ];
 
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    setStats(prev => ({
-                        fps: Math.floor(58 + Math.random() * 4),
-                        memory: (12 + Math.random() * 3).toFixed(1) + ' MB',
-                        integrity: '100%',
-                        threats: prev.threats
-                    }));
-                }, 2000);
-                return () => clearInterval(interval);
-            }, []);
+            return (
+                <section id="art" className="py-20 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex items-center gap-4 mb-12">
+                            <Palette className="text-purple-600" size={32} />
+                            <h2 className="text-4xl font-bold heading-font">Art Gallery</h2>
+                        </div>
 
-            return stats;
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {artworks.map((art) => (
+                                <div key={art.id} className="gallery-item group bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                    <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 rounded-t-lg flex items-center justify-center">
+                                        <Palette className="text-purple-300" size={64} />
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold mb-2">{art.title}</h3>
+                                        <p className="text-sm text-gray-500 mb-3">{art.medium} • {art.year}</p>
+                                        <p className="text-gray-600">{art.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
         };
 
-        const ProjectCard = ({ title, role, desc, tags, link, icon: Icon, stat, statLabel }) => (
-            <div className="group relative border border-zinc-800 bg-zinc-900/50 p-6 hover:border-green-500/50 transition-all duration-300 overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Icon size={64} />
-                </div>
+        // Code Portfolio Component
+        const CodePortfolio = () => {
+            const projects = [
+                {
+                    id: 1,
+                    title: "Bundle Analyzer",
+                    description: "CLI tool for analyzing JavaScript bundle sizes and dependencies",
+                    tech: ["Node.js", "JavaScript", "CLI"],
+                    link: "/projects/bundle-analyzer"
+                },
+                {
+                    id: 2,
+                    title: "Lighthouse Enforcer",
+                    description: "Automated performance testing tool for Core Web Vitals",
+                    tech: ["Node.js", "Lighthouse", "Automation"],
+                    link: "/projects/lighthouse-enforcer"
+                },
+                {
+                    id: 3,
+                    title: "OSINT Tools",
+                    description: "Client-side intelligence gathering suite",
+                    tech: ["JavaScript", "Web APIs", "Security"],
+                    link: "/osint.html"
+                },
+                {
+                    id: 4,
+                    title: "Portfolio Site",
+                    description: "This website - a React-based portfolio",
+                    tech: ["React", "Tailwind CSS", "JavaScript"],
+                    link: "https://github.com/BobGnarly420/bobgnarly420.github.io"
+                }
+            ];
 
-                <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-2 text-green-500 font-bold text-xs tracking-widest uppercase">
-                        <span className="w-2 h-2 bg-green-500 animate-pulse rounded-full"></span>
-                        {role}
+            return (
+                <section id="code" className="py-20 px-6 bg-gray-50">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex items-center gap-4 mb-12">
+                            <Code className="text-blue-600" size={32} />
+                            <h2 className="text-4xl font-bold heading-font">Code Projects</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {projects.map((project) => (
+                                <div key={project.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow duration-300">
+                                    <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
+                                    <p className="text-gray-600 mb-4">{project.description}</p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {project.tech.map((tech) => (
+                                            <span key={tech} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <a
+                                        href={project.link}
+                                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+                                    >
+                                        View Project <ExternalLink size={16} />
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <code className="text-zinc-500 text-xs">ID: {Math.floor(Math.random() * 9000) + 1000}</code>
-                </div>
+                </section>
+            );
+        };
 
-                <h3 className="text-xl font-bold text-zinc-100 mb-2 group-hover:text-green-400 transition-colors">
-                    {title}
-                </h3>
+        // Security: Sanitize HTML to prevent XSS attacks
+        const sanitizeHTML = (str) => {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        };
 
-                <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
-                    {desc}
-                </p>
-
-                <div className="grid grid-cols-2 gap-4 mb-6 border-t border-b border-zinc-800 py-3">
-                    <div>
-                        <div className="text-xs text-zinc-600 uppercase tracking-wider">Status</div>
-                        <div className="text-green-400 text-sm font-bold">ACTIVE</div>
-                    </div>
-                    <div className="text-right">
-                        <div className="text-xs text-zinc-600 uppercase tracking-wider">{statLabel}</div>
-                        <div className="text-zinc-300 text-sm font-bold font-mono">{stat}</div>
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                    {tags.map(tag => (
-                        <span key={tag} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-400 border border-zinc-700">
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-
-                <a href={link} className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-green-400 transition-colors uppercase tracking-widest font-bold">
-                    Initialize Protocol <ExternalLink size={14} />
-                </a>
-            </div>
-        );
-
-        const App = () => {
-            const stats = useSystemStats();
-            const [activeTab, setActiveTab] = useState('projects');
-            const [text, setText] = useState('');
-            const fullText = "INITIALIZING BOBGNARLY420... ACCESS GRANTED.";
+        // Music Projects Component
+        const MusicProjects = () => {
+            const [tracks, setTracks] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(null);
 
             useEffect(() => {
-                let i = 0;
-                const timer = setInterval(() => {
-                    if (i < fullText.length) {
-                        setText(prev => prev + fullText.charAt(i));
-                        i++;
-                    } else {
-                        clearInterval(timer);
-                    }
-                }, 30);
-                return () => clearInterval(timer);
+                fetch('/music-data.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load music data');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.music && Array.isArray(data.music)) {
+                            setTracks(data.music);
+                        } else {
+                            throw new Error('Invalid music data format');
+                        }
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error('Error loading music:', err);
+                        setError(err.message);
+                        setLoading(false);
+                    });
             }, []);
 
             return (
-                <div className="min-h-screen bg-[#050505] text-zinc-300 relative selection:bg-green-900 selection:text-green-100">
-                    <div className="scanline"></div>
-
-                    {/* Header / HUD */}
-                    <header className="fixed top-0 left-0 w-full z-50 border-b border-zinc-800 bg-[#050505]/90 backdrop-blur-sm">
-                        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 flex items-center justify-center text-green-500">
-                                    <Shield size={16} />
-                                </div>
-                                <div className="font-bold tracking-widest text-lg text-white">
-                                    BOB<span className="text-green-500">GNARLY</span>420
-                                </div>
-                            </div>
-
-                            <div className="hidden md:flex gap-8 text-xs font-mono tracking-widest text-zinc-500">
-                                <div className="flex items-center gap-2">
-                                    <Activity size={12} className="text-green-500" />
-                                    FPS: {stats.fps}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Cpu size={12} className="text-green-500" />
-                                    MEM: {stats.memory}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Lock size={12} className="text-green-500" />
-                                    SECURE
-                                </div>
-                            </div>
+                <section id="music" className="py-20 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex items-center gap-4 mb-12">
+                            <Music className="text-pink-600" size={32} />
+                            <h2 className="text-4xl font-bold heading-font">Music Projects</h2>
                         </div>
+
+                        {loading ? (
+                            <div className="text-center py-12">
+                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+                                <p className="mt-4 text-gray-600">Loading music...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded">
+                                <p className="text-red-800">Unable to load music content. Please try again later.</p>
+                            </div>
+                        ) : tracks.length === 0 ? (
+                            <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                                <Music className="text-gray-400 mx-auto mb-4" size={48} />
+                                <p className="text-gray-600">No music tracks yet. Check back soon!</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {tracks.map((track) => (
+                                    <div key={track.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                                        {track.embedCode && track.embedCode.trim() !== '' && (
+                                            <div className="aspect-video bg-gray-100" dangerouslySetInnerHTML={{ __html: track.embedCode }} />
+                                        )}
+                                        <div className="p-6">
+                                            <div className="flex items-start justify-between mb-4">
+                                                <div>
+                                                    <h3 className="text-xl font-semibold mb-1">{track.title}</h3>
+                                                    <p className="text-sm text-gray-500">{track.type} • {track.year}</p>
+                                                </div>
+                                                <Music className="text-pink-400" size={24} />
+                                            </div>
+                                            <p className="text-gray-600 mb-4">{track.description}</p>
+                                            {track.link && track.link.trim() !== '' && (
+                                                <a
+                                                    href={track.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 font-medium"
+                                                >
+                                                    Listen Now <ExternalLink size={16} />
+                                                </a>
+                                            )}
+                                            {(!track.link || track.link.trim() === '') && (!track.embedCode || track.embedCode.trim() === '') && (
+                                                <div className="bg-gradient-to-r from-pink-500 to-purple-500 h-1 rounded-full w-full"></div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+            return (
+                <div className="min-h-screen bg-white">
+                    {/* Header */}
+                    <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+                        <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                            <a href="#" className="text-2xl font-bold heading-font gradient-text">
+                                Ev
+                            </a>
+
+                            {/* Desktop Navigation */}
+                            <div className="hidden md:flex items-center gap-8">
+                                <a href="#art" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
+                                    Art
+                                </a>
+                                <a href="#code" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                                    Code
+                                </a>
+                                <a href="#music" className="text-gray-700 hover:text-pink-600 transition-colors font-medium">
+                                    Music
+                                </a>
+                                <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">
+                                    Contact
+                                </a>
+                            </div>
+
+                            {/* Mobile Menu Button */}
+                            <button
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                className="md:hidden p-2"
+                            >
+                                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
+                        </nav>
+
+                        {/* Mobile Menu */}
+                        {mobileMenuOpen && (
+                            <div className="md:hidden bg-white border-t border-gray-200">
+                                <div className="px-6 py-4 flex flex-col gap-4">
+                                    <a href="#art" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 hover:text-purple-600 font-medium">
+                                        Art
+                                    </a>
+                                    <a href="#code" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 hover:text-blue-600 font-medium">
+                                        Code
+                                    </a>
+                                    <a href="#music" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 hover:text-pink-600 font-medium">
+                                        Music
+                                    </a>
+                                    <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 hover:text-gray-900 font-medium">
+                                        Contact
+                                    </a>
+                                </div>
+                            </div>
+                        )}
                     </header>
 
-                    <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-                        {/* Hero Section */}
-                        <section className="mb-24 relative">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full pointer-events-none"></div>
-
-                            <div className="inline-flex items-center gap-2 px-3 py-1 border border-green-900/50 bg-green-900/10 text-green-400 text-xs tracking-widest mb-6">
-                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                                SYSTEM STATUS: ONLINE
-                            </div>
-
-                            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 glitch-text leading-tight max-w-4xl" data-text="OSINT // SECURITY // TOOLING">
-                                OSINT // SECURITY<br />
-                                <span className="text-zinc-600">TOOLING_</span>
+                    {/* Hero Section */}
+                    <section className="pt-32 pb-20 px-6">
+                        <div className="max-w-6xl mx-auto text-center">
+                            <h1 className="text-5xl md:text-7xl font-bold heading-font mb-6 gradient-text">
+                                Creative Portfolio
                             </h1>
-
-                            <p className="max-w-xl text-zinc-400 text-lg leading-relaxed mb-8 border-l-2 border-green-500 pl-6">
-                                Advanced client-side intelligence gathering and performance enforcement.
-                                Building the tools that build the web, while watching the watchers.
+                            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                                Artist, Developer, and Music Creator
                             </p>
-
-                            <div className="flex flex-wrap gap-4">
-                                <a href="https://github.com/BobGnarly420" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 font-bold text-sm tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2">
-                                    <Github size={18} />
-                                    GITHUB_ACCESS
+                            <div className="flex items-center justify-center gap-4">
+                                <a
+                                    href="#art"
+                                    className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow duration-300"
+                                >
+                                    Explore My Work
                                 </a>
-                                <button onClick={() => window.scrollTo({top: 1000, behavior: 'smooth'})} className="border border-zinc-700 px-6 py-3 font-bold text-sm tracking-widest text-zinc-400 hover:border-green-500 hover:text-green-400 transition-colors">
-                                    VIEW_PROTOCOLS
-                                </button>
-                            </div>
-                        </section>
-
-                        {/* Recursive Diagnostic Strip */}
-                        <div className="w-full border-y border-zinc-800 bg-zinc-900/20 py-4 mb-24 overflow-hidden">
-                            <div className="flex items-center justify-between gap-12 font-mono text-xs text-zinc-500 whitespace-nowrap overflow-x-auto px-4">
-                                <span>CURRENT_BUILD: v2.0.4 (RECURSIVE)</span>
-                                <span>RENDER_ENGINE: REACT_18</span>
-                                <span>TAILWIND: ENABLED</span>
-                                <span className="hidden md:inline">USER_AGENT: {navigator.userAgent.substring(0, 30)}...</span>
-                                <span>COORDINATES: REDACTED</span>
+                                <a
+                                    href="https://github.com/BobGnarly420"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-8 py-3 border-2 border-gray-300 rounded-full font-medium hover:border-gray-400 transition-colors duration-300 flex items-center gap-2"
+                                >
+                                    <Github size={20} />
+                                    GitHub
+                                </a>
                             </div>
                         </div>
+                    </section>
 
-                        {/* Projects Grid */}
-                        <section>
-                            <div className="flex items-end justify-between mb-12">
-                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                                    <Database className="text-green-500" />
-                                    ACTIVE PROTOCOLS
-                                </h2>
-                                <span className="hidden md:block text-zinc-600 font-mono text-xs">DIR: /usr/local/projects</span>
+                    {/* Main Content */}
+                    <ArtGallery />
+                    <CodePortfolio />
+                    <MusicProjects />
+
+                    {/* Contact Section */}
+                    <section id="contact" className="py-20 px-6 bg-gray-50">
+                        <div className="max-w-6xl mx-auto text-center">
+                            <div className="flex items-center justify-center gap-4 mb-8">
+                                <Mail className="text-gray-600" size={32} />
+                                <h2 className="text-4xl font-bold heading-font">Get In Touch</h2>
                             </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {/* Project 1: OSINT */}
-                                <ProjectCard
-                                    title="GHOST_CHAIN"
-                                    role="Intelligence"
-                                    desc="Client-side Open Source Intelligence suite. Zero-backend architecture ensures operator anonymity. Capable of domain reconnaissance, social graph mapping, and metadata extraction."
-                                    tags={['JS', 'Crypto API', 'Forensics']}
-                                    link="/osint.html"
-                                    icon={Eye}
-                                    stat="30+"
-                                    statLabel="Modules"
-                                />
-
-                                {/* Project 2: Bundle Analyzer */}
-                                <ProjectCard
-                                    title="BUNDLE_AUTOPSY"
-                                    role="Diagnostics"
-                                    desc="CLI forensic tool for JavaScript bundles. Detects bloating patterns, duplicate function signatures, and dependency creep before deployment."
-                                    tags={['Node.js', 'CLI', 'CI/CD']}
-                                    link="/projects/bundle-analyzer"
-                                    icon={Layers}
-                                    stat="0ms"
-                                    statLabel="Latency"
-                                />
-
-                                {/* Project 3: Lighthouse Enforcer */}
-                                <ProjectCard
-                                    title="LIGHTHOUSE_SENTINEL"
-                                    role="Enforcement"
-                                    desc="Automated quality gatekeeper. Validates Core Web Vitals and accessibility scores against strict budgets. Fails build pipelines upon regression."
-                                    tags={['Performance', 'Automation']}
-                                    link="/projects/lighthouse-enforcer"
-                                    icon={BarChart2}
-                                    stat="100%"
-                                    statLabel="Coverage"
-                                />
-
-                                {/* Project 4: Recursive/Meta */}
-                                <ProjectCard
-                                    title="SELF_INDEX"
-                                    role="Meta-Structure"
-                                    desc="The architecture you are currently viewing. A recursive React application that monitors its own rendering performance and displays its source logic."
-                                    tags={['React', 'Recursion', 'Quine']}
-                                    link="https://github.com/BobGnarly420/bobgnarly420.github.io"
-                                    icon={FileCode}
-                                    stat="SELF"
-                                    statLabel="Target"
-                                />
-
-                                {/* Project 5: Steganography */}
-                                <ProjectCard
-                                    title="WHISPER_KEY"
-                                    role="Cryptography"
-                                    desc="Browser-based image steganography tool. Embeds encrypted text payloads into pixel data using least significant bit (LSB) encoding."
-                                    tags={['JavaScript', 'Crypto', 'LSB']}
-                                    link="/stego.html"
-                                    icon={Lock}
-                                    stat="AES-256"
-                                    statLabel="Encryption"
-                                />
-
-                                {/* Project 6: Network Analyzer */}
-                                <ProjectCard
-                                    title="NET_INTERCEPT"
-                                    role="Network"
-                                    desc="Real-time network traffic analyzer for HTTP headers and performance metrics. Monitor requests, inspect connections, and analyze response times entirely in the browser."
-                                    tags={['Performance API', 'Fetch API', 'Network']}
-                                    link="/network.html"
-                                    icon={Wifi}
-                                    stat="Real-time"
-                                    statLabel="Mode"
-                                />
+                            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                                Interested in collaborating or want to learn more about my work?
+                            </p>
+                            <div className="flex items-center justify-center gap-6">
+                                <a
+                                    href="https://github.com/BobGnarly420"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+                                >
+                                    <Github size={24} />
+                                    <span className="font-medium">GitHub</span>
+                                </a>
                             </div>
-                        </section>
-
-                        {/* Skills Section */}
-                        <section className="mt-24">
-                            <div className="flex items-end justify-between mb-12">
-                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                                    <Terminal className="text-green-500" />
-                                    CAPABILITIES
-                                </h2>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Languages</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            JavaScript (ES6+)
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Node.js
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            HTML5/CSS3
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            React
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Tools & Frameworks</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Git & GitHub
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Chart.js
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            CI/CD Pipelines
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Command Line Tools
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Focus Areas</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            OSINT & Security
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Performance Optimization
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Build Automation
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Developer Tooling
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </section>
-                    </main>
+                        </div>
+                    </section>
 
                     {/* Footer */}
-                    <footer className="border-t border-zinc-800 bg-zinc-900 py-12 px-6">
-                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div className="text-zinc-500 font-mono text-sm">
-                                © 2024 BOB_GNARLY_420. ALL RIGHTS RESERVED.
-                            </div>
-                            <div className="flex gap-6">
-                                <a href="https://github.com/BobGnarly420/bobgnarly420.github.io" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Source</a>
-                                <a href="https://github.com/BobGnarly420" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">GitHub</a>
-                                <a href="#" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Contact</a>
-                            </div>
+                    <footer className="py-8 px-6 bg-white border-t border-gray-200">
+                        <div className="max-w-6xl mx-auto text-center text-gray-600">
+                            <p>© 2024 Ev. All rights reserved.</p>
                         </div>
                     </footer>
                 </div>

@@ -1,0 +1,40 @@
+{
+  "music": [
+    {
+      "id": 1,
+      "title": "Midnight Dreams",
+      "type": "Electronic",
+      "year": "2024",
+      "description": "Ambient electronic composition exploring nocturnal themes",
+      "link": "",
+      "embedCode": ""
+    },
+    {
+      "id": 2,
+      "title": "Urban Rhythm",
+      "type": "Hip-Hop Beat",
+      "year": "2024",
+      "description": "City-inspired beat with jazzy undertones",
+      "link": "",
+      "embedCode": ""
+    },
+    {
+      "id": 3,
+      "title": "Digital Waves",
+      "type": "Synthwave",
+      "year": "2023",
+      "description": "Retro-futuristic synth journey",
+      "link": "",
+      "embedCode": ""
+    },
+    {
+      "id": 4,
+      "title": "Acoustic Memories",
+      "type": "Indie Folk",
+      "year": "2023",
+      "description": "Intimate guitar-driven storytelling",
+      "link": "",
+      "embedCode": ""
+    }
+  ]
+}
