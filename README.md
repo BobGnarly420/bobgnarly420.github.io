@@ -1,116 +1,88 @@
-# BobGnarly420 Portfolio
+# bobgnarly420.github.io
 
-Developer portfolio showcasing OSINT tools, security research, cryptography, and performance optimization.
+Personal research site — **[bobgnarly420.github.io](https://bobgnarly420.github.io)**
 
-**Live Site:** [bobgnarly420.github.io](https://bobgnarly420.github.io)
-
-## Featured Projects
-
-- **🔍 OSINT Toolchain** - 30+ intelligence gathering tools (domain analysis, social media OSINT, hash analysis)
-- **🔐 Steganography** - AES-256-GCM encrypted message hiding in images via LSB encoding
-- **📡 Network Analyzer** - Real-time HTTP header and performance monitoring
-- **🔬 Bundle Analyzer** - JavaScript bundle size analysis and CI/CD enforcement
-- **🎯 Lighthouse Enforcer** - Performance budget validation for Core Web Vitals
+Static single-file site, no build step. Styled in **Incision**, the design
+language defined in [`mottled/design_tokens.py`](https://github.com/BobGnarly420/mottled/blob/main/design_tokens.py):
+dark navy void, one precision-blue accent, 1px borders, near-sharp corners,
+monospace for every data value. Colours here mirror those tokens — change them
+there first.
 
 ---
 
-## Projects
+## Research direction
 
-### 1. Bundle Analyzer
-CLI tool for analyzing JavaScript bundle sizes and enforcing size budgets in CI/CD.
+Measurement tools for high-dimensional processes that are usually described
+rather than observed. Two substrates, one problem: a trajectory through a state
+space nobody can see directly, and the question of how much of any picture of it
+survived the projection.
 
-- **Location:** `projects/bundle-analyzer/`
-- **Features:** Zero dependencies, detects optimization opportunities, configurable budgets
-- **Tests:** `npm test` (all passing)
-- **Demo:** `node cli.js --input demo/sample-bundle.js --budget 100`
+### 1. Mechanistic interpretability — [Mottled](https://github.com/BobGnarly420/mottled)
 
-[View README](projects/bundle-analyzer/README.md)
+Interactive latent trajectory explorer for transformer forward passes. Captures
+the residual stream after every block, projects it, estimates the local
+manifold, and animates how a prompt moves, turns and settles through the layers.
+Not a neuron inspector — the object of study is the dynamics.
 
-### 2. Lighthouse Budget Enforcer
-Tool for validating Lighthouse audit reports against performance budgets.
+- Real SAE features, fetched and then *measured* for fit rather than assumed
+- Logit-lens readouts, attention patterns, exact attn/MLP residual decomposition
+- Model-agnostic and verified: GPT-2 and Qwen2.5-1.5B-Instruct on one terrain
+- Live: [explorer + WebGL viewer](https://bobgnarly420.github.io/mottled/)
 
-- **Location:** `projects/lighthouse-enforcer/`
-- **Features:** Core Web Vitals validation, severity categorization, CI/CD integration
-- **Tests:** `npm test` (all passing)
-- **Demo:** `node cli.js --report demo/sample-report.json --budget demo/budget.json`
+### 2. Computational neuropharmacology — [meth-neurodiv-model](https://github.com/BobGnarly420/meth-neurodiv-model)
 
-[View README](projects/lighthouse-enforcer/README.md)
+Six-layer simulation of methamphetamine perturbations in neurodivergent reward
+and arousal networks, from millisecond dopamine terminal kinetics to months of
+chronic neuroadaptation. Temperature acts as a bifurcation parameter for
+neurotoxicity, not a linear risk multiplier.
 
-### 3. OSINT Toolchain (GHOST_CHAIN)
-Comprehensive Open Source Intelligence gathering suite with 30+ tools.
+- RL layer rebuilt on ANCCR (Jeong et al. 2022) with IRI-scaling per Burke et al. 2026
+- Neurotypical / ADHD-C / ADHD-I architectures under identical exposure
+- DOI: [10.5281/zenodo.19625787](https://doi.org/10.5281/ZENODO.19625787)
 
-- **Location:** `osint.html`
-- **Live Demo:** [Launch Toolchain](https://bobgnarly420.github.io/osint.html)
-- **Categories:** Domain/IP intelligence, social media OSINT, email intelligence, hash analysis, network tools, metadata extraction
-- **Privacy:** 100% client-side, no backend, no data transmission
+### 3. Agent-native trust infrastructure — [EVT-1](https://github.com/BobGnarly420/evt-1)
 
-### 4. Steganography Tool (WHISPER_KEY)
-Image steganography with AES-256-GCM encryption for hiding encrypted messages in PNG images.
-
-- **Location:** `stego.html`
-- **Live Demo:** [Launch Tool](https://bobgnarly420.github.io/stego.html)
-- **Encryption:** AES-256-GCM via Web Crypto API, PBKDF2 key derivation (100,000 iterations)
-- **Method:** LSB (Least Significant Bit) encoding
-- **Features:** Encode/decode, password protection, client-side only
-
-### 5. Network Analyzer (NET_INTERCEPT)
-Real-time network traffic analyzer for HTTP headers and performance metrics.
-
-- **Location:** `network.html`
-- **Live Demo:** [Launch Analyzer](https://bobgnarly420.github.io/network.html)
-- **Features:** HTTP header inspection, performance metrics, request logging, resource monitoring
-- **APIs:** Fetch API, Performance API
+TLS certificates, but for product claims. Deterministic canonical URNs for
+product identity plus Ed25519-signed trust assertions that agents verify
+locally — the server stores and serves, it is not a trust root. Ships an MCP
+server so the full workflow is available as agent tools.
 
 ---
 
-## Tech Stack
+## What lives in this repo
 
-- **Languages:** JavaScript (ES6+), Node.js, HTML/CSS, React
-- **Web APIs:** Web Crypto API (AES-256-GCM), Canvas API, Performance API, Fetch API
-- **Tools:** Git, GitHub Actions, Tailwind CSS
-- **Focus:** OSINT, security tools, build tools, performance, CI/CD automation
+| Path | What it is | Status |
+| --- | --- | --- |
+| `index.html` | The site itself — static HTML/CSS, no framework | Live |
+| `osint.html` | GHOST_CHAIN — client-side OSINT toolchain | Archive |
+| `stego.html` | WHISPER_KEY — LSB steganography, AES-256-GCM via Web Crypto | Archive |
+| `network.html` | NET_INTERCEPT — HTTP header and timing inspector | Archive |
+| `projects/bundle-analyzer/` | Zero-dependency JS bundle size CLI | Archive |
+| `projects/lighthouse-enforcer/` | Core Web Vitals budget enforcement for CI | Archive |
+
+The browser tools are fully client-side: no backend, nothing leaves the tab.
+"Archive" means working and still hosted, but no longer the direction of the
+work — see [TESTING.md](TESTING.md) for their manual test procedures.
+
+The research code lives in its own repositories, linked above.
 
 ---
 
-## Running Locally
+## Running locally
 
 ```bash
-# Clone repository
 git clone https://github.com/BobGnarly420/bobgnarly420.github.io.git
 cd bobgnarly420.github.io
 
-# Test tools
-cd projects/bundle-analyzer && npm test
-cd ../lighthouse-enforcer && npm test
+python3 -m http.server 8000     # then open http://localhost:8000
 
-# Run demos
-cd projects/bundle-analyzer && npm run demo
-cd ../lighthouse-enforcer && npm run demo
-
-# View portfolio
-open index.html
+npm test                        # runs both archived CLI test suites
 ```
 
----
-
-## CI/CD
-
-GitHub Actions runs tests on every push:
-- Bundle Analyzer tests
-- Lighthouse Enforcer tests
-- Demo commands
-
-See [.github/workflows/test.yml](.github/workflows/test.yml)
-
----
+CI ([`.github/workflows/test.yml`](.github/workflows/test.yml)) runs those suites
+on every push; [`deploy.yml`](.github/workflows/deploy.yml) publishes the site to
+GitHub Pages from `main`.
 
 ## License
 
-MIT - See individual project LICENSE files
-
----
-
-## Contact
-
-- GitHub: [@BobGnarly420](https://github.com/BobGnarly420)
-- Portfolio: [bobgnarly420.github.io](https://bobgnarly420.github.io)
+MIT — see [LICENSE](LICENSE). Individual projects carry their own.

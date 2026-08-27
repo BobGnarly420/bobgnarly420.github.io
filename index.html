@@ -1,573 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BobGnarly420 // SYSTEM_READY</title>
-    <meta name="description" content="Client-side OSINT toolchain, performance tooling, and security research. Building the tools that build the web.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latent Dynamics — Research &amp; Instrumentation</title>
+<meta name="description" content="Research and tooling on latent dynamics: mechanistic interpretability of transformer residual streams, computational neuropharmacology of reward and arousal circuits, and agent-native trust protocols.">
+<link rel="canonical" href="https://bobgnarly420.github.io/">
 
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Latent Dynamics — Research &amp; Instrumentation">
+<meta property="og:description" content="Mechanistic interpretability, computational neuropharmacology, and agent-native protocol design — with the instruments to look at each.">
+<meta property="og:url" content="https://bobgnarly420.github.io/">
 
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* ── Incision design language ─────────────────────────────────────────────
+   Shared with github.com/BobGnarly420/mottled (design_tokens.py):
+   dark navy void, one precision-blue accent, 1px borders, near-sharp
+   corners, monospace for every data value.                                */
+:root{
+  --base:#080B18; --surface-0:#0C1020; --surface-1:#11162A;
+  --border:#1E2540; --border-strong:#283050;
+  --fg-1:#EDF0FA; --fg-2:#818FB8;
+  --accent:#4B7CF3; --accent-subtle:rgba(75,124,243,.08);
+  --teal:#00CCA8; --amber:#D4934A; --red:#E05050; --green:#38B07A;
+  --radius-xs:2px; --radius-sm:3px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --sans:"DM Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --gutter:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--base); color:var(--fg-1);
+  font:16px/1.6 var(--sans); -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+.dim{color:var(--fg-2)}
 
-    <!-- Google Fonts: JetBrains Mono for that dev/hacker aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+/* faint grid over the void — the manifold, not decoration */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    linear-gradient(to right,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(to bottom,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    radial-gradient(ellipse 80% 55% at 50% -10%,rgba(75,124,243,.10),transparent 70%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 60vh,transparent 100vh);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 60vh,transparent 100vh);
+}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
 
-    <style>
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background-color: #0a0a0a;
-            color: #e5e5e5;
-        }
+/* ── masthead ─────────────────────────────────────────────────────────── */
+header.top{
+  position:sticky; top:0; z-index:10;
+  background:rgba(8,11,24,.86); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;text-decoration:none}
+.brand .glyph{
+  width:9px;height:9px;background:var(--accent);border-radius:var(--radius-xs);
+  box-shadow:0 0 0 4px var(--accent-subtle);flex:none
+}
+nav.top-nav{display:flex;gap:22px;font-size:13px}
+nav.top-nav a{
+  color:var(--fg-2);text-decoration:none;font-family:var(--mono);
+  letter-spacing:.02em;transition:color .18s var(--ease)
+}
+nav.top-nav a:hover{color:var(--fg-1)}
+@media(max-width:760px){nav.top-nav{gap:16px}nav.top-nav a:nth-child(n+4){display:none}}
+@media(max-width:560px){nav.top-nav a:nth-child(n+3){display:none}}
+@media(max-width:420px){nav.top-nav{display:none}}
 
-        .glitch-text {
-            position: relative;
-        }
+/* ── hero ─────────────────────────────────────────────────────────────── */
+.hero{padding:clamp(64px,11vw,132px) 0 clamp(48px,7vw,80px)}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:26px
+}
+.eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(to right,var(--border-strong),transparent);max-width:220px}
+h1{
+  font-size:clamp(34px,5.4vw,60px);line-height:1.06;font-weight:700;
+  letter-spacing:-.03em;max-width:19ch
+}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{margin-top:26px;max-width:66ch;font-size:clamp(16px,1.7vw,18.5px);color:var(--fg-2)}
+.lede strong{color:var(--fg-1);font-weight:500}
 
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+.metrics{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--border);border:1px solid var(--border);
+  border-radius:var(--radius-sm);margin-top:46px;overflow:hidden
+}
+.metric{background:var(--surface-0);padding:18px 20px}
+.metric .v{font-family:var(--mono);font-size:24px;font-weight:500;letter-spacing:-.02em}
+.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);margin-top:6px}
 
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -1px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
+/* ── section scaffolding ──────────────────────────────────────────────── */
+section{padding:clamp(52px,7vw,88px) 0;border-top:1px solid var(--border)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:12px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+h2{font-size:clamp(22px,2.8vw,29px);font-weight:700;letter-spacing:-.02em}
+.sec-sub{color:var(--fg-2);max-width:70ch;margin-bottom:40px}
 
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -1px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
+/* ── research threads ─────────────────────────────────────────────────── */
+.threads{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.thread{
+  background:var(--surface-0);padding:clamp(24px,3.2vw,36px);
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(24px,4vw,52px);
+  transition:background .2s var(--ease)
+}
+.thread:hover{background:var(--surface-1)}
+@media(max-width:860px){.thread{grid-template-columns:1fr;gap:26px}}
+.thread-status{
+  display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-2);margin-bottom:14px
+}
+.dot{width:6px;height:6px;border-radius:50%;flex:none}
+.dot.active{background:var(--teal);box-shadow:0 0 0 3px rgba(0,204,168,.14)}
+.dot.iterating{background:var(--accent);box-shadow:0 0 0 3px var(--accent-subtle)}
+.dot.published{background:var(--amber);box-shadow:0 0 0 3px rgba(212,147,74,.14)}
+h3{font-size:clamp(19px,2.2vw,23px);font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.thread .field{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:16px}
+.thread p{color:var(--fg-2);font-size:15px;margin-bottom:14px}
+.thread p strong{color:var(--fg-1);font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.tag{
+  font-family:var(--mono);font-size:11px;color:var(--fg-2);
+  border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:3px 8px
+}
+.links{display:flex;flex-wrap:wrap;gap:18px;margin-top:22px}
+.links a{
+  font-family:var(--mono);font-size:12.5px;color:var(--accent);text-decoration:none;
+  display:inline-flex;align-items:center;gap:7px;padding-bottom:2px;
+  border-bottom:1px solid transparent;transition:border-color .18s var(--ease)
+}
+.links a:hover{border-bottom-color:var(--accent)}
+.links a::after{content:"↗";font-size:11px;opacity:.65}
+.links a.internal::after{content:"→"}
 
-        @keyframes glitch-anim {
-            0% { clip: rect(13px, 9999px, 81px, 0); }
-            5% { clip: rect(89px, 9999px, 12px, 0); }
-            10% { clip: rect(48px, 9999px, 63px, 0); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
+/* findings rail — the data column of each thread */
+.rail{border-left:1px solid var(--border-strong);padding-left:clamp(16px,2vw,24px)}
+.rail h4{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--fg-2);font-weight:500;margin-bottom:16px
+}
+.rail dl{display:flex;flex-direction:column;gap:14px}
+.rail dt{font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:-.01em}
+.rail dt.accent{color:var(--accent)}
+.rail dt.teal{color:var(--teal)}
+.rail dd{font-size:13px;color:var(--fg-2);line-height:1.5;margin-top:3px}
+@media(max-width:860px){.rail{border-left:none;border-top:1px solid var(--border-strong);padding-left:0;padding-top:24px}}
 
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 11px, 0); }
-            5% { clip: rect(23px, 9999px, 76px, 0); }
-            10% { clip: rect(8px, 9999px, 32px, 0); }
-            100% { clip: rect(1px, 9999px, 1px, 0); }
-        }
+/* ── instruments table ────────────────────────────────────────────────── */
+.table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
+thead th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-2);font-weight:500;
+  padding:13px 18px;background:var(--surface-1);border-bottom:1px solid var(--border)
+}
+tbody td{padding:15px 18px;border-bottom:1px solid var(--border);background:var(--surface-0);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-1)}
+td.name{font-weight:500;white-space:nowrap}
+td.name a{text-decoration:none;border-bottom:1px solid var(--border-strong);transition:border-color .18s var(--ease)}
+td.name a:hover{border-bottom-color:var(--accent)}
+td.what{color:var(--fg-2)}
+td.stack{font-family:var(--mono);font-size:12px;color:var(--fg-2);white-space:nowrap}
+.pill{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:2px 7px;
+  color:var(--fg-2);white-space:nowrap
+}
+.pill.live{color:var(--teal);border-color:rgba(0,204,168,.35)}
+.pill.maintained{color:var(--accent);border-color:rgba(75,124,243,.35)}
+.pill.archive{color:var(--fg-2)}
 
-        .scanline {
-            width: 100%;
-            height: 100px;
-            z-index: 10;
-            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(51, 255, 0, 0.02) 50%, rgba(0,0,0,0) 100%);
-            opacity: 0.1;
-            position: absolute;
-            bottom: 100%;
-            animation: scanline 10s linear infinite;
-            pointer-events: none;
-        }
+/* ── method ───────────────────────────────────────────────────────────── */
+.method{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.principle{background:var(--surface-0);padding:26px 24px}
+.principle .n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em;margin-bottom:12px}
+.principle h4{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+.principle p{font-size:14px;color:var(--fg-2)}
 
-        @keyframes scanline {
-            0% { bottom: 100%; }
-            100% { bottom: -100%; }
-        }
+/* ── footer ───────────────────────────────────────────────────────────── */
+footer{border-top:1px solid var(--border);padding:40px 0 56px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+footer .who{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
+footer nav{display:flex;gap:22px}
+footer nav a{font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;transition:color .18s var(--ease)}
+footer nav a:hover{color:var(--accent)}
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #22c55e;
-        }
-    </style>
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--radius-xs)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="glyph"></span>BobGnarly420</a>
+    <nav class="top-nav">
+      <a href="#research">Research</a>
+      <a href="#instruments">Instruments</a>
+      <a href="#method">Method</a>
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+    </nav>
+  </div>
+</header>
 
-        // --- Inline Icon Components (Replaces external dependency for reliability) ---
-        const IconBase = ({ children, size = 24, className = "" }) => (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={size}
-                height={size}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={className}
-            >
-                {children}
-            </svg>
-        );
+<main id="top">
 
-        const Icons = {
-            Shield: (props) => (
-                <IconBase {...props}>
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </IconBase>
-            ),
-            Activity: (props) => (
-                <IconBase {...props}>
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                </IconBase>
-            ),
-            Cpu: (props) => (
-                <IconBase {...props}>
-                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-                    <rect x="9" y="9" width="6" height="6"/>
-                    <line x1="9" y1="1" x2="9" y2="4"/>
-                    <line x1="15" y1="1" x2="15" y2="4"/>
-                    <line x1="9" y1="20" x2="9" y2="23"/>
-                    <line x1="15" y1="20" x2="15" y2="23"/>
-                    <line x1="20" y1="9" x2="23" y2="9"/>
-                    <line x1="20" y1="14" x2="23" y2="14"/>
-                    <line x1="1" y1="9" x2="4" y2="9"/>
-                    <line x1="1" y1="14" x2="4" y2="14"/>
-                </IconBase>
-            ),
-            Lock: (props) => (
-                <IconBase {...props}>
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </IconBase>
-            ),
-            Database: (props) => (
-                <IconBase {...props}>
-                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                </IconBase>
-            ),
-            Eye: (props) => (
-                <IconBase {...props}>
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </IconBase>
-            ),
-            Layers: (props) => (
-                <IconBase {...props}>
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                    <polyline points="2 17 12 22 22 17"/>
-                    <polyline points="2 12 12 17 22 12"/>
-                </IconBase>
-            ),
-            BarChart2: (props) => (
-                <IconBase {...props}>
-                    <line x1="18" y1="20" x2="18" y2="10"/>
-                    <line x1="12" y1="20" x2="12" y2="4"/>
-                    <line x1="6" y1="20" x2="6" y2="14"/>
-                </IconBase>
-            ),
-            FileCode: (props) => (
-                <IconBase {...props}>
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <path d="m10 13-2 2 2 2"/>
-                    <path d="m14 17 2-2-2-2"/>
-                </IconBase>
-            ),
-            Wifi: (props) => (
-                <IconBase {...props}>
-                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-                    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                    <line x1="12" y1="20" x2="12.01" y2="20"/>
-                </IconBase>
-            ),
-            ExternalLink: (props) => (
-                <IconBase {...props}>
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                    <polyline points="15 3 21 3 21 9"/>
-                    <line x1="10" y1="14" x2="21" y2="3"/>
-                </IconBase>
-            ),
-            Terminal: (props) => (
-                <IconBase {...props}>
-                    <polyline points="4 17 10 11 4 5"/>
-                    <line x1="12" y1="19" x2="20" y2="19"/>
-                </IconBase>
-            ),
-            Github: (props) => (
-                <IconBase {...props}>
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                </IconBase>
-            )
-        };
+  <div class="wrap hero">
+    <div class="eyebrow">Latent dynamics — artificial and biological</div>
+    <h1>Instruments for systems that <em>will not hold still</em>.</h1>
+    <p class="lede">
+      I build measurement tools for high-dimensional processes that are usually
+      described rather than observed: the residual stream of a transformer as it
+      moves through its layers, and dopaminergic reward circuitry under
+      pharmacological load. Two substrates, one problem —
+      <strong>a trajectory through a state space nobody can see directly</strong>,
+      and the question of how much of any picture of it survived the projection.
+    </p>
 
-        const { Terminal, Shield, Eye, BarChart2, Cpu, FileCode, ExternalLink, Lock, Activity, Layers, Wifi, Database, Github } = Icons;
+    <div class="metrics">
+      <div class="metric"><div class="v">3</div><div class="k">Active threads</div></div>
+      <div class="metric"><div class="v">6</div><div class="k">Model layers (neuro)</div></div>
+      <div class="metric"><div class="v">266</div><div class="k">Tests in Mottled</div></div>
+      <div class="metric"><div class="v">0.0000</div><div class="k">Residual recon. error</div></div>
+    </div>
+  </div>
 
-        // --- Mock Data simulating a "Recursive" system check ---
-        const useSystemStats = () => {
-            const [stats, setStats] = useState({
-                fps: 60,
-                memory: '14.2 MB',
-                integrity: '100%',
-                threats: 0
-            });
+  <section id="research">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">01</span><h2>Research threads</h2></div>
+      <p class="sec-sub">
+        Current work, ordered by how much of my attention it is taking. Each thread
+        ships as running code rather than as a claim.
+      </p>
 
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    setStats(prev => ({
-                        fps: Math.floor(58 + Math.random() * 4),
-                        memory: (12 + Math.random() * 3).toFixed(1) + ' MB',
-                        integrity: '100%',
-                        threats: prev.threats
-                    }));
-                }, 2000);
-                return () => clearInterval(interval);
-            }, []);
+      <div class="threads">
 
-            return stats;
-        };
-
-        const ProjectCard = ({ title, role, desc, tags, link, icon: Icon, stat, statLabel }) => (
-            <div className="group relative border border-zinc-800 bg-zinc-900/50 p-6 hover:border-green-500/50 transition-all duration-300 overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Icon size={64} />
-                </div>
-
-                <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-2 text-green-500 font-bold text-xs tracking-widest uppercase">
-                        <span className="w-2 h-2 bg-green-500 animate-pulse rounded-full"></span>
-                        {role}
-                    </div>
-                    <code className="text-zinc-500 text-xs">ID: {Math.floor(Math.random() * 9000) + 1000}</code>
-                </div>
-
-                <h3 className="text-xl font-bold text-zinc-100 mb-2 group-hover:text-green-400 transition-colors">
-                    {title}
-                </h3>
-
-                <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
-                    {desc}
-                </p>
-
-                <div className="grid grid-cols-2 gap-4 mb-6 border-t border-b border-zinc-800 py-3">
-                    <div>
-                        <div className="text-xs text-zinc-600 uppercase tracking-wider">Status</div>
-                        <div className="text-green-400 text-sm font-bold">ACTIVE</div>
-                    </div>
-                    <div className="text-right">
-                        <div className="text-xs text-zinc-600 uppercase tracking-wider">{statLabel}</div>
-                        <div className="text-zinc-300 text-sm font-bold font-mono">{stat}</div>
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                    {tags.map(tag => (
-                        <span key={tag} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-400 border border-zinc-700">
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-
-                <a href={link} className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-green-400 transition-colors uppercase tracking-widest font-bold">
-                    Initialize Protocol <ExternalLink size={14} />
-                </a>
+        <article class="thread">
+          <div>
+            <div class="thread-status"><span class="dot active"></span>Active · primary</div>
+            <h3>Mottled</h3>
+            <div class="field">Mechanistic interpretability · latent dynamics</div>
+            <p>
+              An interactive latent trajectory explorer for transformer forward passes.
+              Mottled captures the residual stream after every block, projects it,
+              estimates the local manifold, and animates how a prompt
+              <strong>moves, turns, and settles</strong> as it flows through the model.
+            </p>
+            <p>
+              It is deliberately <em>not</em> a neuron inspector or an attribution
+              dashboard. The object of study is the dynamics: attractor basins in the
+              late layers, where an A/B pair of prompts separates, what the decode axis
+              looks like when a model starts repeating itself. Real SAE features
+              (fetched, then <strong>measured for fit rather than assumed</strong>),
+              logit-lens readouts, attention patterns and an exact attn/MLP residual
+              decomposition all hang off a single interchange type, <code class="mono">StateTrajectory</code>.
+            </p>
+            <p>
+              Model-agnostic by construction and verified as such: GPT-2's 2019 design
+              and Qwen2.5-1.5B-Instruct (GQA, RoPE, SwiGLU, RMSNorm) land on the same
+              terrain, across a 29×1536 vs 13×768 divide.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">PyTorch</span>
+              <span class="tag">TransformerLens</span><span class="tag">SAEs</span>
+              <span class="tag">WebGL</span><span class="tag">Streamlit</span>
             </div>
-        );
+            <div class="links">
+              <a href="https://bobgnarly420.github.io/mottled/">Live explorer</a>
+              <a href="https://bobgnarly420.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Self-portrait scene</a>
+              <a href="https://github.com/BobGnarly420/mottled">Source</a>
+            </div>
+          </div>
+          <div class="rail">
+            <h4>Instrument readings</h4>
+            <dl>
+              <dt class="accent">max |h[l+1] − (h[l]+attn+mlp)| = 0.0000</dt>
+              <dd>Residual decomposition reconciles exactly on a modern architecture, not just on GPT-2.</dd>
+              <dt class="teal">" into"</dt>
+              <dd>GPT-2's top continuation for "the residual stream moves, turns, and settles" — the model completes the project's own thesis.</dd>
+              <dt>42,257</dt>
+              <dd>Shared vocabulary entries used to put Qwen and GPT-2 on one comparable terrain.</dd>
+              <dt>266 tests · 24 files</dt>
+              <dd>Including cross-language conformance between the Python BVH and its JS port.</dd>
+            </dl>
+          </div>
+        </article>
 
-        const App = () => {
-            const stats = useSystemStats();
-            const [activeTab, setActiveTab] = useState('projects');
-            const [text, setText] = useState('');
-            const fullText = "INITIALIZING BOBGNARLY420... ACCESS GRANTED.";
+        <article class="thread">
+          <div>
+            <div class="thread-status"><span class="dot published"></span>Published · iterating</div>
+            <h3>Meth × neurodivergent reward architecture</h3>
+            <div class="field">Computational neuropharmacology</div>
+            <p>
+              A multi-scale simulation of methamphetamine perturbations in
+              neurodivergent reward and arousal networks, spanning six coupled layers
+              from <strong>millisecond dopamine terminal kinetics to months of chronic
+              neuroadaptation</strong>: DAT reverse transport and VMAT2 packing,
+              temperature-dependent oxidative toxicity, LC–NE gain control,
+              trial-level reinforcement learning, circadian and sleep modulation, and
+              setpoint drift over a 365-day horizon.
+            </p>
+            <p>
+              The interesting result is structural: temperature behaves as a
+              <strong>bifurcation parameter</strong> for neurotoxicity rather than as a
+              linear risk multiplier, and the same drug exposure produces materially
+              different trajectories across neurotypical, ADHD-C and ADHD-I parameter
+              architectures.
+            </p>
+            <p>
+              The RL layer has since been rebuilt on <strong>ANCCR</strong>
+              (Jeong et al. 2022) with IRI-scaling per Burke et al. 2026 — learning rate
+              scales with the inter-reward interval instead of sitting as a free
+              parameter, so total conditioning time is invariant to trial frequency.
+              That replaced a fitted knob with a mechanism.
+            </p>
+            <div class="tags">
+              <span class="tag">NumPy</span><span class="tag">ODE systems</span>
+              <span class="tag">ANCCR</span><span class="tag">Dose–response</span>
+              <span class="tag">Sensitivity analysis</span>
+            </div>
+            <div class="links">
+              <a href="https://doi.org/10.5281/ZENODO.19625787">DOI 10.5281/zenodo.19625787</a>
+              <a href="https://github.com/BobGnarly420/meth-neurodiv-model">Source</a>
+            </div>
+          </div>
+          <div class="rail">
+            <h4>Model structure</h4>
+            <dl>
+              <dt class="accent">6 layers · ms → months</dt>
+              <dd>Terminal kinetics, thermal toxicity, LC–NE gain, RL, sleep/circadian, chronic adaptation.</dd>
+              <dt class="teal">α ∝ IRI</dt>
+              <dd>ANCCR revision: the learning rate is derived, so conditioning time stops depending on trial frequency.</dd>
+              <dt>3 architectures</dt>
+              <dd>Neurotypical, ADHD-combined and ADHD-inattentive parameterizations compared under identical exposure.</dd>
+              <dt>7 figures · OAT sensitivity</dt>
+              <dd>Every headline claim is reproduced by a script, with a one-at-a-time sweep showing which parameters carry it.</dd>
+            </dl>
+          </div>
+        </article>
 
-            useEffect(() => {
-                let i = 0;
-                const timer = setInterval(() => {
-                    if (i < fullText.length) {
-                        setText(prev => prev + fullText.charAt(i));
-                        i++;
-                    } else {
-                        clearInterval(timer);
-                    }
-                }, 30);
-                return () => clearInterval(timer);
-            }, []);
+        <article class="thread">
+          <div>
+            <div class="thread-status"><span class="dot iterating"></span>Active · protocol design</div>
+            <h3>EVT-1</h3>
+            <div class="field">Agent-native trust infrastructure</div>
+            <p>
+              TLS certificates, but for product claims. A minimal agent-first protocol
+              that gives agents a shared way to agree on <strong>what a product is</strong>
+              — deterministic canonical URNs — and to verify <strong>claims about it</strong>
+              via Ed25519-signed trust assertions, without trusting the marketplace that
+              displayed them.
+            </p>
+            <p>
+              Shopping and procurement agents currently inherit whatever a platform tells
+              them; badges and "verified" labels are unverifiable platform artifacts.
+              EVT-1 moves both problems down a level: identity is derived
+              (normalization → alias resolution → fuzzy-match confidence), and the server
+              stores and serves signatures but is explicitly <strong>not a trust root</strong> —
+              agents verify locally. It ships an MCP server, so the whole workflow is
+              available as tools to any MCP-compatible agent.
+            </p>
+            <div class="tags">
+              <span class="tag">Python 3.12</span><span class="tag">FastAPI</span>
+              <span class="tag">Ed25519</span><span class="tag">MCP</span>
+              <span class="tag">Canonical JSON</span><span class="tag">Docker</span>
+            </div>
+            <div class="links">
+              <a href="https://github.com/BobGnarly420/evt-1">Source &amp; protocol spec</a>
+              <a href="https://github.com/BobGnarly420/evt-1/blob/main/llms.txt">llms.txt</a>
+            </div>
+          </div>
+          <div class="rail">
+            <h4>Protocol surface</h4>
+            <dl>
+              <dt class="accent">urn:evt:product:{mfr}-{model}-{variant}</dt>
+              <dd>Deterministic identity — two agents canonicalizing the same product get the same URN.</dd>
+              <dt class="teal">6 MCP tools</dt>
+              <dd>resolve, trust profile, keygen, sign, submit, verify — the full loop from an agent.</dd>
+              <dt>Server ≠ trust root</dt>
+              <dd>Assertions are verified client-side; the service is storage and transport only.</dd>
+            </dl>
+          </div>
+        </article>
 
-            return (
-                <div className="min-h-screen bg-[#050505] text-zinc-300 relative selection:bg-green-900 selection:text-green-100">
-                    <div className="scanline"></div>
+      </div>
+    </div>
+  </section>
 
-                    {/* Header / HUD */}
-                    <header className="fixed top-0 left-0 w-full z-50 border-b border-zinc-800 bg-[#050505]/90 backdrop-blur-sm">
-                        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 flex items-center justify-center text-green-500">
-                                    <Shield size={16} />
-                                </div>
-                                <div className="font-bold tracking-widest text-lg text-white">
-                                    BOB<span className="text-green-500">GNARLY</span>420
-                                </div>
-                            </div>
+  <section id="instruments">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Instruments</h2></div>
+      <p class="sec-sub">
+        Everything that runs. The browser tools are fully client-side — no backend,
+        nothing leaves the tab.
+      </p>
 
-                            <div className="hidden md:flex gap-8 text-xs font-mono tracking-widest text-zinc-500">
-                                <div className="flex items-center gap-2">
-                                    <Activity size={12} className="text-green-500" />
-                                    FPS: {stats.fps}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Cpu size={12} className="text-green-500" />
-                                    MEM: {stats.memory}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Lock size={12} className="text-green-500" />
-                                    SECURE
-                                </div>
-                            </div>
-                        </div>
-                    </header>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Instrument</th><th>What it does</th><th>Stack</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name"><a href="https://bobgnarly420.github.io/mottled/">Mottled explorer</a></td>
+              <td class="what">Captures and animates transformer hidden-state trajectories over a density terrain, with SAE features and logit-lens readouts.</td>
+              <td class="stack">Python · Streamlit</td>
+              <td><span class="pill live">Live</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="https://bobgnarly420.github.io/mottled/viewer/">Mottled viewer</a></td>
+              <td class="what">WebGL viewer for <code class="mono">.mtj</code> scenes with real-ray BVH picking. Bundled GPT-2 and Qwen samples, no install.</td>
+              <td class="stack">WebGL · JS</td>
+              <td><span class="pill live">Live</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="https://github.com/BobGnarly420/meth-neurodiv-model">meth-neurodiv-model</a></td>
+              <td class="what">Six-layer dopaminergic simulation with ANCCR reinforcement learning; regenerates every published figure from source.</td>
+              <td class="stack">Python · NumPy</td>
+              <td><span class="pill maintained">Maintained</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="https://github.com/BobGnarly420/evt-1">EVT-1 server</a></td>
+              <td class="what">Canonical product resolution plus signed, locally verifiable trust assertions, exposed over HTTP and MCP.</td>
+              <td class="stack">FastAPI · MCP</td>
+              <td><span class="pill maintained">Maintained</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="osint.html">GHOST_CHAIN</a></td>
+              <td class="what">Client-side OSINT toolchain — domain and IP reconnaissance, hash analysis, metadata extraction. Zero backend.</td>
+              <td class="stack">Vanilla JS</td>
+              <td><span class="pill archive">Archive</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="stego.html">WHISPER_KEY</a></td>
+              <td class="what">LSB image steganography with AES-256-GCM and PBKDF2 (100k iterations) via the Web Crypto API.</td>
+              <td class="stack">Web Crypto · Canvas</td>
+              <td><span class="pill archive">Archive</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="network.html">NET_INTERCEPT</a></td>
+              <td class="what">HTTP header and response-timing inspector built on the Fetch and Performance APIs.</td>
+              <td class="stack">Performance API</td>
+              <td><span class="pill archive">Archive</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/bundle-analyzer">bundle-analyzer</a></td>
+              <td class="what">Zero-dependency CLI that flags bundle bloat and duplicate function signatures against a size budget.</td>
+              <td class="stack">Node.js · CLI</td>
+              <td><span class="pill archive">Archive</span></td>
+            </tr>
+            <tr>
+              <td class="name"><a href="https://github.com/BobGnarly420/bobgnarly420.github.io/tree/main/projects/lighthouse-enforcer">lighthouse-enforcer</a></td>
+              <td class="what">Validates Lighthouse reports against Core Web Vitals budgets and fails the pipeline on regression.</td>
+              <td class="stack">Node.js · CI</td>
+              <td><span class="pill archive">Archive</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
-                    <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-                        {/* Hero Section */}
-                        <section className="mb-24 relative">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+  <section id="method">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">03</span><h2>How I work</h2></div>
+      <p class="sec-sub">
+        The same four commitments show up in the interpretability code and the
+        pharmacology code, which is most of why they are one body of work.
+      </p>
 
-                            <div className="inline-flex items-center gap-2 px-3 py-1 border border-green-900/50 bg-green-900/10 text-green-400 text-xs tracking-widest mb-6">
-                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                                SYSTEM STATUS: ONLINE
-                            </div>
+      <div class="method">
+        <div class="principle">
+          <div class="n">01</div>
+          <h4>Honesty is load-bearing</h4>
+          <p>Any projection of a high-dimensional process is lossy. Every surface carries its fidelity and uncertainty machinery from day one — a lossy picture has to say where it lies, inline and unavoidably.</p>
+        </div>
+        <div class="principle">
+          <div class="n">02</div>
+          <h4>One interchange type</h4>
+          <p>Producers and consumers never couple. New capture backends and new renderers meet at a single structure, so a feature is added in one place and works everywhere.</p>
+        </div>
+        <div class="principle">
+          <div class="n">03</div>
+          <h4>Derive, don't fit</h4>
+          <p>A free parameter tuned to match data explains nothing. Replacing a fitted learning rate with an interval-scaling law is worth more than a better curve fit.</p>
+        </div>
+        <div class="principle">
+          <div class="n">04</div>
+          <h4>It must run offline</h4>
+          <p>Synthetic backends keep pace with real ones, so the whole pipeline stays explorable and testable with no model download, no API key, and no network.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 glitch-text leading-tight max-w-4xl" data-text="OSINT // SECURITY // TOOLING">
-                                OSINT // SECURITY<br />
-                                <span className="text-zinc-600">TOOLING_</span>
-                            </h1>
+</main>
 
-                            <p className="max-w-xl text-zinc-400 text-lg leading-relaxed mb-8 border-l-2 border-green-500 pl-6">
-                                Advanced client-side intelligence gathering and performance enforcement.
-                                Building the tools that build the web, while watching the watchers.
-                            </p>
+<footer>
+  <div class="wrap">
+    <div class="who">BobGnarly420 · latent dynamics, artificial and biological</div>
+    <nav>
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+      <a href="https://github.com/BobGnarly420/bobgnarly420.github.io">Source</a>
+      <a href="https://doi.org/10.5281/ZENODO.19625787">Zenodo</a>
+    </nav>
+  </div>
+</footer>
 
-                            <div className="flex flex-wrap gap-4">
-                                <a href="https://github.com/BobGnarly420" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 font-bold text-sm tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2">
-                                    <Github size={18} />
-                                    GITHUB_ACCESS
-                                </a>
-                                <button onClick={() => window.scrollTo({top: 1000, behavior: 'smooth'})} className="border border-zinc-700 px-6 py-3 font-bold text-sm tracking-widest text-zinc-400 hover:border-green-500 hover:text-green-400 transition-colors">
-                                    VIEW_PROTOCOLS
-                                </button>
-                            </div>
-                        </section>
-
-                        {/* Recursive Diagnostic Strip */}
-                        <div className="w-full border-y border-zinc-800 bg-zinc-900/20 py-4 mb-24 overflow-hidden">
-                            <div className="flex items-center justify-between gap-12 font-mono text-xs text-zinc-500 whitespace-nowrap overflow-x-auto px-4">
-                                <span>CURRENT_BUILD: v2.0.4 (RECURSIVE)</span>
-                                <span>RENDER_ENGINE: REACT_18</span>
-                                <span>TAILWIND: ENABLED</span>
-                                <span className="hidden md:inline">USER_AGENT: {navigator.userAgent.substring(0, 30)}...</span>
-                                <span>COORDINATES: REDACTED</span>
-                            </div>
-                        </div>
-
-                        {/* Projects Grid */}
-                        <section>
-                            <div className="flex items-end justify-between mb-12">
-                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                                    <Database className="text-green-500" />
-                                    ACTIVE PROTOCOLS
-                                </h2>
-                                <span className="hidden md:block text-zinc-600 font-mono text-xs">DIR: /usr/local/projects</span>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {/* Project 1: OSINT */}
-                                <ProjectCard
-                                    title="GHOST_CHAIN"
-                                    role="Intelligence"
-                                    desc="Client-side Open Source Intelligence suite. Zero-backend architecture ensures operator anonymity. Capable of domain reconnaissance, social graph mapping, and metadata extraction."
-                                    tags={['JS', 'Crypto API', 'Forensics']}
-                                    link="/osint.html"
-                                    icon={Eye}
-                                    stat="30+"
-                                    statLabel="Modules"
-                                />
-
-                                {/* Project 2: Bundle Analyzer */}
-                                <ProjectCard
-                                    title="BUNDLE_AUTOPSY"
-                                    role="Diagnostics"
-                                    desc="CLI forensic tool for JavaScript bundles. Detects bloating patterns, duplicate function signatures, and dependency creep before deployment."
-                                    tags={['Node.js', 'CLI', 'CI/CD']}
-                                    link="/projects/bundle-analyzer"
-                                    icon={Layers}
-                                    stat="0ms"
-                                    statLabel="Latency"
-                                />
-
-                                {/* Project 3: Lighthouse Enforcer */}
-                                <ProjectCard
-                                    title="LIGHTHOUSE_SENTINEL"
-                                    role="Enforcement"
-                                    desc="Automated quality gatekeeper. Validates Core Web Vitals and accessibility scores against strict budgets. Fails build pipelines upon regression."
-                                    tags={['Performance', 'Automation']}
-                                    link="/projects/lighthouse-enforcer"
-                                    icon={BarChart2}
-                                    stat="100%"
-                                    statLabel="Coverage"
-                                />
-
-                                {/* Project 4: Recursive/Meta */}
-                                <ProjectCard
-                                    title="SELF_INDEX"
-                                    role="Meta-Structure"
-                                    desc="The architecture you are currently viewing. A recursive React application that monitors its own rendering performance and displays its source logic."
-                                    tags={['React', 'Recursion', 'Quine']}
-                                    link="https://github.com/BobGnarly420/bobgnarly420.github.io"
-                                    icon={FileCode}
-                                    stat="SELF"
-                                    statLabel="Target"
-                                />
-
-                                {/* Project 5: Steganography */}
-                                <ProjectCard
-                                    title="WHISPER_KEY"
-                                    role="Cryptography"
-                                    desc="Browser-based image steganography tool. Embeds encrypted text payloads into pixel data using least significant bit (LSB) encoding."
-                                    tags={['JavaScript', 'Crypto', 'LSB']}
-                                    link="/stego.html"
-                                    icon={Lock}
-                                    stat="AES-256"
-                                    statLabel="Encryption"
-                                />
-
-                                {/* Project 6: Network Analyzer */}
-                                <ProjectCard
-                                    title="NET_INTERCEPT"
-                                    role="Network"
-                                    desc="Real-time network traffic analyzer for HTTP headers and performance metrics. Monitor requests, inspect connections, and analyze response times entirely in the browser."
-                                    tags={['Performance API', 'Fetch API', 'Network']}
-                                    link="/network.html"
-                                    icon={Wifi}
-                                    stat="Real-time"
-                                    statLabel="Mode"
-                                />
-                            </div>
-                        </section>
-
-                        {/* Skills Section */}
-                        <section className="mt-24">
-                            <div className="flex items-end justify-between mb-12">
-                                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                                    <Terminal className="text-green-500" />
-                                    CAPABILITIES
-                                </h2>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Languages</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            JavaScript (ES6+)
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Node.js
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            HTML5/CSS3
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            React
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Tools & Frameworks</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Git & GitHub
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Chart.js
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            CI/CD Pipelines
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Command Line Tools
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div className="border border-zinc-800 bg-zinc-900/30 p-6">
-                                    <h3 className="text-lg font-bold text-green-400 mb-4 uppercase tracking-wider">Focus Areas</h3>
-                                    <ul className="space-y-2 text-sm text-zinc-400">
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            OSINT & Security
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Performance Optimization
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Build Automation
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
-                                            Developer Tooling
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </section>
-                    </main>
-
-                    {/* Footer */}
-                    <footer className="border-t border-zinc-800 bg-zinc-900 py-12 px-6">
-                        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div className="text-zinc-500 font-mono text-sm">
-                                © 2024 BOB_GNARLY_420. ALL RIGHTS RESERVED.
-                            </div>
-                            <div className="flex gap-6">
-                                <a href="https://github.com/BobGnarly420/bobgnarly420.github.io" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Source</a>
-                                <a href="https://github.com/BobGnarly420" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">GitHub</a>
-                                <a href="#" className="text-zinc-500 hover:text-green-500 transition-colors text-sm font-bold uppercase">Contact</a>
-                            </div>
-                        </div>
-                    </footer>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
 </body>
 </html>
