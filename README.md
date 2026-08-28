@@ -40,6 +40,15 @@ neurotoxicity, not a linear risk multiplier.
 - Neurotypical / ADHD-C / ADHD-I architectures under identical exposure
 - DOI: [10.5281/zenodo.19625787](https://doi.org/10.5281/ZENODO.19625787)
 
+### Side study — [measuring a generated catalogue](catalogue.html)
+
+155 generated tracks reduced to 20 features each, then audited: `n_sections` is a
+segmenter cap, `mean_seg_s` reproduces duration to within 0.05 s, and
+`novelty_peaks` correlates with duration at r = 0.979. Rate-corrected, the
+generator emits novelty at 34.4 ± 2.6 peaks/min regardless of track length.
+What survives: a 3.65 ± 0.89 s lead-in on every track, a median repetition score
+of 0.973, and brightness correlating with repetition at r = +0.474.
+
 ### 3. Agent-native trust infrastructure — [EVT-1](https://github.com/BobGnarly420/evt-1)
 
 TLS certificates, but for product claims. Deterministic canonical URNs for
@@ -54,6 +63,7 @@ server so the full workflow is available as agent tools.
 | Path | What it is | Status |
 | --- | --- | --- |
 | `index.html` | The site itself — static HTML/CSS, no framework | Live |
+| `catalogue.html` | Audio-feature analysis of 155 generated tracks; hand-built SVG charts | Live |
 | `osint.html` | GHOST_CHAIN — client-side OSINT toolchain | Archive |
 | `stego.html` | WHISPER_KEY — LSB steganography, AES-256-GCM via Web Crypto | Archive |
 | `network.html` | NET_INTERCEPT — HTTP header and timing inspector | Archive |
