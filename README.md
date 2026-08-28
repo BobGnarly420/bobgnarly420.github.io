@@ -28,6 +28,12 @@ Not a neuron inspector — the object of study is the dynamics.
 - Logit-lens readouts, attention patterns, exact attn/MLP residual decomposition
 - Model-agnostic and verified: GPT-2 and Qwen2.5-1.5B-Instruct on one terrain
 - Live: [explorer + WebGL viewer](https://bobgnarly420.github.io/mottled/)
+- **First external result:** an autonomous agent (Manus AI) used Mottled's unmodified
+  capture path for a preregistered residual-state transplant study on Qwen2.5-0.5B and
+  found its compatibility hypothesis *reversed* — unrelated-relation donor states were
+  more causally portable than same-relation ones (mid-band difference −0.290, p = 3.05e-5),
+  surviving raw-logit, distance-rematching, norm and permutation controls.
+  [Write-up](portability.html).
 
 ### 2. Computational neuropharmacology — [meth-neurodiv-model](https://github.com/BobGnarly420/meth-neurodiv-model)
 
@@ -63,6 +69,7 @@ server so the full workflow is available as agent tools.
 | Path | What it is | Status |
 | --- | --- | --- |
 | `index.html` | The site itself — static HTML/CSS, no framework | Live |
+| `portability.html` | Write-up of an external preregistered transplant study run on Mottled | Live |
 | `catalogue.html` | Audio-feature analysis of 155 generated tracks; hand-built SVG charts | Live |
 | `osint.html` | GHOST_CHAIN — client-side OSINT toolchain | Archive |
 | `stego.html` | WHISPER_KEY — LSB steganography, AES-256-GCM via Web Crypto | Archive |

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Relation-Compatibility Reversal</title>
+<meta name="description" content="A preregistered residual-state transplant study run on Mottled: unrelated-relation donor states proved more causally portable through Qwen2.5-0.5B than same-relation ones — the opposite of the registered prediction.">
+<link rel="canonical" href="https://bobgnarly420.github.io/portability.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Relation-Compatibility Reversal">
+<meta property="og:description" content="A preregistered prediction reversed: semantically compatible residual states transferred worse, not better.">
+<meta property="og:url" content="https://bobgnarly420.github.io/portability.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Incision design language — mirrors mottled/design_tokens.py ────────── */
+:root{
+  --base:#080B18; --surface-0:#0C1020; --surface-1:#11162A;
+  --border:#1E2540; --border-strong:#283050;
+  --fg-1:#EDF0FA; --fg-2:#818FB8;
+  --accent:#4B7CF3; --accent-subtle:rgba(75,124,243,.08);
+  --teal:#00CCA8; --amber:#D4934A; --red:#E05050;
+  /* chart marks — snapped into the dark lightness band and validated */
+  --mark-1:#4B7CF3; --mark-2:#C28238;
+  --radius-xs:2px; --radius-sm:3px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --sans:"DM Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --gutter:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--base);color:var(--fg-1);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(to right,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(to bottom,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    radial-gradient(ellipse 80% 55% at 50% -10%,rgba(75,124,243,.10),transparent 70%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 55vh,transparent 95vh);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 55vh,transparent 95vh);
+}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
+.narrow{max-width:800px}
+
+header.top{position:sticky;top:0;z-index:10;background:rgba(8,11,24,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;text-decoration:none}
+.brand .glyph{width:9px;height:9px;background:var(--accent);border-radius:var(--radius-xs);box-shadow:0 0 0 4px var(--accent-subtle);flex:none}
+nav.top-nav{display:flex;gap:22px;font-size:13px}
+nav.top-nav a{color:var(--fg-2);text-decoration:none;font-family:var(--mono);letter-spacing:.02em;transition:color .18s var(--ease)}
+nav.top-nav a:hover,nav.top-nav a[aria-current]{color:var(--fg-1)}
+@media(max-width:760px){nav.top-nav{gap:16px}nav.top-nav a:nth-child(n+4){display:none}}
+@media(max-width:560px){nav.top-nav a:nth-child(n+3){display:none}}
+@media(max-width:420px){nav.top-nav{display:none}}
+
+.hero{padding:clamp(48px,8vw,92px) 0 clamp(36px,5vw,56px)}
+.crumb{font-family:var(--mono);font-size:12px;color:var(--fg-2);margin-bottom:24px}
+.crumb a{color:var(--accent);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(to right,var(--border-strong),transparent);max-width:200px}
+h1{font-size:clamp(31px,4.8vw,52px);line-height:1.07;font-weight:700;letter-spacing:-.03em;max-width:19ch}
+.lede{margin-top:24px;max-width:68ch;font-size:clamp(15.5px,1.6vw,18px);color:var(--fg-2)}
+.lede strong{color:var(--fg-1);font-weight:500}
+
+.byline{margin-top:30px;border:1px solid var(--border);border-left:2px solid var(--amber);background:var(--surface-0);border-radius:0 var(--radius-xs) var(--radius-xs) 0;padding:16px 20px;max-width:74ch}
+.byline p{font-size:13.5px;color:var(--fg-2);margin:0}
+.byline strong{color:var(--fg-1);font-weight:500}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:38px;overflow:hidden}
+.metric{background:var(--surface-0);padding:18px 20px}
+.metric .v{font-family:var(--mono);font-size:22px;font-weight:500;letter-spacing:-.02em}
+.metric .v.neg{color:var(--amber)}
+.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);margin-top:6px}
+
+section{padding:clamp(46px,6vw,78px) 0;border-top:1px solid var(--border)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:12px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+h2{font-size:clamp(21px,2.6vw,28px);font-weight:700;letter-spacing:-.02em}
+.sec-sub{color:var(--fg-2);max-width:70ch;margin-bottom:34px}
+section p{max-width:70ch;margin-bottom:16px;color:var(--fg-2)}
+section p strong{color:var(--fg-1);font-weight:500}
+h3.sub{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:34px 0 10px;color:var(--fg-1)}
+code.mono{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius-xs);padding:1px 5px;font-size:.9em;color:var(--fg-1)}
+blockquote{border-left:2px solid var(--accent);background:var(--accent-subtle);padding:18px 22px;border-radius:0 var(--radius-xs) var(--radius-xs) 0;margin:26px 0;max-width:74ch}
+blockquote p{margin:0;color:var(--fg-1)}
+
+figure{background:var(--surface-0);border:1px solid var(--border);border-radius:var(--radius-sm);padding:clamp(18px,2.4vw,26px);margin:30px 0}
+figure .f-title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px}
+figure .f-sub{font-size:13.5px;color:var(--fg-2);margin-bottom:18px;max-width:74ch}
+figcaption{font-size:13px;color:var(--fg-2);margin-top:16px;padding-top:14px;border-top:1px solid var(--border);max-width:76ch}
+figcaption strong{color:var(--fg-1);font-weight:500}
+.chart-box{position:relative;width:100%}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.grid line{stroke:var(--border);stroke-width:1}
+.axis text{font-family:var(--mono);font-size:10.5px;fill:var(--fg-2)}
+.axis-title{font-family:var(--mono);font-size:10.5px;fill:var(--fg-2);letter-spacing:.06em;text-transform:uppercase}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:16px;font-family:var(--mono);font-size:11.5px;color:var(--fg-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.legend i.band{border-radius:var(--radius-xs);background:rgba(212,147,74,.16);border:1px solid rgba(212,147,74,.4)}
+.tip{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-118%);background:var(--surface-1);border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:8px 11px;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--fg-1);white-space:nowrap;z-index:5;transition:opacity .12s var(--ease);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.tip.on{opacity:1}
+.tip b.s1{color:var(--mark-1)} .tip b.s2{color:var(--mark-2)}
+.hit{fill:transparent;cursor:crosshair}
+
+.table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin:26px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
+thead th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);font-weight:500;padding:13px 16px;background:var(--surface-1);border-bottom:1px solid var(--border)}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);background:var(--surface-0);vertical-align:top;color:var(--fg-2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-1)}
+td.k{font-family:var(--mono);font-size:12.5px;color:var(--fg-1);white-space:nowrap}
+td.num{font-family:var(--mono);font-size:12.5px;color:var(--fg-1);text-align:right;white-space:nowrap}
+td.num.neg{color:var(--amber)}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:2px 7px;white-space:nowrap;color:var(--fg-2)}
+.tag.yes{color:var(--teal);border-color:rgba(0,204,168,.35)}
+.tag.no{color:var(--amber);border-color:rgba(212,147,74,.35)}
+.tag.spec{color:var(--red);border-color:rgba(224,80,80,.35)}
+.conf{display:inline-block;min-width:44px;font-family:var(--mono);font-size:12.5px;color:var(--fg-1)}
+.bar{display:inline-block;height:5px;border-radius:1px;background:var(--accent);vertical-align:middle;margin-left:8px}
+
+details{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-0);margin:24px 0}
+summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:12.5px;color:var(--accent);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";display:inline-block}
+details[open] summary::before{content:"▾ "}
+details .table-scroll{margin:0;border:none;border-top:1px solid var(--border);border-radius:0}
+details .inner{padding:4px 18px 18px}
+details .inner p{font-size:14px;margin-bottom:12px}
+
+footer{border-top:1px solid var(--border);padding:40px 0 56px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+footer .who{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
+footer nav{display:flex;gap:22px}
+footer nav a{font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;transition:color .18s var(--ease)}
+footer nav a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--radius-xs)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="glyph"></span>BobGnarly420</a>
+    <nav class="top-nav">
+      <a href="index.html#research">Research</a>
+      <a href="index.html#instruments">Instruments</a>
+      <a href="portability.html" aria-current="page">Portability</a>
+      <a href="https://github.com/BobGnarly420/mottled">Mottled</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div class="crumb"><a href="index.html">← Instruments</a> · <a href="https://github.com/BobGnarly420/mottled">Mottled</a></div>
+    <div class="eyebrow">Preregistered study · Qwen2.5-0.5B-Instruct</div>
+    <h1>A relation-compatibility reversal.</h1>
+    <p class="lede">
+      Take the final-token residual state from one factual prompt and paste it into
+      another at the same depth. The registered prediction was that a donor from the
+      <em>same</em> factual relation would transfer better — that semantic compatibility
+      would buy causal compatibility. Across 32 directional transplants it went the
+      other way: <strong>unrelated-relation donors were consistently more causally
+      portable</strong>, and the effect survived every control aimed at killing it.
+    </p>
+
+    <div class="byline">
+      <p>
+        <strong>This study was designed and run by Manus AI</strong>, an autonomous
+        agent, against <a href="https://github.com/BobGnarly420/mottled" style="color:var(--accent)">Mottled</a>
+        at commit <code class="mono">f244c6e</code> — using the repository's unmodified
+        <code class="mono">capture.HookCapture</code> and <code class="mono">capture.logit_lens</code>
+        primitives, with no changes to upstream source. It is reproduced here because it
+        is the first external causal result produced with Mottled as the instrument.
+        The findings and their confidence levels are the author's; the instrument is mine.
+      </p>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="v neg">−0.290</div><div class="k">Same − unrelated, mid band</div></div>
+      <div class="metric"><div class="v">3.05×10⁻⁵</div><div class="k">Paired sign-flip p</div></div>
+      <div class="metric"><div class="v">0.0000</div><div class="k">Max identity-check error</div></div>
+      <div class="metric"><div class="v">16 / 32 / 8</div><div class="k">Pairs / directions / relations</div></div>
+    </div>
+  </div>
+
+  <section id="setup">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">01</span><h2>The intervention</h2></div>
+      <p class="sec-sub">
+        One vector moves. Everything else runs normally.
+      </p>
+      <p>
+        Mottled records the residual stream at the embedding state and after each of the
+        checkpoint's 24 transformer blocks, then applies the model's own final RMSNorm and
+        language-model head as a logit lens. For a recipient prompt <code class="mono">A</code>
+        and a donor prompt <code class="mono">B</code> — both CounterFact factual clozes with
+        different correct answers — the intervention replaces <strong>only the recipient's
+        final-token residual vector at depth <em>l</em></strong> with the donor's vector at
+        that same depth. The rest of the recipient computation is untouched.
+      </p>
+      <p>
+        The registered contrast: a donor drawn from the same factual relation as the
+        recipient, against a matched control donor drawn from a different relation.
+        Transfer efficiency is the causal shift toward the donor's answer token at depth
+        <em>l</em>, divided by that same donor condition's shift at the final state — so
+        each condition is scored against its own ceiling.
+      </p>
+
+      <h3 class="sub">Instrument validity came first</h3>
+      <p>
+        The first validation run was <strong>stopped and discarded</strong>. BF16 batch-shape
+        numerics made a batch-size-1 captured state differ from a batch-size-4 self-overwrite
+        by up to 0.25 logits — small, but not zero, and the whole design rests on a patched
+        state being bit-for-bit what was captured. Execution moved to batch size 1 and the
+        run restarted from the top. The failed record was kept rather than deleted.
+      </p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Identity check (unbatched)</th><th>Max absolute logit error</th></tr></thead>
+          <tbody>
+            <tr><td>Repeated clean baseline</td><td class="num">0.0000</td></tr>
+            <tr><td>Self-state overwrite at states 0, 6, 12, 18, 24</td><td class="num">0.0000</td></tr>
+            <tr><td>Final-state patch vs direct Mottled logit lens</td><td class="num">0.0000</td></tr>
+            <tr><td>Mottled final logit lens vs native model logits</td><td class="num">0.0000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        These establish that the instrument does what it claims. They say nothing about
+        whether the scientific result generalizes — a distinction the study is careful to
+        keep, and so is this page.
+      </p>
+    </div>
+  </section>
+
+  <section id="reversal">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">02</span><h2>The prediction reversed</h2></div>
+      <p class="sec-sub">
+        H2 predicted same-relation donors would transfer better. They transferred worse, at
+        almost every depth.
+      </p>
+
+      <figure>
+        <div class="f-title">Transfer efficiency by residual state</div>
+        <div class="f-sub">Mean transfer efficiency across 32 directional units, with pair-clustered 95% bootstrap bands. The shaded region is the preregistered middle band (states 9–16).</div>
+        <div class="legend">
+          <span><i style="background:var(--mark-1)"></i>Unrelated-relation donor</span>
+          <span><i style="background:var(--mark-2)"></i>Same-relation donor</span>
+          <span><i class="band"></i>Preregistered mid band</span>
+        </div>
+        <div class="chart-box"><div class="tip" id="tipE"></div><svg id="chartE" viewBox="0 0 900 420" role="img" aria-label="Line chart of transfer efficiency against residual state index. The unrelated-relation donor curve sits above the same-relation curve at every state except 23, with the gap widest through the preregistered middle band."></svg></div>
+        <figcaption>
+          Through the middle band the unrelated-donor mean is <strong>0.327</strong> against
+          <strong>0.037</strong> for same-relation donors. The two curves converge only in
+          the last two states, where both approach their shared ceiling by construction.
+          The unrelated curve is higher at <strong>every state but one</strong> (state 23).
+        </figcaption>
+      </figure>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Same − unrelated, under…</th><th>Middle (9–16)</th><th>Late (17–23)</th></tr></thead>
+          <tbody>
+            <tr><td>Transfer efficiency (original)</td><td class="num neg">−0.290 [−0.363, −0.224]</td><td class="num neg">−0.195 [−0.244, −0.147]</td></tr>
+            <tr><td>Raw causal logit shift</td><td class="num neg">−7.47 [−9.12, −5.82]</td><td class="num neg">−10.27 [−12.76, −7.99]</td></tr>
+            <tr><td>Hidden-distance rematched</td><td class="num neg">−0.168 [−0.244, −0.093]</td><td class="num neg">−0.122 [−0.168, −0.073]</td></tr>
+            <tr><td>Rescaled to unrelated-donor norm</td><td class="num neg">−0.252 [−0.329, −0.178]</td><td class="num neg">−0.123 [−0.173, −0.070]</td></tr>
+            <tr><td>Leave-one-relation-out range</td><td class="num neg">−0.309 to −0.271</td><td class="num">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Every row is negative. The obvious deflation — that unrelated donors simply have a
+        bigger final-state ceiling, so the denominator flatters them — is answered by the
+        raw-logit row, where no division happens. Rescaling the same-relation direction by an
+        average factor of <strong>2.21</strong> raised its raw effect but left the unrelated
+        advantage intact, so perturbation magnitude does not explain it either.
+      </p>
+    </div>
+  </section>
+
+  <section id="staged">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Readable long before it steers</h2></div>
+      <p class="sec-sub">
+        H1 asked whether a donor answer becomes decodable before it becomes causally
+        controlling. It does — but the honest version of that claim is narrower than the
+        headline.
+      </p>
+
+      <figure>
+        <div class="f-title">Decodability against control</div>
+        <div class="f-sub">Fraction of the 32 directional units at which the donor answer is decodable from the patched state, against the fraction at which the recipient's own output has actually flipped to it. Bands are pair-clustered 95% bootstrap intervals.</div>
+        <div class="legend">
+          <span><i style="background:var(--mark-1)"></i>Donor answer decodable</span>
+          <span><i style="background:var(--mark-2)"></i>Recipient output flipped</span>
+        </div>
+        <div class="chart-box"><div class="tip" id="tipF"></div><svg id="chartF" viewBox="0 0 900 400" role="img" aria-label="Line chart comparing the fraction of units where the donor answer is decodable against the fraction where the recipient output has flipped. Decodability hovers near 0.5 to 0.6 from the first state while output flipping stays at zero until state 18, then both rise to 1.0."></svg></div>
+        <figcaption>
+          Decodability sits near chance-to-moderate from the embedding state onward; the
+          recipient's output does not flip <strong>in a single unit until state 18</strong>,
+          then rises sharply. Median lag under the primary onset definition:
+          <strong>17.5 states, or 0.729 of model depth</strong> (CI [0.667, 0.792]);
+          26 of 32 directions positive, exact sign-test p = 3.03×10⁻⁶.
+        </figcaption>
+      </figure>
+
+      <blockquote>
+        <p>
+          <strong>H1 is not formally supported under its own preregistered gate.</strong>
+          The single-crossing sensitivity retained the effect; the half-ceiling onset did
+          not (median lag 0.021, CI [0.000, 0.271]). The model exposes an early
+          <em>sign</em> of the donor answer long before that sign controls anything — but
+          readout strength and causal portability reach half their final levels at roughly
+          the same late stage.
+        </p>
+      </blockquote>
+      <p>
+        That distinction is the difference between a two-stage descriptive result and a
+        universal "decoding precedes control" law. Only the first is claimed. The broad
+        principle that decodability, direct effect and causal use can dissociate is already
+        established in the Hydra-effect literature and elsewhere; it is not what is new here.
+      </p>
+    </div>
+  </section>
+
+  <section id="controls">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Adversarial controls</h2></div>
+      <p class="sec-sub">
+        Two controls were built specifically to destroy the result. They constrained it
+        instead.
+      </p>
+
+      <h3 class="sub">Norm-matched isotropic perturbations</h3>
+      <p>
+        Against random directions of matched norm, the targeted same-relation transplant
+        <strong>did not beat the isotropic median at state 12</strong> (mean difference
+        −0.50 logits, CI [−1.53, 0.35]). Direction specificity only emerges later:
+        <strong>+3.21</strong> at state 18, <strong>+6.87</strong> at 21,
+        <strong>+12.45</strong> at 24. This makes the early portion of the H1 curve weaker
+        evidence than a raw logit-lens sign alone would suggest — a point the study makes
+        against itself.
+      </p>
+
+      <h3 class="sub">Target-label permutation</h3>
+      <p>
+        Donor answer labels were permuted 10,000 times within each relation with the patched
+        activations held fixed. Same-relation donors were <strong>not</strong> detectably
+        specific to their actual label at state 12 (p = 0.165), but were at states 18, 21
+        and 24 (p &lt; 10⁻⁴ each). Unrelated donors showed actual-target specificity
+        <em>already at state 12</em>, exceeding the null by 3.15 logits.
+      </p>
+      <blockquote>
+        <p>
+          That sharpens the picture past "unrelated overwrites are just more destructive":
+          the unrelated donor's <em>own answer token</em> is preferentially promoted. A full
+          state still carries many bundled features, so this does not identify which one
+          downstream computation consumes.
+        </p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="ladder">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">05</span><h2>How far the claim reaches</h2></div>
+      <p class="sec-sub">
+        The study grades its own claims by epistemic level rather than asserting one
+        conclusion. That ladder is the most useful thing in it, so it is reproduced intact.
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Level</th><th>Claim</th><th>Status</th><th>Confidence</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="k">Observation</td>
+              <td>Unrelated donor patches produce larger target-token shifts and transfer efficiency than same-relation patches.</td>
+              <td><span class="tag yes">Directly measured</span></td>
+              <td class="num">91%<span class="bar" style="width:55px"></span></td>
+            </tr>
+            <tr>
+              <td class="k">Statistical</td>
+              <td>The difference is stable across 16 pairs and 8 relations under pair-clustered resampling and leave-one-relation-out.</td>
+              <td><span class="tag yes">Supported for this frame</span></td>
+              <td class="num">72%<span class="bar" style="width:43px"></span></td>
+            </tr>
+            <tr>
+              <td class="k">Intervention</td>
+              <td>Full final-token states from unrelated relations are more causally portable under this overwrite operation.</td>
+              <td><span class="tag yes">Intervention-specific</span></td>
+              <td class="num">—</td>
+            </tr>
+            <tr>
+              <td class="k">Mechanistic</td>
+              <td>Same-relation states encode context-specific bindings that recipient layers reject; unrelated states expose a more forceful target-bound direction.</td>
+              <td><span class="tag spec">Speculative</span></td>
+              <td class="num">38%<span class="bar" style="width:23px"></span></td>
+            </tr>
+            <tr>
+              <td class="k">Scale</td>
+              <td>Qwen2.5-7B or Qwen3-8B will show the same reversal.</td>
+              <td><span class="tag no">Unsupported</span></td>
+              <td class="num">18%<span class="bar" style="width:11px"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        A load-bearing alternative survives: same-relation prompts may produce states that
+        sit closer in hidden space <em>because</em> they share relation structure, so the
+        intervention simply changes less of the recipient computation. Norm rescaling and
+        distance rematching weaken that account without eliminating higher-order geometric
+        differences. Component-level or subspace transplants are the way to settle it.
+      </p>
+
+      <details>
+        <summary>What would falsify this</summary>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Falsifier</th><th>Why it matters</th></tr></thead>
+            <tbody>
+              <tr><td class="k">Fresh hashed CounterFact frame gives ≈0 or positive difference</td><td>Current sample would be selection noise</td></tr>
+              <tr><td class="k">Qwen2.5-1.5B / 7B or Qwen3-8B reverses it</td><td>Result is scale- or generation-specific</td></tr>
+              <tr><td class="k">Token-mass gating shows unrelated patches collapse the distribution</td><td>Target shift would coexist with off-manifold damage</td></tr>
+              <tr><td class="k">Locality and copy-preservation show broad prompt overwrite</td><td>"Portability" would be promotion at unacceptable collateral cost</td></tr>
+              <tr><td class="k">Low-rank or component patches remove the advantage</td><td>Full-state result driven by irrelevant bundled features</td></tr>
+              <tr><td class="k">A Jacobian- or Fisher-matched control transfers equally well</td><td>Euclidean distance and norm were insufficient controls</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details>
+        <summary>Frozen protocol and artifacts</summary>
+        <div class="inner">
+          <p>
+            Model revision <code class="mono">7ae5576</code>; Mottled at
+            <code class="mono">f244c6e</code> with a 290-test passing baseline; CounterFact-tracing
+            mirror of 21,919 rows pinned by SHA-256; a 2,048-row screening frame selected by
+            frozen hash ordering; eligibility requiring a single-token true target, model
+            top-1 correct at p ≥ 0.05, and prompt ≤ 48 tokens. States 0–24, CPU, BF16.
+          </p>
+          <p>
+            The package carries the preregistration and its pre-data hash, a deviations log,
+            the run script, 1,600 raw transplant rows, and separate summaries for the
+            confirmatory gates, adversarial checks, norm controls, both label-permutation
+            nulls, and the instrument validation — plus a manifest of checksums. Upstream
+            Mottled source was not edited.
+          </p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap narrow">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Why this is on this site</h2></div>
+      <p>
+        Mottled was built on the premise that a lossy picture of latent dynamics has to say
+        where it lies. This study is the first time someone else pointed the instrument at a
+        question I did not ask, and it is a reasonable test of whether that premise holds up
+        under adversarial use: the run was stopped over a 0.25-logit numerical discrepancy,
+        every identity check is reported at <strong>0.0000</strong>, and the headline
+        hypothesis is recorded as <em>refused by its own gate</em> rather than quietly
+        softened.
+      </p>
+      <p>
+        The result itself is not mine and I have not independently replicated it. What I can
+        say is narrower and worth saying plainly: the capture path and logit lens reproduce
+        native model outputs exactly under matched execution shapes, and the failure that was
+        found — batch-shape numerics — was found because the protocol looked for it.
+      </p>
+      <p>
+        The defensible contribution, in the author's own framing: in this Qwen2.5-0.5B
+        factual-cloze protocol, same-relation full residual states were <em>less</em> causally
+        portable through recipient middle and late layers than unrelated-relation states,
+        after controlling for output ceiling, hidden-space distance, perturbation norm,
+        relation composition and donor-label specificity. Confidence that this exact pattern
+        is previously unreported: <strong>68%</strong>.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="who">Study by Manus AI · instrument by BobGnarly420</div>
+    <nav>
+      <a href="index.html">Index</a>
+      <a href="https://github.com/BobGnarly420/mottled">Mottled</a>
+      <a href="https://arxiv.org/abs/2202.05262">CounterFact</a>
+    </nav>
+  </div>
+</footer>
+
+<script id="pdata" type="application/json">{"states":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"same":[0.0225,0.0212,0.0142,0.0295,0.0407,0.04,0.0378,0.0376,0.0209,0.0202,0.0206,0.0216,0.0227,0.03,0.0298,0.0728,0.0781,0.081,0.356,0.3533,0.3553,0.5673,0.9811,1.0052,1.0],"sameLo":[-0.0004,-0.001,0.0003,0.007,0.0102,0.0077,0.0017,0.0063,-0.013,-0.0114,-0.0125,-0.0117,-0.0099,-0.0023,-0.0061,0.0326,0.0398,0.0412,0.2872,0.2831,0.2812,0.4829,0.9564,0.994,1.0],"sameHi":[0.063,0.0615,0.0348,0.0569,0.0762,0.0766,0.0759,0.07,0.0503,0.0476,0.0493,0.052,0.0531,0.0605,0.0638,0.1189,0.1225,0.1266,0.421,0.4194,0.425,0.6493,0.9985,1.0186,1.0],"mis":[0.1776,0.1792,0.1844,0.2067,0.2156,0.2309,0.2454,0.251,0.2651,0.2619,0.256,0.2847,0.284,0.313,0.3199,0.4457,0.4514,0.4546,0.6233,0.6199,0.6244,0.7538,0.9919,0.999,1.0],"misLo":[0.1099,0.1122,0.1223,0.1446,0.1527,0.17,0.1796,0.1822,0.1905,0.1879,0.1816,0.217,0.2135,0.2433,0.2497,0.3642,0.3654,0.3677,0.577,0.5708,0.5732,0.6964,0.9842,0.9919,1.0],"misHi":[0.251,0.252,0.253,0.2741,0.2816,0.2951,0.3104,0.3164,0.3323,0.3288,0.324,0.3445,0.3475,0.3767,0.3838,0.5135,0.5234,0.5272,0.6679,0.6673,0.6736,0.8077,0.9989,1.0066,1.0],"dec":[0.5,0.5,0.5312,0.5,0.5625,0.5625,0.5312,0.5312,0.5938,0.5312,0.5312,0.5625,0.5625,0.5312,0.5625,0.5938,0.5,0.5625,0.6875,0.75,0.5938,0.8125,1.0,0.9688,1.0],"flip":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.2188,0.2188,0.2188,0.625,1.0,1.0,1.0],"decLo":[0.5,0.4062,0.4375,0.5,0.5,0.4375,0.4375,0.5,0.5,0.5,0.5,0.5,0.5,0.4375,0.5,0.4688,0.375,0.4375,0.5625,0.625,0.5,0.6875,1.0,0.9062,1.0],"decHi":[0.5,0.5938,0.6562,0.5,0.6562,0.6875,0.6562,0.5938,0.6875,0.5938,0.5938,0.6562,0.6562,0.6562,0.6562,0.7188,0.625,0.6875,0.8125,0.875,0.6875,0.9375,1.0,1.0,1.0],"flipLo":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0938,0.0938,0.0938,0.4688,1.0,1.0,1.0],"flipHi":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.375,0.375,0.375,0.7812,1.0,1.0,1.0]}</script>
+<script>
+(function(){
+  "use strict";
+  var D = JSON.parse(document.getElementById('pdata').textContent);
+  var NS = 'http://www.w3.org/2000/svg';
+  var M1 = '#4B7CF3', M2 = '#C28238', SURF = '#0C1020';
+
+  function el(n, a){ var e = document.createElementNS(NS, n);
+    for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function f(x, d){ return Number(x).toFixed(d == null ? 2 : d); }
+
+  function lineChart(id, tipId, o){
+    var svg = document.getElementById(id), tip = document.getElementById(tipId);
+    var vb = svg.getAttribute('viewBox').split(' ').map(Number);
+    var W = vb[2], H = vb[3], L = 62, R = 18, T = 16, B = 48;
+    var pw = W - L - R, ph = H - T - B;
+    var xs = D.states, n = xs.length;
+    var X = function(i){ return L + pw * i / (n - 1); };
+    var Y = function(v){
+      var c = Math.max(o.yMin, Math.min(o.yMax, v));
+      return T + ph - ph * (c - o.yMin) / (o.yMax - o.yMin);
+    };
+
+    // preregistered band (states 9–16), drawn under everything
+    if (o.band){
+      svg.appendChild(el('rect', {x:X(o.band[0]), y:T, width:X(o.band[1]) - X(o.band[0]),
+        height:ph, fill:'rgba(212,147,74,.10)'}));
+    }
+    var g = el('g', {'class':'grid'});
+    for (var i = 0; i <= 4; i++) g.appendChild(el('line', {x1:L, x2:W - R, y1:T + ph*i/4, y2:T + ph*i/4}));
+    svg.appendChild(g);
+    var a = el('g', {'class':'axis'});
+    for (var j = 0; j <= 4; j++){
+      var t = el('text', {x:L - 10, y:T + ph*j/4 + 3.5, 'text-anchor':'end'});
+      t.textContent = f(o.yMax - (o.yMax - o.yMin) * j / 4, o.yDec == null ? 1 : o.yDec);
+      a.appendChild(t);
+    }
+    [0,5,10,15,20,24].forEach(function(s){
+      var t = el('text', {x:X(s), y:H - B + 18, 'text-anchor':'middle'});
+      t.textContent = s; a.appendChild(t);
+    });
+    var xt = el('text', {x:(L + W - R)/2, y:H - 6, 'text-anchor':'middle', 'class':'axis-title'});
+    xt.textContent = 'Residual state index'; a.appendChild(xt);
+    var yt = el('text', {x:0, y:0, 'text-anchor':'middle', 'class':'axis-title',
+      transform:'translate(' + (L - 44) + ',' + (T + ph/2) + ') rotate(-90)'});
+    yt.textContent = o.yTitle; a.appendChild(yt);
+    svg.appendChild(a);
+
+    // confidence bands as ~10% washes, then 2px lines
+    o.series.forEach(function(s){
+      var up = '', dn = '';
+      for (var i = 0; i < n; i++) up += (i ? ' L' : 'M') + X(i) + ',' + Y(s.hi[i]);
+      for (var k = n - 1; k >= 0; k--) dn += ' L' + X(k) + ',' + Y(s.lo[k]);
+      svg.appendChild(el('path', {d:up + dn + ' Z', fill:s.color, 'fill-opacity':0.10}));
+    });
+    o.series.forEach(function(s){
+      var d = '';
+      for (var i = 0; i < n; i++) d += (i ? ' L' : 'M') + X(i) + ',' + Y(s.v[i]);
+      svg.appendChild(el('path', {d:d, fill:'none', stroke:s.color, 'stroke-width':2,
+        'stroke-linejoin':'round', 'stroke-linecap':'round'}));
+    });
+
+    // crosshair + shared tooltip
+    var cross = el('line', {x1:0, x2:0, y1:T, y2:T + ph, stroke:'#283050',
+      'stroke-width':1, opacity:0});
+    svg.appendChild(cross);
+    var dots = o.series.map(function(s){
+      var c = el('circle', {r:4.5, fill:s.color, stroke:SURF, 'stroke-width':2, opacity:0});
+      svg.appendChild(c); return c;
+    });
+    var hit = el('rect', {x:L, y:T, width:pw, height:ph, 'class':'hit'});
+    svg.appendChild(hit);
+    function move(ev){
+      var box = svg.getBoundingClientRect();
+      var rel = (ev.clientX - box.left) / box.width * W;
+      var i = Math.max(0, Math.min(n - 1, Math.round((rel - L) / pw * (n - 1))));
+      cross.setAttribute('x1', X(i)); cross.setAttribute('x2', X(i));
+      cross.setAttribute('opacity', 1);
+      var html = '<div>state <b>' + xs[i] + '</b></div>';
+      o.series.forEach(function(s, k){
+        dots[k].setAttribute('cx', X(i)); dots[k].setAttribute('cy', Y(s.v[i]));
+        dots[k].setAttribute('opacity', 1);
+        html += '<div><b class="' + (k ? 's2' : 's1') + '">' + f(s.v[i], 3) + '</b> · ' + s.name + '</div>';
+      });
+      tip.innerHTML = html;
+      tip.style.left = ((X(i)) / W * box.width) + 'px';
+      tip.style.top  = (T / H * box.height) + 'px';
+      tip.classList.add('on');
+    }
+    hit.addEventListener('mousemove', move);
+    hit.addEventListener('mouseenter', move);
+    hit.addEventListener('mouseleave', function(){
+      tip.classList.remove('on'); cross.setAttribute('opacity', 0);
+      dots.forEach(function(d){ d.setAttribute('opacity', 0); });
+    });
+  }
+
+  lineChart('chartE', 'tipE', {
+    yMin:0, yMax:1, yDec:2, yTitle:'Transfer efficiency', band:[9,16],
+    series:[
+      {name:'unrelated', color:M1, v:D.mis,  lo:D.misLo,  hi:D.misHi},
+      {name:'same',      color:M2, v:D.same, lo:D.sameLo, hi:D.sameHi}
+    ]
+  });
+  lineChart('chartF', 'tipF', {
+    yMin:0, yMax:1, yDec:2, yTitle:'Fraction of units',
+    series:[
+      {name:'decodable', color:M1, v:D.dec,  lo:D.decLo,  hi:D.decHi},
+      {name:'flipped',   color:M2, v:D.flip, lo:D.flipLo, hi:D.flipHi}
+    ]
+  });
+})();
+</script>
+</body>
+</html>
