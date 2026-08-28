@@ -28,6 +28,12 @@ Not a neuron inspector — the object of study is the dynamics.
 - Logit-lens readouts, attention patterns, exact attn/MLP residual decomposition
 - Model-agnostic and verified: GPT-2 and Qwen2.5-1.5B-Instruct on one terrain
 - Live: [explorer + WebGL viewer](https://bobgnarly420.github.io/mottled/)
+- **First external result:** an autonomous agent (Manus AI) used Mottled's unmodified
+  capture path for a preregistered residual-state transplant study on Qwen2.5-0.5B and
+  found its compatibility hypothesis *reversed* — unrelated-relation donor states were
+  more causally portable than same-relation ones (mid-band difference −0.290, p = 3.05e-5),
+  surviving raw-logit, distance-rematching, norm and permutation controls.
+  [Write-up](portability.html).
 
 ### 2. Computational neuropharmacology — [meth-neurodiv-model](https://github.com/BobGnarly420/meth-neurodiv-model)
 
@@ -39,6 +45,15 @@ neurotoxicity, not a linear risk multiplier.
 - RL layer rebuilt on ANCCR (Jeong et al. 2022) with IRI-scaling per Burke et al. 2026
 - Neurotypical / ADHD-C / ADHD-I architectures under identical exposure
 - DOI: [10.5281/zenodo.19625787](https://doi.org/10.5281/ZENODO.19625787)
+
+### Side study — [measuring a generated catalogue](catalogue.html)
+
+155 generated tracks reduced to 20 features each, then audited: `n_sections` is a
+segmenter cap, `mean_seg_s` reproduces duration to within 0.05 s, and
+`novelty_peaks` correlates with duration at r = 0.979. Rate-corrected, the
+generator emits novelty at 34.4 ± 2.6 peaks/min regardless of track length.
+What survives: a 3.65 ± 0.89 s lead-in on every track, a median repetition score
+of 0.973, and brightness correlating with repetition at r = +0.474.
 
 ### 3. Agent-native trust infrastructure — [EVT-1](https://github.com/BobGnarly420/evt-1)
 
@@ -54,6 +69,8 @@ server so the full workflow is available as agent tools.
 | Path | What it is | Status |
 | --- | --- | --- |
 | `index.html` | The site itself — static HTML/CSS, no framework | Live |
+| `portability.html` | Write-up of an external preregistered transplant study run on Mottled | Live |
+| `catalogue.html` | Audio-feature analysis of 155 generated tracks; hand-built SVG charts | Live |
 | `osint.html` | GHOST_CHAIN — client-side OSINT toolchain | Archive |
 | `stego.html` | WHISPER_KEY — LSB steganography, AES-256-GCM via Web Crypto | Archive |
 | `network.html` | NET_INTERCEPT — HTTP header and timing inspector | Archive |

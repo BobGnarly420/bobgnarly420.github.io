@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measuring a Generated Catalogue</title>
+<meta name="description" content="Audio-feature analysis of 155 generated tracks: what the timbral and structural measurements actually show, and which three of them are duration wearing a disguise.">
+<link rel="canonical" href="https://bobgnarly420.github.io/catalogue.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Measuring a Generated Catalogue">
+<meta property="og:description" content="155 tracks, 7.4 hours, 20 features per track — and an honest account of which measurements survive scrutiny.">
+<meta property="og:url" content="https://bobgnarly420.github.io/catalogue.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Incision design language — mirrors mottled/design_tokens.py ────────── */
+:root{
+  --base:#080B18; --surface-0:#0C1020; --surface-1:#11162A;
+  --border:#1E2540; --border-strong:#283050;
+  --fg-1:#EDF0FA; --fg-2:#818FB8;
+  --accent:#4B7CF3; --accent-subtle:rgba(75,124,243,.08);
+  --teal:#00CCA8; --amber:#D4934A; --red:#E05050;
+  /* chart marks — snapped into the dark lightness band L 0.48–0.67 and
+     validated (lightness / chroma / CVD ΔE / normal-vision / contrast). */
+  --mark-1:#4B7CF3; --mark-2:#C28238; --mark-mute:#3A456B;
+  --radius-xs:2px; --radius-sm:3px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --sans:"DM Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --gutter:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--base);color:var(--fg-1);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(to right,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    linear-gradient(to bottom,rgba(75,124,243,.045) 1px,transparent 1px) 0 0/72px 72px,
+    radial-gradient(ellipse 80% 55% at 50% -10%,rgba(75,124,243,.10),transparent 70%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 55vh,transparent 95vh);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 55vh,transparent 95vh);
+}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 var(--gutter)}
+.narrow{max-width:780px}
+
+header.top{position:sticky;top:0;z-index:10;background:rgba(8,11,24,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;text-decoration:none}
+.brand .glyph{width:9px;height:9px;background:var(--accent);border-radius:var(--radius-xs);box-shadow:0 0 0 4px var(--accent-subtle);flex:none}
+nav.top-nav{display:flex;gap:22px;font-size:13px}
+nav.top-nav a{color:var(--fg-2);text-decoration:none;font-family:var(--mono);letter-spacing:.02em;transition:color .18s var(--ease)}
+nav.top-nav a:hover,nav.top-nav a[aria-current]{color:var(--fg-1)}
+@media(max-width:760px){nav.top-nav{gap:16px}nav.top-nav a:nth-child(n+4){display:none}}
+@media(max-width:560px){nav.top-nav a:nth-child(n+3){display:none}}
+@media(max-width:420px){nav.top-nav{display:none}}
+
+.hero{padding:clamp(48px,8vw,92px) 0 clamp(36px,5vw,56px)}
+.crumb{font-family:var(--mono);font-size:12px;color:var(--fg-2);margin-bottom:24px}
+.crumb a{color:var(--accent);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(to right,var(--border-strong),transparent);max-width:200px}
+h1{font-size:clamp(31px,4.8vw,52px);line-height:1.07;font-weight:700;letter-spacing:-.03em;max-width:20ch}
+.lede{margin-top:24px;max-width:68ch;font-size:clamp(15.5px,1.6vw,18px);color:var(--fg-2)}
+.lede strong{color:var(--fg-1);font-weight:500}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:42px;overflow:hidden}
+.metric{background:var(--surface-0);padding:18px 20px}
+.metric .v{font-family:var(--mono);font-size:23px;font-weight:500;letter-spacing:-.02em}
+.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);margin-top:6px}
+
+section{padding:clamp(46px,6vw,78px) 0;border-top:1px solid var(--border)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:12px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+h2{font-size:clamp(21px,2.6vw,28px);font-weight:700;letter-spacing:-.02em}
+.sec-sub{color:var(--fg-2);max-width:70ch;margin-bottom:36px}
+section p{max-width:70ch;margin-bottom:16px;color:var(--fg-2)}
+section p strong{color:var(--fg-1);font-weight:500}
+code.mono{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius-xs);padding:1px 5px;font-size:.9em;color:var(--fg-1)}
+
+/* ── figure ──────────────────────────────────────────────────────────── */
+figure{background:var(--surface-0);border:1px solid var(--border);border-radius:var(--radius-sm);padding:clamp(18px,2.4vw,26px);margin:30px 0}
+figure .f-title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px}
+figure .f-sub{font-size:13.5px;color:var(--fg-2);margin-bottom:20px;max-width:72ch}
+figcaption{font-size:13px;color:var(--fg-2);margin-top:16px;padding-top:14px;border-top:1px solid var(--border);max-width:74ch}
+figcaption strong{color:var(--fg-1);font-weight:500}
+.chart-box{position:relative;width:100%}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.grid line{stroke:var(--border);stroke-width:1}
+.axis text{font-family:var(--mono);font-size:10.5px;fill:var(--fg-2)}
+.axis-title{font-family:var(--mono);font-size:10.5px;fill:var(--fg-2);letter-spacing:.06em;text-transform:uppercase}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:16px;font-family:var(--mono);font-size:11.5px;color:var(--fg-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,30px)}
+@media(max-width:720px){.panels{grid-template-columns:1fr}}
+.panel-h{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);margin-bottom:10px;letter-spacing:.04em}
+.panel-h b{color:var(--fg-1);font-weight:500}
+
+.tip{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-115%);background:var(--surface-1);border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:8px 10px;font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--fg-1);white-space:nowrap;z-index:5;transition:opacity .12s var(--ease);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.tip .t-name{color:var(--fg-2);max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tip.on{opacity:1}
+.hit{fill:transparent;cursor:crosshair}
+
+/* ── tables ──────────────────────────────────────────────────────────── */
+.table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin:26px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+thead th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);font-weight:500;padding:13px 16px;background:var(--surface-1);border-bottom:1px solid var(--border)}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);background:var(--surface-0);vertical-align:top;color:var(--fg-2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-1)}
+td.k{font-family:var(--mono);font-size:12.5px;color:var(--fg-1);white-space:nowrap}
+td.num{font-family:var(--mono);font-size:12.5px;color:var(--fg-1);text-align:right;white-space:nowrap}
+.verdict{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--border-strong);border-radius:var(--radius-xs);padding:2px 7px;white-space:nowrap}
+.verdict.real{color:var(--teal);border-color:rgba(0,204,168,.35)}
+.verdict.proxy{color:var(--amber);border-color:rgba(212,147,74,.35)}
+.verdict.fixed{color:var(--fg-2)}
+details{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-0);margin:24px 0}
+summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:12.5px;color:var(--accent);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";display:inline-block;transition:transform .18s var(--ease)}
+details[open] summary::before{content:"▾ "}
+details .table-scroll{margin:0;border:none;border-top:1px solid var(--border);border-radius:0}
+
+.callout{border-left:2px solid var(--accent);background:var(--accent-subtle);padding:18px 22px;border-radius:0 var(--radius-xs) var(--radius-xs) 0;margin:26px 0}
+.callout p{margin:0;color:var(--fg-1);max-width:68ch}
+
+footer{border-top:1px solid var(--border);padding:40px 0 56px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+footer .who{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
+footer nav{display:flex;gap:22px}
+footer nav a{font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;transition:color .18s var(--ease)}
+footer nav a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--radius-xs)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="glyph"></span>BobGnarly420</a>
+    <nav class="top-nav">
+      <a href="index.html#research">Research</a>
+      <a href="index.html#instruments">Instruments</a>
+      <a href="catalogue.html" aria-current="page">Catalogue</a>
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div class="crumb"><a href="index.html">← Instruments</a></div>
+    <div class="eyebrow">Audio feature analysis · n = 155</div>
+    <h1>Measuring a generated catalogue.</h1>
+    <p class="lede">
+      155 generated tracks — 7.4 hours of audio — reduced to twenty numbers each:
+      spectral centroid, flatness, zero-crossing rate, thirteen MFCCs, and six
+      structural descriptors taken off the self-similarity matrix. The interesting
+      part is not the summary. It is that
+      <strong>three of the six structural columns turn out to be track duration
+      wearing a disguise</strong>, and one of them is a parameter I set myself.
+      This page separates what the instrument measured from what it only
+      appeared to.
+    </p>
+
+    <div class="metrics">
+      <div class="metric"><div class="v">155</div><div class="k">Tracks</div></div>
+      <div class="metric"><div class="v">7.4 h</div><div class="k">Total runtime</div></div>
+      <div class="metric"><div class="v">0.973</div><div class="k">Median repetition</div></div>
+      <div class="metric"><div class="v">3 / 6</div><div class="k">Structural cols = duration</div></div>
+    </div>
+  </div>
+
+  <section id="instrument">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">01</span><h2>What was measured</h2></div>
+      <p class="sec-sub">
+        Two tables, one row per track. Nothing here is perceptual — every column is a
+        summary statistic over the waveform or over a self-similarity matrix built
+        from it.
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Column</th><th>What it is</th><th>Reading</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td class="k">centroid</td><td>Spectral centre of mass — "brightness"</td><td class="num">2800 ± 527 Hz</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">flatness</td><td>Noise-vs-tone ratio of the spectrum</td><td class="num">0.034 ± 0.014</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">zcr</td><td>Zero-crossing rate — high-frequency content</td><td class="num">0.123 ± 0.034</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">mfcc0–12</td><td>Mel-cepstral timbre envelope</td><td class="num">13 dims</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">onset_s</td><td>Silence before the first detected onset</td><td class="num">3.65 ± 0.89 s</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">rep_score</td><td>Self-similarity mass off the diagonal</td><td class="num">0.944 ± 0.082</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">diag_ratio</td><td>Diagonal concentration of that matrix</td><td class="num">1.096 ± 0.068</td><td><span class="verdict real">Informative</span></td></tr>
+            <tr><td class="k">n_sections</td><td>Segments found by the segmenter</td><td class="num">10 in 149/155</td><td><span class="verdict fixed">My parameter</span></td></tr>
+            <tr><td class="k">mean_seg_s</td><td>Mean segment length</td><td class="num">r = 0.999 w/ dur</td><td><span class="verdict proxy">Duration proxy</span></td></tr>
+            <tr><td class="k">novelty_peaks</td><td>Count of novelty-curve peaks</td><td class="num">r = 0.979 w/ dur</td><td><span class="verdict proxy">Duration proxy</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="disguise">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Three columns that are really one</h2></div>
+      <p class="sec-sub">
+        Before any finding, the columns have to earn their place. Half the structural
+        block does not.
+      </p>
+
+      <p>
+        <code class="mono">n_sections</code> is fixed at 10 for 149 of 155 tracks. That
+        is not a fact about the music — it is the segmenter's cap, a number I chose
+        before running it. Which means <code class="mono">mean_seg_s</code>, computed
+        as duration ÷ sections, is duration ÷ 10 for 96% of the catalogue: it
+        reproduces track length to within <strong>0.05 seconds</strong> and carries no
+        independent information at all.
+      </p>
+      <p>
+        <code class="mono">novelty_peaks</code> is subtler and more tempting. It
+        correlates with duration at <strong>r = 0.979</strong> — longer tracks have
+        more peaks, because peaks accumulate with time. Read raw, it would say the
+        long tracks are the eventful ones. Divide it by duration and the illusion
+        collapses.
+      </p>
+
+      <figure>
+        <div class="f-title">Novelty peaks against duration, raw and rate-corrected</div>
+        <div class="f-sub">Each dot is one track. Left: the raw count. Right: the same data as peaks per minute.</div>
+        <div class="panels">
+          <div>
+            <div class="panel-h">Raw count · <b>r = 0.979</b></div>
+            <div class="chart-box"><div class="tip" id="tipD1"></div><svg id="chartD1" viewBox="0 0 460 300" role="img" aria-label="Scatter plot of novelty peak count against track duration, showing a tight positive linear relationship, r equals 0.979."></svg></div>
+          </div>
+          <div>
+            <div class="panel-h">Per minute · <b>r = 0.009</b></div>
+            <div class="chart-box"><div class="tip" id="tipD2"></div><svg id="chartD2" viewBox="0 0 460 300" role="img" aria-label="Scatter plot of novelty peaks per minute against track duration, showing no relationship, r equals 0.009, values clustered near 34 per minute."></svg></div>
+          </div>
+        </div>
+        <figcaption>
+          Corrected, the measure is <strong>34.4 ± 2.6 peaks per minute</strong> and its
+          correlation with duration falls to 0.009. The generator emits novelty at a
+          near-constant rate regardless of how long it runs — which is a real finding,
+          and the exact opposite of what the raw column implied.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <p>
+          Two of these columns were never measurements. Reporting a catalogue-wide mean
+          for <code class="mono">mean_seg_s</code> would have been reporting mean track
+          length under another name, with a musical interpretation attached to it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="findings">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">03</span><h2>What survives</h2></div>
+      <p class="sec-sub">
+        Four results that are not duration in disguise, and do not depend on a
+        parameter I picked.
+      </p>
+
+      <figure>
+        <div class="f-title">Every track begins inside the same four-second window</div>
+        <div class="f-sub">Distribution of silence before the first detected onset, 0.25 s bins.</div>
+        <div class="chart-box"><div class="tip" id="tipA"></div><svg id="chartA" viewBox="0 0 900 300" role="img" aria-label="Histogram of lead-in silence across 155 tracks, unimodal and centred near 3.6 seconds, with no track outside 1.3 to 5.6 seconds."></svg></div>
+        <figcaption>
+          Mean <strong>3.65 s</strong>, standard deviation 0.89 s, and
+          <strong>not one track outside 1.34–5.60 s</strong> across the whole
+          catalogue. Human recordings do not cluster like this. This is a signature of
+          the generator, not of any musical decision.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <div class="f-title">The catalogue is extraordinarily repetitive</div>
+        <div class="f-sub">Distribution of self-similarity score, 0.05 bins. The top bin alone holds 100 of the 155 tracks.</div>
+        <div class="chart-box"><div class="tip" id="tipB"></div><svg id="chartB" viewBox="0 0 900 300" role="img" aria-label="Histogram of repetition score, heavily left-skewed with 100 of 155 tracks in the top bin above 0.95."></svg></div>
+        <figcaption>
+          Median <strong>0.973</strong>; <strong>40 tracks score above 0.99</strong>,
+          meaning almost every bar has a near-twin elsewhere in the piece. The
+          interquartile range is 0.930–0.991 — the distribution is compressed against
+          its own ceiling, which is what makes the low tail worth looking at.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <div class="f-title">Brighter tracks are more repetitive</div>
+        <div class="f-sub">Repetition score against a brightness axis — the first principal component of centroid, flatness and zero-crossing rate, which absorbs 92.5% of their shared variance.</div>
+        <div class="legend">
+          <span><i style="background:var(--mark-1)"></i>Catalogue (n = 143)</span>
+          <span><i style="background:var(--mark-2)"></i>Low-repetition tail (n = 12)</span>
+        </div>
+        <div class="chart-box"><div class="tip" id="tipC"></div><svg id="chartC" viewBox="0 0 900 420" role="img" aria-label="Scatter plot of repetition score against brightness, showing a positive relationship, r equals 0.474; the twelve lowest-repetition tracks cluster at the dark, low-repetition corner."></svg></div>
+        <figcaption>
+          <strong>r = +0.474</strong> (p ≈ 3 × 10⁻¹¹). Those three spectral features are
+          not three measurements — they intercorrelate at 0.85–0.91 and collapse onto a
+          single axis with near-equal loadings. On that axis, brightness and repetition
+          move together: the bright, noisy, busy end of the catalogue is also the most
+          self-similar.
+        </figcaption>
+      </figure>
+
+      <p>
+        The fourth result is the tail itself. The twelve least repetitive tracks are not
+        scattered — they are a coherent cluster: mean centroid
+        <strong>2164 Hz against 2854 Hz</strong> for the rest, and mean flatness
+        <strong>0.0152 against 0.0358</strong>, less than half. Darker and markedly more
+        tonal than the catalogue around them. <em>Isotope Garden</em>,
+        <em>Suspended Pixels</em> and <em>Suspended Whispers</em> sit at the extreme of
+        both measures at once. Whatever the generator does by default, this corner is
+        where it stops doing it.
+      </p>
+
+      <details>
+        <summary>Table view — all figures as numbers</summary>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Quantity</th><th>Value</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td class="k">Tracks</td><td class="num">155</td><td>7.37 h total, median 163.9 s</td></tr>
+              <tr><td class="k">onset_s</td><td class="num">3.65 ± 0.89 s</td><td>range 1.34–5.60, no outliers</td></tr>
+              <tr><td class="k">rep_score</td><td class="num">0.973</td><td>median; Q1 0.930, Q3 0.991; 40 tracks &gt; 0.99</td></tr>
+              <tr><td class="k">peaks / min</td><td class="num">34.4 ± 2.6</td><td>r with duration = 0.009</td></tr>
+              <tr><td class="k">novelty_peaks (raw)</td><td class="num">r = 0.979</td><td>against duration — a proxy</td></tr>
+              <tr><td class="k">mean_seg_s</td><td class="num">r = 0.999</td><td>against duration — a restatement</td></tr>
+              <tr><td class="k">n_sections = 10</td><td class="num">149 / 155</td><td>segmenter cap, not a property of the audio</td></tr>
+              <tr><td class="k">brightness PC1</td><td class="num">92.5%</td><td>of variance in centroid + flatness + zcr</td></tr>
+              <tr><td class="k">r(brightness, rep)</td><td class="num">+0.474</td><td>p ≈ 3 × 10⁻¹¹</td></tr>
+              <tr><td class="k">r(rep, diag_ratio)</td><td class="num">−0.812</td><td>two views of the same matrix</td></tr>
+              <tr><td class="k">r(centroid, zcr)</td><td class="num">+0.911</td><td>why the three collapse to one axis</td></tr>
+              <tr><td class="k">MFCC PC1–3</td><td class="num">62.5%</td><td>timbre stays genuinely high-dimensional</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="wrap narrow">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Method &amp; limits</h2></div>
+      <p>
+        Each track was decoded to mono, summarised into the twenty features above, and
+        written to two CSVs — one timbral, one structural. Every number on this page is
+        computed from those two tables. Correlations are Pearson; <em>p</em>-values use
+        the normal approximation at n = 155. The brightness axis is the first principal
+        component of the three z-scored spectral features, sign-fixed so that higher
+        means brighter.
+      </p>
+      <p>
+        <strong>What this cannot tell you.</strong> Every feature is a whole-track mean,
+        so nothing here describes how a track evolves — a piece that begins sparse and
+        ends dense has the same centroid as one that is uniformly mid-bright. The
+        repetition score comes off a self-similarity matrix whose resolution is a
+        parameter, the segmenter's cap is another, and both were set once and not swept.
+        And none of these features are perceptual: spectral flatness is not "noisiness"
+        as a listener hears it, only as the spectrum reports it.
+      </p>
+      <p>
+        The audio and its identifiers are not published here; the analysis is derived
+        from the feature tables alone.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="who">BobGnarly420 · latent dynamics, artificial and biological</div>
+    <nav>
+      <a href="index.html">Index</a>
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+      <a href="https://github.com/BobGnarly420/bobgnarly420.github.io">Source</a>
+    </nav>
+  </div>
+</footer>
+
+<script id="cdata" type="application/json">{"n":155,"hours":7.37,"onset":{"mean":3.65,"sd":0.89,"min":1.34,"max":5.6,"hist":{"counts":[0,2,0,4,3,8,11,9,19,16,12,14,14,13,13,8,5,2,2,0],"edges":[1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.75,4.0,4.25,4.5,4.75,5.0,5.25,5.5,5.75,6.0]}},"rep":{"median":0.973,"q1":0.93,"q3":0.991,"over99":40,"hist":{"counts":[0,1,1,1,0,1,2,4,1,12,30,100],"edges":[0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0]}},"ppm":{"mean":34.4,"sd":2.6,"r_dur":0.009},"sections":{"7":1,"8":4,"9":1,"10":149},"r":{"rep_bright":0.474,"rep_diag":-0.812,"peaks_dur":0.979,"seg_dur":0.999,"cent_zcr":0.911},"brightPC1":92.5,"scatter":[{"x":0.001,"y":0.9669,"d":59,"t":"yeah im mad","tail":0},{"x":0.92,"y":0.9953,"d":185,"t":"I finally understand that letting go isn't something","tail":0},{"x":0.197,"y":0.8899,"d":168,"t":"Cold Sided","tail":0},{"x":0.828,"y":0.9788,"d":147,"t":"between places...","tail":0},{"x":-0.747,"y":0.9843,"d":104,"t":"Timber Frame","tail":0},{"x":0.921,"y":0.9463,"d":73,"t":"alt bitch blues fetty crippin","tail":0},{"x":0.685,"y":0.978,"d":209,"t":"Quiet Weight","tail":0},{"x":1.574,"y":0.9792,"d":188,"t":"Snapback Ranch","tail":0},{"x":-1.592,"y":0.8548,"d":132,"t":"deadbeat beats","tail":1},{"x":-0.399,"y":0.9972,"d":131,"t":"One Foot In","tail":0},{"x":-1.071,"y":0.9805,"d":204,"t":"it's never going away","tail":0},{"x":-0.475,"y":0.9874,"d":146,"t":"2026-07-16-13-40-39.mp4","tail":0},{"x":-1.994,"y":0.9374,"d":75,"t":"Epitaph","tail":0},{"x":-1.748,"y":0.9734,"d":144,"t":"babe blade (Remix)","tail":0},{"x":-0.1,"y":0.9965,"d":72,"t":"I dont","tail":0},{"x":-1.774,"y":0.893,"d":65,"t":"1k ms","tail":0},{"x":1.38,"y":1.0,"d":80,"t":"infoplex","tail":0},{"x":-0.296,"y":0.9973,"d":262,"t":"Out of Sync","tail":0},{"x":-0.41,"y":0.8738,"d":79,"t":"the wash","tail":0},{"x":-0.206,"y":0.9515,"d":160,"t":"5 evictions under my belt","tail":0},{"x":0.553,"y":0.9933,"d":236,"t":"Knot theory","tail":0},{"x":1.366,"y":0.934,"d":195,"t":"me asf","tail":0},{"x":-1.554,"y":0.9643,"d":149,"t":"right in my ear. no your left.","tail":0},{"x":0.361,"y":0.9996,"d":130,"t":"2nd to last Crab in the Bucket","tail":0},{"x":0.564,"y":0.9937,"d":183,"t":"Nowhere 2 Go","tail":0},{"x":-1.469,"y":0.9845,"d":154,"t":"Grip on the situation","tail":0},{"x":-0.736,"y":0.9909,"d":341,"t":"Ground-State Assumption","tail":0},{"x":0.826,"y":0.9912,"d":147,"t":"22nd letter","tail":0},{"x":-0.218,"y":0.9773,"d":155,"t":"Available","tail":0},{"x":-0.388,"y":0.9775,"d":155,"t":"August Ice Water","tail":0},{"x":-0.343,"y":0.973,"d":300,"t":"Choosing/Chose","tail":0},{"x":0.425,"y":0.9863,"d":131,"t":"The New Girl","tail":0},{"x":2.003,"y":0.9982,"d":143,"t":"2V ev40","tail":0},{"x":4.135,"y":0.9937,"d":80,"t":"Borrowed Air","tail":0},{"x":1.802,"y":0.9744,"d":146,"t":"Bagels","tail":0},{"x":-0.16,"y":0.9261,"d":148,"t":"Fabled Fable","tail":0},{"x":0.241,"y":0.7898,"d":221,"t":"I'm in Pieces","tail":1},{"x":0.426,"y":0.9851,"d":294,"t":"compatibility layer x I'm Not Fine (Mashup)","tail":0},{"x":-1.239,"y":0.9692,"d":182,"t":"Chronically Overdrawn (jaspercore)","tail":0},{"x":2.278,"y":0.9938,"d":177,"t":"Phantom Flakes","tail":0},{"x":0.906,"y":0.9988,"d":201,"t":"stop that","tail":0},{"x":1.856,"y":0.9967,"d":182,"t":"Lost in Numbers","tail":0},{"x":-0.346,"y":0.9888,"d":148,"t":"STOP GAP","tail":0},{"x":-1.873,"y":0.972,"d":280,"t":"Cell in Grid","tail":0},{"x":-0.019,"y":0.9786,"d":203,"t":"Loved 1S","tail":0},{"x":-1.077,"y":0.9075,"d":185,"t":"The message","tail":0},{"x":1.032,"y":0.9974,"d":87,"t":"fuck my therapist i want to literally","tail":0},{"x":-1.496,"y":0.5778,"d":74,"t":"Chronos","tail":1},{"x":-0.997,"y":0.966,"d":173,"t":"White Shoes","tail":0},{"x":0.298,"y":0.9772,"d":208,"t":"Thick in the Heart","tail":0},{"x":-0.135,"y":0.9658,"d":180,"t":"Put me on Display","tail":0},{"x":0.859,"y":0.9131,"d":182,"t":"Online (Edit)","tail":0},{"x":-1.347,"y":0.8991,"d":163,"t":"bruh im fucking hhfh","tail":0},{"x":-0.249,"y":0.9344,"d":210,"t":"Entropy","tail":0},{"x":1.568,"y":0.9679,"d":74,"t":"get in em!","tail":0},{"x":0.484,"y":0.995,"d":262,"t":"compatibility layer","tail":0},{"x":2.348,"y":0.9624,"d":137,"t":"Bad For My HRV (Remastered)","tail":0},{"x":0.077,"y":0.9811,"d":113,"t":"Elastic Lucid Mind","tail":0},{"x":-0.52,"y":0.9383,"d":210,"t":"Me: the amplifier","tail":0},{"x":0.777,"y":0.9907,"d":95,"t":"Yes I do","tail":0},{"x":0.335,"y":0.9334,"d":179,"t":"I\u2019m just","tail":0},{"x":1.301,"y":0.9831,"d":396,"t":"Memetic mars bars","tail":0},{"x":-2.087,"y":0.9559,"d":168,"t":"Illegible","tail":0},{"x":0.068,"y":0.9938,"d":97,"t":"HI V(is)","tail":0},{"x":-2.838,"y":0.9582,"d":194,"t":"From the Love","tail":0},{"x":-0.0,"y":0.938,"d":277,"t":"The clarity machine","tail":0},{"x":-0.41,"y":0.9941,"d":86,"t":"You got Gnome\u2019d","tail":0},{"x":-1.333,"y":0.9301,"d":168,"t":"Captain Nemo\u2019s Nautilus","tail":0},{"x":-0.754,"y":0.948,"d":183,"t":"Tumblr hauntology","tail":0},{"x":-0.414,"y":0.9949,"d":119,"t":"Mr brown\u2019s; the ev special","tail":0},{"x":2.432,"y":0.9999,"d":107,"t":"I\u2019m tried calling but no service","tail":0},{"x":3.593,"y":0.9561,"d":113,"t":"Optimize Your Life","tail":0},{"x":1.838,"y":0.9707,"d":137,"t":"Bad For My HRV","tail":0},{"x":2.718,"y":0.9906,"d":187,"t":"How am I supposed to?","tail":0},{"x":3.078,"y":0.9601,"d":284,"t":"Kiss and Tell x I don\u2019t think I can (Mashup)","tail":0},{"x":-2.158,"y":0.9746,"d":171,"t":"Ex ennui","tail":0},{"x":-0.359,"y":0.9026,"d":253,"t":"Aperture","tail":0},{"x":3.372,"y":0.9692,"d":267,"t":"Tungstenography","tail":0},{"x":-2.352,"y":0.7406,"d":147,"t":"Cinema","tail":1},{"x":-1.178,"y":0.9941,"d":220,"t":"Fetty spaghetti Machiavelli","tail":0},{"x":-0.351,"y":0.7891,"d":110,"t":"Knife hits","tail":1},{"x":1.21,"y":0.9771,"d":167,"t":"Contingency chaplain","tail":0},{"x":-0.058,"y":0.9345,"d":98,"t":"23","tail":0},{"x":0.32,"y":0.9055,"d":238,"t":"EV&V limited liability company","tail":0},{"x":-0.616,"y":0.8925,"d":171,"t":"Magnetic discretion","tail":0},{"x":-0.399,"y":0.975,"d":208,"t":"Far From Perfect","tail":0},{"x":1.181,"y":0.9946,"d":151,"t":"Infinite Tangents","tail":0},{"x":-2.004,"y":0.9235,"d":124,"t":"Frame testing for feelings 2026-01-27_03:54:26","tail":0},{"x":-1.675,"y":0.8782,"d":148,"t":"Inner monologue 2026-01-27_03:54:26","tail":0},{"x":-1.095,"y":0.9817,"d":247,"t":"Campbell island teal","tail":0},{"x":1.816,"y":0.9544,"d":255,"t":"STATIC BLOOM","tail":0},{"x":0.588,"y":0.8962,"d":178,"t":"wont pay the bills","tail":0},{"x":-0.101,"y":0.9985,"d":190,"t":"Yeah I think it\u2019s time","tail":0},{"x":1.983,"y":0.9939,"d":117,"t":"meloqa","tail":0},{"x":-0.469,"y":0.9459,"d":134,"t":"Negligent Discharge","tail":0},{"x":0.521,"y":0.9173,"d":78,"t":"Stickerless","tail":0},{"x":-0.228,"y":0.9956,"d":140,"t":"yeah we let it ride","tail":0},{"x":-5.464,"y":0.9623,"d":209,"t":"Isotope Garden","tail":0},{"x":2.509,"y":0.9915,"d":118,"t":"Projector Ticking","tail":0},{"x":1.833,"y":0.991,"d":122,"t":"yeahokyeah","tail":0},{"x":3.646,"y":0.9833,"d":139,"t":"yeahokyeah","tail":0},{"x":2.403,"y":0.9821,"d":108,"t":"PUT ME IN THE GRAVE","tail":0},{"x":4.906,"y":0.946,"d":164,"t":"escape velocity reached","tail":0},{"x":-0.263,"y":0.9346,"d":158,"t":"Sealed off","tail":0},{"x":-0.489,"y":0.9795,"d":72,"t":"Audit Season Anthem","tail":0},{"x":1.113,"y":0.9989,"d":65,"t":"Crab Bucket","tail":0},{"x":-0.532,"y":0.9789,"d":71,"t":"raw expression (unCover)","tail":0},{"x":1.126,"y":0.8948,"d":211,"t":"what an innovative idea?","tail":0},{"x":2.702,"y":0.916,"d":163,"t":"May i?","tail":0},{"x":2.124,"y":0.9834,"d":122,"t":"NVR","tail":0},{"x":-1.63,"y":0.939,"d":64,"t":"Such a Epistemic Uncertainty","tail":0},{"x":0.187,"y":0.9584,"d":136,"t":"Dying Animal","tail":0},{"x":-0.652,"y":0.953,"d":161,"t":"Dying Animal","tail":0},{"x":-1.046,"y":0.9108,"d":155,"t":"suddenly i feel like everything's gonna suck","tail":0},{"x":-0.755,"y":0.9143,"d":148,"t":"suddenly i feel like everything's gonna suck","tail":0},{"x":1.376,"y":0.9978,"d":107,"t":"suddenly i feel like everything's gonna suck","tail":0},{"x":-0.457,"y":0.9858,"d":160,"t":"Song title (Optional) damn right it is","tail":0},{"x":-5.388,"y":0.4528,"d":205,"t":"Suspended Pixels","tail":1},{"x":-4.1,"y":0.5302,"d":180,"t":"Suspended Whispers","tail":1},{"x":0.852,"y":0.9129,"d":149,"t":"How You Like It","tail":0},{"x":-0.916,"y":0.9212,"d":226,"t":"sedxi","tail":0},{"x":-1.989,"y":0.992,"d":142,"t":"sedxi","tail":0},{"x":1.032,"y":1.0,"d":250,"t":"Okotophonics","tail":0},{"x":-0.641,"y":0.9223,"d":222,"t":"Boysenberry blues","tail":0},{"x":-0.466,"y":0.9685,"d":130,"t":"Homework","tail":0},{"x":-1.833,"y":0.9767,"d":480,"t":"Linked Winters","tail":0},{"x":0.503,"y":0.9817,"d":203,"t":"May/Fly","tail":0},{"x":-0.63,"y":0.9017,"d":167,"t":"Five nights at panuccis pizza","tail":0},{"x":-0.252,"y":0.9258,"d":135,"t":"Case","tail":0},{"x":1.062,"y":0.9846,"d":197,"t":"Good Girl in a Bad Way","tail":0},{"x":1.093,"y":0.8952,"d":145,"t":"Opus 4.5","tail":0},{"x":-3.324,"y":0.6852,"d":257,"t":"2025-11-20_18:21:00","tail":1},{"x":0.246,"y":0.7642,"d":96,"t":"Vague enough to say it","tail":1},{"x":0.562,"y":0.9871,"d":170,"t":"may flies mayfly","tail":0},{"x":-3.831,"y":0.929,"d":273,"t":"2025-11-20_18:21:00","tail":0},{"x":-1.348,"y":0.9996,"d":135,"t":"I\u2019m not gonna lie I\u2019m really not sure how to feel","tail":0},{"x":0.588,"y":0.9825,"d":267,"t":"Skyline Reverie","tail":0},{"x":0.913,"y":0.9747,"d":284,"t":"Neither here/nor there","tail":0},{"x":-1.442,"y":0.8988,"d":268,"t":"Neither here/nor there","tail":0},{"x":-1.553,"y":0.9761,"d":238,"t":"The digital spirit analog association","tail":0},{"x":0.482,"y":0.9839,"d":204,"t":"Vanadium skies","tail":0},{"x":2.31,"y":0.9993,"d":212,"t":"Locker Notes","tail":0},{"x":-2.929,"y":0.8341,"d":148,"t":"About You","tail":1},{"x":-2.363,"y":0.7937,"d":186,"t":"About You","tail":1},{"x":-0.453,"y":0.9852,"d":180,"t":"Deal, fold","tail":0},{"x":-0.332,"y":0.9959,"d":174,"t":"Fractured Maps","tail":0},{"x":0.349,"y":0.9927,"d":224,"t":"Infinite Driveways","tail":0},{"x":1.175,"y":0.9997,"d":190,"t":"Fractals of You","tail":0},{"x":1.43,"y":0.9967,"d":242,"t":"Falling Into Spring","tail":0},{"x":-2.27,"y":0.8844,"d":139,"t":"Bifurcated pivot point","tail":0},{"x":0.514,"y":0.972,"d":260,"t":"Anxious Horizon","tail":0},{"x":-2.376,"y":0.7437,"d":206,"t":"Trading time for temperature","tail":1},{"x":2.526,"y":0.9706,"d":140,"t":"Infinite Tangents","tail":0},{"x":-0.703,"y":0.961,"d":182,"t":"A Faded Photo on the Mantel","tail":0},{"x":-1.323,"y":0.9733,"d":140,"t":"Xx","tail":0}],"dur_peaks":[{"x":59,"y":38,"z":38.5,"t":"yeah im mad"},{"x":185,"y":105,"z":34.0,"t":"I finally understand that letting go isn't something"},{"x":168,"y":100,"z":35.8,"t":"Cold Sided"},{"x":147,"y":84,"z":34.2,"t":"between places..."},{"x":104,"y":60,"z":34.5,"t":"Timber Frame"},{"x":73,"y":42,"z":34.5,"t":"alt bitch blues fetty crippin"},{"x":209,"y":113,"z":32.4,"t":"Quiet Weight"},{"x":188,"y":91,"z":29.0,"t":"Snapback Ranch"},{"x":132,"y":73,"z":33.1,"t":"deadbeat beats"},{"x":131,"y":75,"z":34.4,"t":"One Foot In"},{"x":204,"y":120,"z":35.2,"t":"it's never going away"},{"x":146,"y":83,"z":34.2,"t":"2026-07-16-13-40-39.mp4"},{"x":75,"y":44,"z":35.2,"t":"Epitaph"},{"x":144,"y":87,"z":36.1,"t":"babe blade (Remix)"},{"x":72,"y":35,"z":29.2,"t":"I dont"},{"x":65,"y":35,"z":32.3,"t":"1k ms"},{"x":80,"y":46,"z":34.5,"t":"infoplex"},{"x":262,"y":140,"z":32.0,"t":"Out of Sync"},{"x":79,"y":43,"z":32.5,"t":"the wash"},{"x":160,"y":95,"z":35.6,"t":"5 evictions under my belt"},{"x":236,"y":124,"z":31.6,"t":"Knot theory"},{"x":195,"y":114,"z":35.0,"t":"me asf"},{"x":149,"y":86,"z":34.6,"t":"right in my ear. no your left."},{"x":130,"y":72,"z":33.3,"t":"2nd to last Crab in the Bucket"},{"x":183,"y":115,"z":37.7,"t":"Nowhere 2 Go"},{"x":154,"y":90,"z":35.0,"t":"Grip on the situation"},{"x":341,"y":190,"z":33.5,"t":"Ground-State Assumption"},{"x":147,"y":80,"z":32.7,"t":"22nd letter"},{"x":155,"y":93,"z":35.9,"t":"Available"},{"x":155,"y":88,"z":34.1,"t":"August Ice Water"},{"x":300,"y":179,"z":35.8,"t":"Choosing/Chose"},{"x":131,"y":74,"z":33.8,"t":"The New Girl"},{"x":143,"y":77,"z":32.4,"t":"2V ev40"},{"x":80,"y":42,"z":31.5,"t":"Borrowed Air"},{"x":146,"y":88,"z":36.1,"t":"Bagels"},{"x":148,"y":85,"z":34.5,"t":"Fabled Fable"},{"x":221,"y":123,"z":33.3,"t":"I'm in Pieces"},{"x":294,"y":167,"z":34.1,"t":"compatibility layer x I'm Not Fine (Mashup)"},{"x":182,"y":106,"z":34.9,"t":"Chronically Overdrawn (jaspercore)"},{"x":177,"y":88,"z":29.8,"t":"Phantom Flakes"},{"x":201,"y":115,"z":34.3,"t":"stop that"},{"x":182,"y":112,"z":36.8,"t":"Lost in Numbers"},{"x":148,"y":75,"z":30.4,"t":"STOP GAP"},{"x":280,"y":146,"z":31.2,"t":"Cell in Grid"},{"x":203,"y":112,"z":33.1,"t":"Loved 1S"},{"x":185,"y":99,"z":32.1,"t":"The message"},{"x":87,"y":52,"z":35.9,"t":"fuck my therapist i want to literally"},{"x":74,"y":40,"z":32.6,"t":"Chronos"},{"x":173,"y":101,"z":35.1,"t":"White Shoes"},{"x":208,"y":111,"z":32.1,"t":"Thick in the Heart"},{"x":180,"y":115,"z":38.3,"t":"Put me on Display"},{"x":182,"y":91,"z":30.0,"t":"Online (Edit)"},{"x":163,"y":98,"z":36.0,"t":"bruh im fucking hhfh"},{"x":210,"y":114,"z":32.5,"t":"Entropy"},{"x":74,"y":43,"z":34.7,"t":"get in em!"},{"x":262,"y":143,"z":32.7,"t":"compatibility layer"},{"x":137,"y":84,"z":36.7,"t":"Bad For My HRV (Remastered)"},{"x":113,"y":66,"z":35.1,"t":"Elastic Lucid Mind"},{"x":210,"y":112,"z":32.0,"t":"Me: the amplifier"},{"x":95,"y":52,"z":33.0,"t":"Yes I do"},{"x":179,"y":106,"z":35.6,"t":"I\u2019m just"},{"x":396,"y":236,"z":35.7,"t":"Memetic mars bars"},{"x":168,"y":92,"z":32.8,"t":"Illegible"},{"x":97,"y":61,"z":37.9,"t":"HI V(is)"},{"x":194,"y":127,"z":39.3,"t":"From the Love"},{"x":277,"y":158,"z":34.3,"t":"The clarity machine"},{"x":86,"y":51,"z":35.6,"t":"You got Gnome\u2019d"},{"x":168,"y":113,"z":40.3,"t":"Captain Nemo\u2019s Nautilus"},{"x":183,"y":120,"z":39.4,"t":"Tumblr hauntology"},{"x":119,"y":78,"z":39.4,"t":"Mr brown\u2019s; the ev special"},{"x":107,"y":55,"z":31.0,"t":"I\u2019m tried calling but no service"},{"x":113,"y":75,"z":39.9,"t":"Optimize Your Life"},{"x":137,"y":83,"z":36.2,"t":"Bad For My HRV"},{"x":187,"y":104,"z":33.4,"t":"How am I supposed to?"},{"x":284,"y":168,"z":35.5,"t":"Kiss and Tell x I don\u2019t think I can (Mashup)"},{"x":171,"y":105,"z":36.9,"t":"Ex ennui"},{"x":253,"y":134,"z":31.8,"t":"Aperture"},{"x":267,"y":148,"z":33.2,"t":"Tungstenography"},{"x":147,"y":83,"z":33.9,"t":"Cinema"},{"x":220,"y":130,"z":35.5,"t":"Fetty spaghetti Machiavelli"},{"x":110,"y":58,"z":31.7,"t":"Knife hits"},{"x":167,"y":90,"z":32.3,"t":"Contingency chaplain"},{"x":98,"y":59,"z":36.2,"t":"23"},{"x":238,"y":147,"z":37.0,"t":"EV&V limited liability company"},{"x":171,"y":94,"z":33.0,"t":"Magnetic discretion"},{"x":208,"y":128,"z":36.9,"t":"Far From Perfect"},{"x":151,"y":83,"z":32.9,"t":"Infinite Tangents"},{"x":124,"y":83,"z":40.2,"t":"Frame testing for feelings 2026-01-27_03:54:26"},{"x":148,"y":88,"z":35.6,"t":"Inner monologue 2026-01-27_03:54:26"},{"x":247,"y":147,"z":35.7,"t":"Campbell island teal"},{"x":255,"y":150,"z":35.2,"t":"STATIC BLOOM"},{"x":178,"y":97,"z":32.8,"t":"wont pay the bills"},{"x":190,"y":116,"z":36.7,"t":"Yeah I think it\u2019s time"},{"x":117,"y":78,"z":40.0,"t":"meloqa"},{"x":134,"y":83,"z":37.2,"t":"Negligent Discharge"},{"x":78,"y":41,"z":31.7,"t":"Stickerless"},{"x":140,"y":80,"z":34.3,"t":"yeah we let it ride"},{"x":209,"y":67,"z":19.3,"t":"Isotope Garden"},{"x":118,"y":64,"z":32.6,"t":"Projector Ticking"},{"x":122,"y":71,"z":35.0,"t":"yeahokyeah"},{"x":139,"y":73,"z":31.4,"t":"yeahokyeah"},{"x":108,"y":60,"z":33.4,"t":"PUT ME IN THE GRAVE"},{"x":164,"y":94,"z":34.4,"t":"escape velocity reached"},{"x":158,"y":97,"z":36.9,"t":"Sealed off"},{"x":72,"y":45,"z":37.5,"t":"Audit Season Anthem"},{"x":65,"y":37,"z":34.2,"t":"Crab Bucket"},{"x":71,"y":42,"z":35.6,"t":"raw expression (unCover)"},{"x":211,"y":114,"z":32.4,"t":"what an innovative idea?"},{"x":163,"y":95,"z":35.0,"t":"May i?"},{"x":122,"y":68,"z":33.4,"t":"NVR"},{"x":64,"y":39,"z":36.4,"t":"Such a Epistemic Uncertainty"},{"x":136,"y":75,"z":33.2,"t":"Dying Animal"},{"x":161,"y":88,"z":32.8,"t":"Dying Animal"},{"x":155,"y":85,"z":32.9,"t":"suddenly i feel like everything's gonna suck"},{"x":148,"y":81,"z":32.8,"t":"suddenly i feel like everything's gonna suck"},{"x":107,"y":62,"z":34.7,"t":"suddenly i feel like everything's gonna suck"},{"x":160,"y":93,"z":34.9,"t":"Song title (Optional) damn right it is"},{"x":205,"y":119,"z":34.8,"t":"Suspended Pixels"},{"x":180,"y":104,"z":34.7,"t":"Suspended Whispers"},{"x":149,"y":91,"z":36.6,"t":"How You Like It"},{"x":226,"y":130,"z":34.6,"t":"sedxi"},{"x":142,"y":80,"z":33.9,"t":"sedxi"},{"x":250,"y":147,"z":35.3,"t":"Okotophonics"},{"x":222,"y":132,"z":35.6,"t":"Boysenberry blues"},{"x":130,"y":78,"z":36.0,"t":"Homework"},{"x":480,"y":306,"z":38.2,"t":"Linked Winters"},{"x":203,"y":124,"z":36.7,"t":"May/Fly"},{"x":167,"y":95,"z":34.1,"t":"Five nights at panuccis pizza"},{"x":135,"y":78,"z":34.7,"t":"Case"},{"x":197,"y":105,"z":31.9,"t":"Good Girl in a Bad Way"},{"x":145,"y":75,"z":31.1,"t":"Opus 4.5"},{"x":257,"y":145,"z":33.9,"t":"2025-11-20_18:21:00"},{"x":96,"y":52,"z":32.5,"t":"Vague enough to say it"},{"x":170,"y":100,"z":35.3,"t":"may flies mayfly"},{"x":273,"y":177,"z":38.9,"t":"2025-11-20_18:21:00"},{"x":135,"y":67,"z":29.9,"t":"I\u2019m not gonna lie I\u2019m really not sure how to feel"},{"x":267,"y":149,"z":33.5,"t":"Skyline Reverie"},{"x":284,"y":163,"z":34.4,"t":"Neither here/nor there"},{"x":268,"y":161,"z":36.0,"t":"Neither here/nor there"},{"x":238,"y":135,"z":34.1,"t":"The digital spirit analog association"},{"x":204,"y":123,"z":36.2,"t":"Vanadium skies"},{"x":212,"y":121,"z":34.2,"t":"Locker Notes"},{"x":148,"y":81,"z":32.9,"t":"About You"},{"x":186,"y":110,"z":35.4,"t":"About You"},{"x":180,"y":97,"z":32.4,"t":"Deal, fold"},{"x":174,"y":91,"z":31.5,"t":"Fractured Maps"},{"x":224,"y":138,"z":36.9,"t":"Infinite Driveways"},{"x":190,"y":101,"z":31.9,"t":"Fractals of You"},{"x":242,"y":149,"z":36.9,"t":"Falling Into Spring"},{"x":139,"y":95,"z":41.1,"t":"Bifurcated pivot point"},{"x":260,"y":156,"z":36.0,"t":"Anxious Horizon"},{"x":206,"y":104,"z":30.3,"t":"Trading time for temperature"},{"x":140,"y":81,"z":34.8,"t":"Infinite Tangents"},{"x":182,"y":109,"z":35.9,"t":"A Faded Photo on the Mantel"},{"x":140,"y":84,"z":36.0,"t":"Xx"}]}</script>
+<script>
+(function(){
+  "use strict";
+  var D = JSON.parse(document.getElementById('cdata').textContent);
+  var NS = 'http://www.w3.org/2000/svg';
+  var MARK1 = '#4B7CF3', MARK2 = '#C28238', MUTE = '#3A456B', SURF = '#0C1020';
+
+  function el(n, a){ var e = document.createElementNS(NS, n);
+    for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function fmt(x, d){ return Number(x).toFixed(d == null ? 0 : d); }
+
+  // ── tooltip plumbing ───────────────────────────────────────────────
+  function bindTip(svg, tipEl){
+    return function(node, html){
+      function show(ev){
+        var box = svg.getBoundingClientRect();
+        tipEl.innerHTML = html;
+        tipEl.style.left = (ev.clientX - box.left) + 'px';
+        tipEl.style.top  = (ev.clientY - box.top) + 'px';
+        tipEl.classList.add('on');
+      }
+      node.addEventListener('mouseenter', show);
+      node.addEventListener('mousemove', show);
+      node.addEventListener('mouseleave', function(){ tipEl.classList.remove('on'); });
+    };
+  }
+
+  function axes(svg, o){
+    var g = el('g', {'class':'grid'});
+    for (var i = 0; i <= o.yTicks; i++){
+      var y = o.t + (o.h - o.t - o.b) * i / o.yTicks;
+      g.appendChild(el('line', {x1:o.l, x2:o.w - o.r, y1:y, y2:y}));
+    }
+    svg.appendChild(g);
+    var a = el('g', {'class':'axis'});
+    for (var j = 0; j <= o.yTicks; j++){
+      var yy = o.t + (o.h - o.t - o.b) * j / o.yTicks;
+      var v  = o.yMax - (o.yMax - o.yMin) * j / o.yTicks;
+      var tx = el('text', {x:o.l - 9, y:yy + 3.5, 'text-anchor':'end'});
+      tx.textContent = o.yFmt ? o.yFmt(v) : fmt(v);
+      a.appendChild(tx);
+    }
+    (o.xTickVals || []).forEach(function(v){
+      var x  = o.l + (o.w - o.l - o.r) * (v - o.xMin) / (o.xMax - o.xMin);
+      var tx = el('text', {x:x, y:o.h - o.b + 18, 'text-anchor':'middle'});
+      tx.textContent = o.xFmt ? o.xFmt(v) : fmt(v);
+      a.appendChild(tx);
+    });
+    if (o.xTitle){
+      var xt = el('text', {x:(o.l + o.w - o.r)/2, y:o.h - 4, 'text-anchor':'middle', 'class':'axis-title'});
+      xt.textContent = o.xTitle; a.appendChild(xt);
+    }
+    if (o.yTitle){
+      var yt = el('text', {x:0, y:0, 'text-anchor':'middle', 'class':'axis-title',
+        transform:'translate(' + (o.l - 46) + ',' + ((o.t + o.h - o.b)/2) + ') rotate(-90)'});
+      yt.textContent = o.yTitle; a.appendChild(yt);
+    }
+    svg.appendChild(a);
+  }
+
+  // ── histogram ──────────────────────────────────────────────────────
+  function histogram(id, tipId, hist, opt){
+    var svg = document.getElementById(id), tip = document.getElementById(tipId);
+    var vb = svg.getAttribute('viewBox').split(' ').map(Number);
+    var W = vb[2], H = vb[3], L = 56, R = 16, T = 14, B = 44;
+    var counts = hist.counts, edges = hist.edges;
+    var yMax = Math.ceil(Math.max.apply(null, counts) / 20) * 20;
+    var o = {w:W, h:H, l:L, r:R, t:T, b:B, yTicks:4, yMin:0, yMax:yMax,
+             xMin:edges[0], xMax:edges[edges.length-1],
+             xTickVals:opt.xTickVals, xFmt:opt.xFmt, xTitle:opt.xTitle, yTitle:'Tracks'};
+    axes(svg, o);
+    var plotW = W - L - R, plotH = H - T - B;
+    var span = edges[edges.length-1] - edges[0];
+    var attach = bindTip(svg, tip);
+    counts.forEach(function(c, i){
+      if (!c) return;
+      var x0 = L + plotW * (edges[i]   - edges[0]) / span;
+      var x1 = L + plotW * (edges[i+1] - edges[0]) / span;
+      var bw = Math.min(24, x1 - x0 - 2);          // <=24px, 2px surface gap
+      var cx = (x0 + x1) / 2 - bw / 2;
+      var bh = plotH * c / yMax;
+      var y  = T + plotH - bh;
+      var fill = (opt.highlight && opt.highlight(edges[i])) ? MARK2 : MARK1;
+      var r = Math.min(4, bw / 2);
+      // rounded data-end, square at the baseline
+      var d = 'M' + cx + ',' + (T + plotH) + ' L' + cx + ',' + (y + r) +
+              ' Q' + cx + ',' + y + ' ' + (cx + r) + ',' + y +
+              ' L' + (cx + bw - r) + ',' + y +
+              ' Q' + (cx + bw) + ',' + y + ' ' + (cx + bw) + ',' + (y + r) +
+              ' L' + (cx + bw) + ',' + (T + plotH) + ' Z';
+      svg.appendChild(el('path', {d:d, fill:fill}));
+      var hit = el('rect', {x:x0, y:T, width:(x1 - x0), height:plotH, 'class':'hit'});
+      attach(hit, '<b>' + c + '</b> track' + (c === 1 ? '' : 's') +
+                  '<div class="t-name">' + opt.binLabel(edges[i], edges[i+1]) + '</div>');
+      svg.appendChild(hit);
+    });
+  }
+
+  // ── scatter ────────────────────────────────────────────────────────
+  function scatter(id, tipId, pts, opt){
+    var svg = document.getElementById(id), tip = document.getElementById(tipId);
+    var vb = svg.getAttribute('viewBox').split(' ').map(Number);
+    var W = vb[2], H = vb[3];
+    var L = opt.compact ? 46 : 60, R = 16, T = 14, B = 46;
+    var xs = pts.map(function(p){ return p.x; }), ys = pts.map(function(p){ return p.y; });
+    var xMin = opt.xMin != null ? opt.xMin : Math.min.apply(null, xs);
+    var xMax = opt.xMax != null ? opt.xMax : Math.max.apply(null, xs);
+    var yMin = opt.yMin != null ? opt.yMin : Math.min.apply(null, ys);
+    var yMax = opt.yMax != null ? opt.yMax : Math.max.apply(null, ys);
+    axes(svg, {w:W, h:H, l:L, r:R, t:T, b:B, yTicks:4, yMin:yMin, yMax:yMax,
+               xMin:xMin, xMax:xMax, xTickVals:opt.xTickVals, xFmt:opt.xFmt,
+               yFmt:opt.yFmt, xTitle:opt.xTitle, yTitle:opt.yTitle});
+    var plotW = W - L - R, plotH = H - T - B;
+    var attach = bindTip(svg, tip);
+    var order = pts.slice().sort(function(a, b){ return (a.tail || 0) - (b.tail || 0); });
+    order.forEach(function(p){
+      var x = L + plotW * (p.x - xMin) / (xMax - xMin);
+      var y = T + plotH - plotH * (p.y - yMin) / (yMax - yMin);
+      var hl = !!p.tail;
+      // 2px surface ring keeps overlapping dots legible
+      svg.appendChild(el('circle', {cx:x, cy:y, r:opt.rDot || 4.5,
+        fill: hl ? MARK2 : (opt.muted ? MUTE : MARK1),
+        stroke: SURF, 'stroke-width': 2}));
+      var hit = el('circle', {cx:x, cy:y, r:11, 'class':'hit'});
+      attach(hit, opt.tip(p));
+      svg.appendChild(hit);
+    });
+  }
+
+  // ── A: onset ───────────────────────────────────────────────────────
+  histogram('chartA', 'tipA', D.onset.hist, {
+    xTickVals:[1,2,3,4,5,6], xFmt:function(v){ return fmt(v) + 's'; },
+    xTitle:'Lead-in silence (seconds)',
+    binLabel:function(a, b){ return fmt(a,2) + '–' + fmt(b,2) + ' s'; }
+  });
+
+  // ── B: repetition ──────────────────────────────────────────────────
+  histogram('chartB', 'tipB', D.rep.hist, {
+    xTickVals:[0.4,0.5,0.6,0.7,0.8,0.9,1.0], xFmt:function(v){ return fmt(v,2); },
+    xTitle:'Repetition score (self-similarity)',
+    binLabel:function(a, b){ return fmt(a,2) + '–' + fmt(b,2); }
+  });
+
+  // ── C: brightness vs repetition ────────────────────────────────────
+  scatter('chartC', 'tipC', D.scatter, {
+    xTitle:'Brightness (PC1 of centroid, flatness, ZCR) →',
+    yTitle:'Repetition score',
+    xTickVals:[-5,-4,-3,-2,-1,0,1,2,3], xFmt:function(v){ return fmt(v,0); },
+    yFmt:function(v){ return fmt(v,2); },
+    yMin:0.4, yMax:1.0,
+    tip:function(p){
+      return '<b>rep ' + fmt(p.y,3) + '</b> · bright ' + fmt(p.x,2) +
+             '<div class="t-name">' + p.t + ' · ' + p.d + 's</div>';
+    }
+  });
+
+  // ── D: the duration proxy, raw and corrected ───────────────────────
+  scatter('chartD1', 'tipD1', D.dur_peaks.map(function(p){
+      return {x:p.x, y:p.y, t:p.t}; }), {
+    compact:true, rDot:3.5, muted:false,
+    xTitle:'Duration (s)', yTitle:'Novelty peaks',
+    xTickVals:[100,200,300,400], yMin:0, yMax:320,
+    tip:function(p){ return '<b>' + p.y + ' peaks</b> · ' + p.x + 's' +
+                            '<div class="t-name">' + p.t + '</div>'; }
+  });
+  scatter('chartD2', 'tipD2', D.dur_peaks.map(function(p){
+      return {x:p.x, y:p.z, t:p.t}; }), {
+    compact:true, rDot:3.5, muted:false,
+    xTitle:'Duration (s)', yTitle:'Peaks / minute',
+    xTickVals:[100,200,300,400], yMin:0, yMax:60, yFmt:function(v){ return fmt(v,0); },
+    tip:function(p){ return '<b>' + fmt(p.y,1) + ' / min</b> · ' + p.x + 's' +
+                            '<div class="t-name">' + p.t + '</div>'; }
+  });
+})();
+</script>
+</body>
+</html>
