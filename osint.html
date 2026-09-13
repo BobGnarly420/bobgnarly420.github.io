@@ -329,7 +329,46 @@
         overflow-x: auto;
       }
     }
+
+    /* busy + field-error states */
+    .result-box.busy{display:block;border-color:var(--accent);color:var(--accent)}
+    .result-box.busy .msg{display:flex;align-items:center;gap:0.6rem;font-size:0.85rem}
+    .spinner{
+      display:inline-block;width:11px;height:11px;flex:none;
+      border:2px solid rgba(88,166,255,.25);border-top-color:var(--accent);
+      border-radius:50%;animation:spin .7s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(prefers-reduced-motion:reduce){.spinner{animation-duration:2.4s}}
+    input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--danger)}
+    .field-error{color:var(--danger);font-size:0.75rem;margin-top:0.35rem}
+
+    /* shared site footer — every page reaches the policy pages */
+    .site-foot{
+      display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;
+      margin:2.5rem auto 0;padding:1.25rem 1rem 2rem;
+      border-top:1px solid var(--border);font-size:0.75rem
+    }
+    .site-foot a{color:var(--text-secondary);text-decoration:none;transition:color .18s}
+    .site-foot a:hover{color:var(--accent)}
   </style>
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://bobgnarly420.github.io/osint.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BobGnarly420">
+<meta property="og:title" content="GHOST_CHAIN — Client-Side OSINT Toolchain">
+<meta property="og:description" content="Domain and IP reconnaissance, hash analysis and metadata extraction that runs entirely in your browser. Zero backend.">
+<meta property="og:url" content="https://bobgnarly420.github.io/osint.html">
+<meta property="og:image" content="https://bobgnarly420.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BobGnarly420 — instruments for systems that will not hold still.">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
   <div class="header">
@@ -374,7 +413,7 @@
             </select>
           </div>
           <button class="btn" onclick="performDNSLookup()">Query DNS</button>
-          <div id="dns-result" class="result-box" style="display:none;"></div>
+          <div id="dns-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -385,7 +424,7 @@
             <input type="text" id="ip-address" placeholder="8.8.8.8">
           </div>
           <button class="btn" onclick="performIPLookup()">Lookup IP</button>
-          <div id="ip-result" class="result-box" style="display:none;"></div>
+          <div id="ip-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -396,7 +435,7 @@
             <input type="text" id="ssl-domain" placeholder="example.com">
           </div>
           <button class="btn" onclick="checkSSL()">Check SSL</button>
-          <div id="ssl-result" class="result-box" style="display:none;"></div>
+          <div id="ssl-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -407,7 +446,7 @@
             <input type="text" id="subdomain-domain" placeholder="example.com">
           </div>
           <button class="btn" onclick="generateSubdomains()">Generate List</button>
-          <div id="subdomain-result" class="result-box" style="display:none;"></div>
+          <div id="subdomain-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -418,7 +457,7 @@
             <input type="text" id="url-input" placeholder="https://example.com/path?param=value">
           </div>
           <button class="btn" onclick="analyzeURL()">Analyze URL</button>
-          <div id="url-result" class="result-box" style="display:none;"></div>
+          <div id="url-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -429,7 +468,7 @@
             <input type="number" id="port-number" placeholder="80">
           </div>
           <button class="btn" onclick="lookupPort()">Lookup Port</button>
-          <div id="port-result" class="result-box" style="display:none;"></div>
+          <div id="port-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -445,7 +484,7 @@
             <input type="text" id="username" placeholder="johndoe">
           </div>
           <button class="btn" onclick="searchUsername()">Generate Links</button>
-          <div id="username-result" class="result-box" style="display:none;"></div>
+          <div id="username-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -456,7 +495,7 @@
             <input type="text" id="social-handle" placeholder="username">
           </div>
           <button class="btn" onclick="generateSocialLinks()">Generate Links</button>
-          <div id="social-result" class="result-box" style="display:none;"></div>
+          <div id="social-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -467,7 +506,7 @@
             <input type="text" id="image-url" placeholder="https://example.com/image.jpg">
           </div>
           <button class="btn" onclick="reverseImageSearch()">Generate Searches</button>
-          <div id="image-result" class="result-box" style="display:none;"></div>
+          <div id="image-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -478,7 +517,7 @@
             <input type="text" id="github-user" placeholder="username">
           </div>
           <button class="btn" onclick="githubOSINT()">Generate Queries</button>
-          <div id="github-result" class="result-box" style="display:none;"></div>
+          <div id="github-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -494,7 +533,7 @@
             <textarea id="email-headers" placeholder="Paste email headers here..."></textarea>
           </div>
           <button class="btn" onclick="analyzeEmailHeaders()">Analyze Headers</button>
-          <div id="email-header-result" class="result-box" style="display:none;"></div>
+          <div id="email-header-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -505,7 +544,7 @@
             <input type="email" id="email-address" placeholder="user@example.com">
           </div>
           <button class="btn" onclick="validateEmail()">Validate Email</button>
-          <div id="email-validate-result" class="result-box" style="display:none;"></div>
+          <div id="email-validate-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -516,7 +555,7 @@
             <input type="email" id="disposable-email" placeholder="user@tempmail.com">
           </div>
           <button class="btn" onclick="checkDisposableEmail()">Check Email</button>
-          <div id="disposable-result" class="result-box" style="display:none;"></div>
+          <div id="disposable-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -535,7 +574,7 @@
             <input type="text" id="email-domain" placeholder="example.com">
           </div>
           <button class="btn" onclick="generateEmailPermutations()">Generate</button>
-          <div id="email-permute-result" class="result-box" style="display:none;"></div>
+          <div id="email-permute-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -551,7 +590,7 @@
             <input type="text" id="hash-input" placeholder="5d41402abc4b2a76b9719d911017c592">
           </div>
           <button class="btn" onclick="identifyHash()">Identify Hash</button>
-          <div id="hash-result" class="result-box" style="display:none;"></div>
+          <div id="hash-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -563,7 +602,7 @@
           </div>
           <button class="btn" onclick="encodeBase64()">Encode</button>
           <button class="btn btn-secondary" onclick="decodeBase64()">Decode</button>
-          <div id="base64-result" class="result-box" style="display:none;"></div>
+          <div id="base64-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -582,7 +621,7 @@
             </select>
           </div>
           <button class="btn" onclick="generateHash()">Generate Hash</button>
-          <div id="hash-gen-result" class="result-box" style="display:none;"></div>
+          <div id="hash-gen-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -593,7 +632,7 @@
             <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
           </div>
           <button class="btn" onclick="decodeJWT()">Decode JWT</button>
-          <div id="jwt-result" class="result-box" style="display:none;"></div>
+          <div id="jwt-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -609,14 +648,14 @@
             <input type="text" id="headers-url" placeholder="https://example.com">
           </div>
           <button class="btn" onclick="viewHeaders()">View Headers</button>
-          <div id="headers-result" class="result-box" style="display:none;"></div>
+          <div id="headers-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
           <h3>IP Address Info</h3>
           <p>Get your current IP address and basic network info</p>
           <button class="btn" onclick="getMyIP()">Get My IP</button>
-          <div id="myip-result" class="result-box" style="display:none;"></div>
+          <div id="myip-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -628,7 +667,7 @@
           </div>
           <button class="btn" onclick="analyzeUserAgent()">Analyze</button>
           <button class="btn btn-secondary" onclick="showMyUserAgent()">Show My UA</button>
-          <div id="useragent-result" class="result-box" style="display:none;"></div>
+          <div id="useragent-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -639,7 +678,7 @@
             <input type="text" id="cidr-input" placeholder="192.168.1.0/24">
           </div>
           <button class="btn" onclick="calculateCIDR()">Calculate</button>
-          <div id="cidr-result" class="result-box" style="display:none;"></div>
+          <div id="cidr-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -650,7 +689,7 @@
             <input type="text" id="mac-input" placeholder="00:1A:2B:3C:4D:5E">
           </div>
           <button class="btn" onclick="lookupMAC()">Lookup Vendor</button>
-          <div id="mac-result" class="result-box" style="display:none;"></div>
+          <div id="mac-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -662,7 +701,7 @@
           </div>
           <button class="btn" onclick="convertTimestamp()">Convert</button>
           <button class="btn btn-secondary" onclick="getCurrentTimestamp()">Current Time</button>
-          <div id="timestamp-result" class="result-box" style="display:none;"></div>
+          <div id="timestamp-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -677,7 +716,7 @@
             EXIF data contains metadata like camera settings, GPS coordinates, timestamps, and software used.
             Client-side extraction requires JavaScript libraries like exif-js.
           </p>
-          <div class="result-box">
+          <div class="result-box" role="status" aria-live="polite">
             <pre><span class="info">Common EXIF Fields:</span>
 • Camera Make/Model
 • Date/Time Original
@@ -702,7 +741,7 @@
           <p style="color: var(--text-secondary); font-size: 0.85rem;">
             PDF, Office docs, and other files contain metadata about creation, modification, and authors.
           </p>
-          <div class="result-box">
+          <div class="result-box" role="status" aria-live="polite">
             <pre><span class="info">Common Metadata Fields:</span>
 • Author/Creator
 • Creation Date
@@ -729,7 +768,7 @@
             <input type="file" id="file-input" style="color: var(--text);">
           </div>
           <button class="btn" onclick="calculateFileHash()">Calculate Hashes</button>
-          <div id="file-hash-result" class="result-box" style="display:none;"></div>
+          <div id="file-hash-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
 
         <div class="tool-card">
@@ -744,7 +783,7 @@
             <input type="number" id="min-string-length" value="4" min="1">
           </div>
           <button class="btn" onclick="extractStrings()">Extract Strings</button>
-          <div id="string-result" class="result-box" style="display:none;"></div>
+          <div id="string-result" class="result-box" role="status" aria-live="polite" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -929,6 +968,13 @@
     </div>
   </div>
 
+  <footer class="site-foot">
+    <a href="/">Home</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/terms.html">Terms</a>
+    <a href="https://github.com/BobGnarly420">GitHub</a>
+  </footer>
+
   <script>
     // Tab switching
     function switchTab(tabName) {
@@ -949,9 +995,53 @@
     function showResult(elementId, content, type = 'info') {
       const element = document.getElementById(elementId);
       element.style.display = 'block';
-      element.innerHTML = `<pre class="${type}">${content}</pre>`;
+      element.classList.remove('busy');
+      element.removeAttribute('aria-busy');
+      element.textContent = '';
+      const pre = document.createElement('pre');
+      pre.className = type;
+      pre.textContent = content;
+      element.appendChild(pre);
       addCopyButton(element);
     }
+
+    // Async tools get a visible busy state rather than a line of text that
+    // looks the same as a result.
+    function showBusy(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.style.display = 'block';
+      element.className = 'result-box busy';
+      element.setAttribute('role', 'status');
+      element.setAttribute('aria-live', 'polite');
+      element.setAttribute('aria-busy', 'true');
+      element.innerHTML = '<div class="msg"><span class="spinner" aria-hidden="true"></span>' +
+        '<span></span></div>';
+      element.querySelector('.msg span:last-child').textContent = message;
+    }
+
+    // Mark the input that needs fixing, not only the result panel.
+    function markInvalid(inputId, message) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      input.setAttribute('aria-invalid', 'true');
+      let box = input.parentNode.querySelector('.field-error');
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'field-error';
+        box.setAttribute('role', 'alert');
+        input.parentNode.insertBefore(box, input.nextSibling);
+      }
+      box.textContent = message;
+      input.focus();
+    }
+
+    document.addEventListener('input', function (ev) {
+      const input = ev.target;
+      if (!input.hasAttribute('aria-invalid')) return;
+      input.removeAttribute('aria-invalid');
+      const box = input.parentNode.querySelector('.field-error');
+      if (box) box.remove();
+    });
 
     function addCopyButton(element) {
       if (!element.querySelector('.copy-btn')) {
@@ -975,6 +1065,7 @@
       const type = document.getElementById('dns-type').value;
 
       if (!domain) {
+        markInvalid('dns-domain', 'Please enter a domain.');
         showResult('dns-result', 'Please enter a domain', 'error');
         return;
       }
@@ -987,6 +1078,7 @@
       const ip = document.getElementById('ip-address').value.trim();
 
       if (!ip) {
+        markInvalid('ip-address', 'Please enter an IP address.');
         showResult('ip-result', 'Please enter an IP address', 'error');
         return;
       }
@@ -999,6 +1091,7 @@
       const domain = document.getElementById('ssl-domain').value.trim();
 
       if (!domain) {
+        markInvalid('ssl-domain', 'Please enter a domain.');
         showResult('ssl-result', 'Please enter a domain', 'error');
         return;
       }
@@ -1011,6 +1104,7 @@
       const domain = document.getElementById('subdomain-domain').value.trim();
 
       if (!domain) {
+        markInvalid('subdomain-domain', 'Please enter a domain.');
         showResult('subdomain-result', 'Please enter a domain', 'error');
         return;
       }
@@ -1037,6 +1131,7 @@
       const urlInput = document.getElementById('url-input').value.trim();
 
       if (!urlInput) {
+        markInvalid('url-input', 'Please enter a URL.');
         showResult('url-result', 'Please enter a URL', 'error');
         return;
       }
@@ -1110,6 +1205,7 @@
       const username = document.getElementById('username').value.trim();
 
       if (!username) {
+        markInvalid('username', 'Please enter a username.');
         showResult('username-result', 'Please enter a username', 'error');
         return;
       }
@@ -1143,6 +1239,7 @@
       const handle = document.getElementById('social-handle').value.trim();
 
       if (!handle) {
+        markInvalid('social-handle', 'Please enter a handle/username.');
         showResult('social-result', 'Please enter a handle/username', 'error');
         return;
       }
@@ -1165,6 +1262,7 @@
       const imageUrl = document.getElementById('image-url').value.trim();
 
       if (!imageUrl) {
+        markInvalid('image-url', 'Please enter an image URL.');
         showResult('image-result', 'Please enter an image URL', 'error');
         return;
       }
@@ -1184,6 +1282,7 @@
       const user = document.getElementById('github-user').value.trim();
 
       if (!user) {
+        markInvalid('github-user', 'Please enter a GitHub username.');
         showResult('github-result', 'Please enter a GitHub username', 'error');
         return;
       }
@@ -1208,6 +1307,7 @@
       const headers = document.getElementById('email-headers').value.trim();
 
       if (!headers) {
+        markInvalid('email-headers', 'Please paste email headers.');
         showResult('email-header-result', 'Please paste email headers', 'error');
         return;
       }
@@ -1250,6 +1350,7 @@
       const email = document.getElementById('email-address').value.trim();
 
       if (!email) {
+        markInvalid('email-address', 'Please enter an email address.');
         showResult('email-validate-result', 'Please enter an email address', 'error');
         return;
       }
@@ -1279,6 +1380,7 @@
       const email = document.getElementById('disposable-email').value.trim();
 
       if (!email) {
+        markInvalid('disposable-email', 'Please enter an email address.');
         showResult('disposable-result', 'Please enter an email address', 'error');
         return;
       }
@@ -1346,6 +1448,7 @@
       const hash = document.getElementById('hash-input').value.trim();
 
       if (!hash) {
+        markInvalid('hash-input', 'Please enter a hash.');
         showResult('hash-result', 'Please enter a hash', 'error');
         return;
       }
@@ -1404,6 +1507,7 @@
       const input = document.getElementById('base64-input').value;
 
       if (!input) {
+        markInvalid('base64-input', 'Please enter text to encode.');
         showResult('base64-result', 'Please enter text to encode', 'error');
         return;
       }
@@ -1420,6 +1524,7 @@
       const input = document.getElementById('base64-input').value.trim();
 
       if (!input) {
+        markInvalid('base64-input', 'Please enter Base64 to decode.');
         showResult('base64-result', 'Please enter Base64 to decode', 'error');
         return;
       }
@@ -1438,6 +1543,7 @@
       const algorithm = document.getElementById('hash-algorithm').value;
 
       if (!text) {
+        markInvalid('hash-text', 'Please enter text to hash.');
         showResult('hash-gen-result', 'Please enter text to hash', 'error');
         return;
       }
@@ -1464,6 +1570,7 @@
       const jwt = document.getElementById('jwt-input').value.trim();
 
       if (!jwt) {
+        markInvalid('jwt-input', 'Please enter a JWT token.');
         showResult('jwt-result', 'Please enter a JWT token', 'error');
         return;
       }
@@ -1504,13 +1611,14 @@
       const url = document.getElementById('headers-url').value.trim();
 
       if (!url) {
+        markInvalid('headers-url', 'Please enter a URL.');
         showResult('headers-result', 'Please enter a URL', 'error');
         return;
       }
 
-      try {
-        showResult('headers-result', 'Fetching headers...\n\nNote: This may fail due to CORS restrictions.\nFor unrestricted header viewing, use:\n• curl -I ' + url + '\n• Browser DevTools Network tab\n• Postman/Insomnia', 'info');
+      showBusy('headers-result', 'Requesting headers from ' + url + '\u2026');
 
+      try {
         const response = await fetch(url, { method: 'HEAD' });
         let output = `Headers for: ${url}\n\nStatus: ${response.status} ${response.statusText}\n\n`;
 
@@ -1526,7 +1634,7 @@
 
     // Get My IP
     async function getMyIP() {
-      showResult('myip-result', 'Fetching your IP information...', 'info');
+      showBusy('myip-result', 'Asking api.ipify.org for your public IP\u2026');
 
       try {
         const response = await fetch('https://api.ipify.org?format=json');
@@ -1553,6 +1661,7 @@
       const ua = document.getElementById('useragent-input').value.trim();
 
       if (!ua) {
+        markInvalid('useragent-input', 'Please enter a user agent string.');
         showResult('useragent-result', 'Please enter a user agent string', 'error');
         return;
       }
@@ -1588,6 +1697,7 @@
       const cidr = document.getElementById('cidr-input').value.trim();
 
       if (!cidr) {
+        markInvalid('cidr-input', 'Please enter CIDR notation.');
         showResult('cidr-result', 'Please enter CIDR notation', 'error');
         return;
       }
@@ -1625,6 +1735,7 @@
       const mac = document.getElementById('mac-input').value.trim().toUpperCase();
 
       if (!mac) {
+        markInvalid('mac-input', 'Please enter a MAC address.');
         showResult('mac-result', 'Please enter a MAC address', 'error');
         return;
       }
@@ -1647,6 +1758,7 @@
       const timestamp = document.getElementById('timestamp-input').value.trim();
 
       if (!timestamp) {
+        markInvalid('timestamp-input', 'Please enter a timestamp.');
         showResult('timestamp-result', 'Please enter a timestamp', 'error');
         return;
       }
@@ -1680,11 +1792,13 @@
       const file = fileInput.files[0];
 
       if (!file) {
+        markInvalid('file-input', 'Choose a file to hash.');
         showResult('file-hash-result', 'Please select a file', 'error');
         return;
       }
 
-      showResult('file-hash-result', `Calculating hashes for: ${file.name}\nSize: ${file.size} bytes\n\nPlease wait...`, 'info');
+      showBusy('file-hash-result',
+        `Hashing ${file.name} (${(file.size / 1024).toFixed(1)} KB)\u2026`);
 
       try {
         const arrayBuffer = await file.arrayBuffer();
@@ -1720,11 +1834,13 @@
       const minLength = parseInt(document.getElementById('min-string-length').value) || 4;
 
       if (!file) {
+        markInvalid('string-file-input', 'Choose a file to scan for strings.');
         showResult('string-result', 'Please select a file', 'error');
         return;
       }
 
-      showResult('string-result', `Extracting strings from: ${file.name}\nMin length: ${minLength}\n\nPlease wait...`, 'info');
+      showBusy('string-result',
+        `Scanning ${file.name} for strings of ${minLength}+ characters\u2026`);
 
       try {
         const text = await file.text();
@@ -1751,5 +1867,6 @@
       }
     }
   </script>
+<script src="/assets/consent.js" defer></script>
 </body>
 </html>

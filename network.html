@@ -294,6 +294,11 @@
             background: #1a1a1a;
         }
 
+        /* 1fr tracks default to min-width:auto, so the widest table inside a
+           panel set the page width instead of scrolling within its own box. */
+        .grid > * { min-width: 0; }
+        .connections-list { overflow-x: auto; }
+
         @media (max-width: 968px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -303,7 +308,50 @@
                 font-size: 1.8rem;
             }
         }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .panel, header { padding: 1.25rem; }
+        }
+
+        /* busy + field-error states */
+        .status.busy{display:block;border-color:#3b82f6;color:#3b82f6}
+        .spinner{
+            display:inline-block;width:11px;height:11px;margin-right:0.6rem;
+            vertical-align:-1px;border:2px solid rgba(59,130,246,.25);
+            border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media(prefers-reduced-motion:reduce){.spinner{animation-duration:2.4s}}
+        input[aria-invalid="true"]{border-color:#ef4444}
+        .field-error{display:none;color:#ef4444;font-size:0.75rem;margin-top:0.35rem}
+        .field-error.show{display:block}
+        button[disabled]{opacity:.55;cursor:not-allowed}
+
+        /* shared site footer — every page reaches the policy pages */
+        .site-foot{
+            display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;
+            margin:2.5rem auto 0;padding:1.25rem 1rem 2rem;
+            border-top:1px solid #333;font-size:0.75rem
+        }
+        .site-foot a{color:#666;text-decoration:none;transition:color .18s}
+        .site-foot a:hover{color:#3b82f6}
     </style>
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BobGnarly420">
+<meta property="og:title" content="NET_INTERCEPT — Network Analysis">
+<meta property="og:description" content="HTTP header and response-timing inspector built on the Fetch and Performance APIs.">
+<meta property="og:url" content="https://bobgnarly420.github.io/network.html">
+<meta property="og:image" content="https://bobgnarly420.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BobGnarly420 — instruments for systems that will not hold still.">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
     <div class="container">
@@ -358,11 +406,12 @@
                 <small id="url-help" style="color: #666; font-size: 0.75rem; display: block; margin-top: 0.25rem;">
                     Enter a URL that allows CORS (e.g., public APIs)
                 </small>
+                <div class="field-error" id="url-error" role="alert"></div>
             </div>
 
-            <button onclick="analyzeUrl()" aria-label="Analyze the target URL">ANALYZE REQUEST</button>
+            <button id="analyzeBtn" onclick="analyzeUrl()" aria-label="Analyze the target URL">ANALYZE REQUEST</button>
 
-            <div class="status" id="analyzeStatus"></div>
+            <div class="status" id="analyzeStatus" role="status" aria-live="polite"></div>
 
             <div id="analysisResults"></div>
         </div>
@@ -386,8 +435,13 @@
                 </div>
             </div>
         </div>
+        <footer class="site-foot">
+            <a href="/">Home</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+            <a href="https://github.com/BobGnarly420">GitHub</a>
+        </footer>
     </div>
-
     <script>
         let requestCounter = 0;
         let totalDataTransfer = 0;
@@ -432,20 +486,55 @@
             updateStats();
         }
 
+        // Mark the field itself, not just the status panel, so the error sits
+        // next to the thing the visitor has to change.
+        function setFieldError(inputId, errorId, message) {
+            const input = document.getElementById(inputId);
+            const box = document.getElementById(errorId);
+            box.textContent = message || '';
+            box.classList.toggle('show', !!message);
+            if (message) input.setAttribute('aria-invalid', 'true');
+            else input.removeAttribute('aria-invalid');
+        }
+
         async function analyzeUrl() {
-            const url = document.getElementById('targetUrl').value;
+            const url = document.getElementById('targetUrl').value.trim();
             const status = document.getElementById('analyzeStatus');
             const results = document.getElementById('analysisResults');
+            const btn = document.getElementById('analyzeBtn');
 
             status.className = 'status';
             status.style.display = 'none';
             results.innerHTML = '';
+            setFieldError('targetUrl', 'url-error', '');
 
             if (!url) {
-                status.className = 'status error';
-                status.textContent = 'ERROR: Please enter a URL';
+                setFieldError('targetUrl', 'url-error', 'Enter a URL to analyze.');
+                document.getElementById('targetUrl').focus();
                 return;
             }
+
+            let parsed;
+            try {
+                parsed = new URL(url);
+            } catch (e) {
+                setFieldError('targetUrl', 'url-error',
+                    'That is not a valid URL. Include the scheme, e.g. https://example.com');
+                document.getElementById('targetUrl').focus();
+                return;
+            }
+            if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+                setFieldError('targetUrl', 'url-error',
+                    'Only http:// and https:// URLs can be fetched from the browser.');
+                document.getElementById('targetUrl').focus();
+                return;
+            }
+
+            btn.disabled = true;
+            status.className = 'status busy';
+            status.setAttribute('aria-busy', 'true');
+            status.innerHTML = '<span class="spinner" aria-hidden="true"></span>Requesting ' +
+                parsed.hostname + '\u2026';
 
             try {
                 const startTime = performance.now();
@@ -497,9 +586,13 @@
 
             } catch (error) {
                 status.className = 'status error';
-                status.textContent = 'ERROR: ' + error.message;
+                status.textContent = 'ERROR: ' + error.message +
+                    ' — most often CORS: the target has to allow cross-origin reads.';
 
                 addLogEntry('GET', url, 0, 0, 0);
+            } finally {
+                btn.disabled = false;
+                status.removeAttribute('aria-busy');
             }
         }
 
@@ -555,5 +648,6 @@
         // Auto-refresh performance metrics every 5 seconds
         setInterval(loadPerformanceResources, 5000);
     </script>
+<script src="/assets/consent.js" defer></script>
 </body>
 </html>
