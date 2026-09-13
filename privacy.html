@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy</title>
+<meta name="description" content="What bobgnarly420.github.io stores, what it sends elsewhere, and what it never touches. A static site with no backend, no cookies, and consent-gated analytics.">
+<link rel="canonical" href="https://bobgnarly420.github.io/privacy.html">
+
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+<meta name="theme-color" content="#080B18">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="BobGnarly420">
+<meta property="og:title" content="Privacy">
+<meta property="og:description" content="No backend, no cookies, no third-party tracking by default — and a plain account of the three places data does leave your browser.">
+<meta property="og:url" content="https://bobgnarly420.github.io/privacy.html">
+<meta property="og:image" content="https://bobgnarly420.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BobGnarly420 — instruments for systems that will not hold still.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/incision.css">
+<style>
+  .consent-state{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:14px}
+  .consent-state .v{font-family:var(--mono);font-size:13px;color:var(--fg-1)}
+  .consent-state button{
+    font:500 12.5px/1 var(--mono);letter-spacing:.02em;padding:10px 16px;
+    border-radius:var(--radius-xs);cursor:pointer;border:1px solid var(--border-strong);
+    background:transparent;color:var(--fg-2);
+    transition:color .18s var(--ease),border-color .18s var(--ease)
+  }
+  .consent-state button:hover{color:var(--fg-1);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="glyph"></span>BobGnarly420</a>
+    <nav class="top-nav">
+      <a href="/#research">Research</a>
+      <a href="/#instruments">Instruments</a>
+      <a href="/#contact">Contact</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="eyebrow">Privacy</div>
+    <h1>What this site stores, and <em>what it sends elsewhere</em>.</h1>
+    <p class="lede">
+      <strong>bobgnarly420.github.io</strong> is a static site. There is no
+      backend, no database, no account system and no advertising. It sets
+      <strong>no cookies at all</strong>. This page is the complete account of
+      the places where data does leave your browser, written to be checkable
+      against the source rather than taken on trust —
+      <a href="https://github.com/BobGnarly420/bobgnarly420.github.io">every line of it is public</a>.
+    </p>
+    <p class="meta" style="margin-top:26px">Last updated 13 September 2026</p>
+
+    <h2>1. What I collect directly</h2>
+    <p>
+      Nothing. There is no form on this site that submits data to me, no email
+      capture, no session, no fingerprinting script. I do not know who you are
+      or that you visited unless you choose to contact me.
+    </p>
+
+    <h2>2. Hosting — GitHub Pages</h2>
+    <p>
+      The site is served by GitHub Pages. Like any web server, GitHub's
+      infrastructure processes the request itself — your IP address, user
+      agent and the URL requested — for delivery, security and abuse
+      prevention. I have no access to those logs and cannot see individual
+      visitors in them. This processing is governed by the
+      <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement" rel="noopener">GitHub Privacy Statement</a>.
+    </p>
+
+    <h2>3. Fonts — Google Fonts</h2>
+    <p>
+      Pages load two typefaces (DM Sans and JetBrains Mono) from
+      <span class="mono">fonts.googleapis.com</span> and
+      <span class="mono">fonts.gstatic.com</span>. Making that request
+      discloses your IP address and user agent to Google, as any third-party
+      request would. Google states that the Fonts API sets no cookies and
+      does not use the requests to build an advertising profile, but the
+      request is real and worth naming rather than glossing over. If you
+      block it, the site falls back to your system's sans and monospace faces
+      and remains fully usable.
+    </p>
+
+    <h2>4. Analytics — off unless you say yes</h2>
+    <p>
+      If analytics is enabled on this site, it is a cookieless page-view
+      counter that records only the page path, referrer, rough country and a
+      coarse browser label. It never sets a cookie, never assigns you an
+      identifier, and cannot follow you to another site.
+    </p>
+    <p>
+      The script is <strong>not loaded until you allow it</strong>. On a first
+      visit you get a banner with two equally weighted choices; nothing is
+      requested from the analytics host before you answer, and declining is
+      permanent for that browser.
+    </p>
+
+    <div class="panel">
+      <h2>Your current choice</h2>
+      <p id="consent-summary">Checking…</p>
+      <div class="consent-state" id="consent-controls" hidden>
+        <span class="v" id="consent-value"></span>
+        <button type="button" data-set="granted">Allow analytics</button>
+        <button type="button" data-set="denied">Decline analytics</button>
+        <button type="button" data-clear>Ask me again</button>
+      </div>
+    </div>
+
+    <h2>5. Local storage</h2>
+    <p>
+      The only thing this site writes to your browser is a single
+      <span class="mono">localStorage</span> key,
+      <span class="mono">bg420:analytics-consent</span>, holding your answer to
+      the banner above so it is not asked twice. It is not a cookie, it is
+      never transmitted anywhere, and clearing your site data removes it.
+    </p>
+
+    <h2>6. The browser tools</h2>
+    <p>
+      Three pages on this site are interactive instruments, and they behave
+      differently from the reading pages. All of them run entirely in your tab
+      — nothing you load into them is uploaded to me, because there is nowhere
+      for it to be uploaded to.
+    </p>
+    <ul>
+      <li>
+        <strong><a href="/stego.html">WHISPER_KEY</a></strong> — images,
+        messages and passwords are processed in-page with the Web Crypto API
+        and the canvas. No image or key material ever leaves the browser.
+      </li>
+      <li>
+        <strong><a href="/osint.html">GHOST_CHAIN</a></strong> — hashing,
+        decoding and parsing are local. Two features make outbound requests
+        <em>on your instruction</em>: the header viewer fetches the URL you
+        type, and "My IP" queries <span class="mono">api.ipify.org</span>.
+        Those third parties see the request as if you had made it yourself.
+      </li>
+      <li>
+        <strong><a href="/network.html">NET_INTERCEPT</a></strong> — fetches
+        the URL you enter and reads your own browser's Performance timings.
+        The target server sees a normal request from your browser.
+      </li>
+    </ul>
+
+    <h2>7. Contacting me</h2>
+    <p>
+      The contact route on this site is a GitHub issue. GitHub issues on a
+      public repository are <strong>public</strong> — the text, and the GitHub
+      account that opened it, are visible to anyone and indexed by search
+      engines. Do not put anything confidential in one. Contact details are on
+      the <a href="/#contact">contact section of the home page</a>.
+    </p>
+
+    <h2>8. Your rights</h2>
+    <p>
+      Because I hold no personal data about visitors, there is nothing of
+      yours for me to export, correct or erase. If you have opened a GitHub
+      issue and want it removed, ask in the issue or through GitHub and I will
+      delete it. For the request logs and the font requests described above,
+      the controllers are GitHub and Google respectively, and their own
+      policies apply.
+    </p>
+
+    <h2>9. Changes</h2>
+    <p>
+      If what the site does changes, this page changes with it, and the date
+      above moves. The full revision history is in
+      <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/commits/main/privacy.html">the commit log for this file</a>,
+      so you can see exactly what changed and when.
+    </p>
+
+    <div class="actions">
+      <a class="btn primary" href="/">Back to the site</a>
+      <a class="btn" href="/terms.html">Terms &amp; conditions</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="who">BobGnarly420 · latent dynamics, artificial and biological</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="https://github.com/BobGnarly420">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/assets/consent.js" defer></script>
+<script>
+  /* Reflect the live consent choice so this page can also be used to change
+     it — a privacy page that only describes the control is half a control. */
+  window.addEventListener('load', function () {
+    var summary = document.getElementById('consent-summary');
+    var controls = document.getElementById('consent-controls');
+    var value = document.getElementById('consent-value');
+    var c = window.bg420Consent;
+
+    if (!c || !c.configured()) {
+      summary.textContent =
+        'Analytics is not currently enabled on this site, so there is nothing ' +
+        'to allow or decline and no banner is shown. Nothing is counted.';
+      return;
+    }
+
+    var state = c.get();
+    summary.textContent =
+      'You can change this at any time, from this page, without clearing anything else.';
+    value.textContent =
+      state === 'granted' ? 'Currently: allowed'
+      : state === 'denied' ? 'Currently: declined'
+      : 'Currently: not yet answered';
+    controls.hidden = false;
+
+    controls.addEventListener('click', function (ev) {
+      var set = ev.target.getAttribute('data-set');
+      if (set) { c.set(set); return; }
+      if (ev.target.hasAttribute('data-clear')) c.clear();
+    });
+  });
+</script>
+</body>
+</html>

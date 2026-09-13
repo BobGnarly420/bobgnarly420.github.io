@@ -74,6 +74,11 @@ server so the full workflow is available as agent tools.
 | `osint.html` | GHOST_CHAIN — client-side OSINT toolchain | Archive |
 | `stego.html` | WHISPER_KEY — LSB steganography, AES-256-GCM via Web Crypto | Archive |
 | `network.html` | NET_INTERCEPT — HTTP header and timing inspector | Archive |
+| `404.html` | Custom not-found page; GitHub Pages serves it for any unmatched path | Live |
+| `privacy.html` | What the site stores and what it sends elsewhere | Live |
+| `terms.html` | Licensing, no-warranty position, authorised-use condition on the tools | Live |
+| `thanks.html` | Post-submit page for the contact form | Live |
+| `assets/` | Favicon set, Open Graph card, shared page CSS, consent script | Live |
 | `projects/bundle-analyzer/` | Zero-dependency JS bundle size CLI | Archive |
 | `projects/lighthouse-enforcer/` | Core Web Vitals budget enforcement for CI | Archive |
 
@@ -82,6 +87,53 @@ The browser tools are fully client-side: no backend, nothing leaves the tab.
 work — see [TESTING.md](TESTING.md) for their manual test procedures.
 
 The research code lives in its own repositories, linked above.
+
+---
+
+## Analytics and consent
+
+The site currently counts nothing. [`assets/consent.js`](assets/consent.js)
+holds the whole mechanism and one switch:
+
+```js
+var ENDPOINT = '';   // e.g. 'https://YOURCODE.goatcounter.com/count'
+```
+
+While it is empty no analytics script is fetched and no banner is shown —
+there would be nothing to consent to. Set it to a
+[GoatCounter](https://www.goatcounter.com/) count URL and three things turn on
+together: the consent banner, the beacon (loaded only after a visitor allows
+it), and the live allow/decline control on the privacy page. Declining is
+remembered and never re-asked.
+
+The only thing the site writes to a browser is that answer, under the
+`localStorage` key `bg420:analytics-consent`. There are no cookies.
+
+### Contact
+
+The contact form on the home page has no backend. It validates client-side and
+composes a prefilled GitHub issue, which the sender submits themselves; with
+JavaScript off the plain form GET lands on the same prefilled form. To use an
+email address instead, point the form's `action` at a `mailto:` and drop the
+submit handler.
+
+---
+
+## Regenerating the brand assets
+
+`assets/icon-*.png`, `assets/apple-touch-icon.png`, `assets/favicon.ico` and
+`assets/og-image.png` are generated from the Incision tokens rather than drawn
+by hand, so a palette change is one edit and a re-run:
+
+```bash
+pip install Pillow
+python3 assets/fetch_fonts.py    # DM Sans + JetBrains Mono -> assets/.fonts (gitignored)
+python3 assets/generate.py       # rewrites the PNGs and the .ico
+```
+
+[`assets/favicon.svg`](assets/favicon.svg) is maintained by hand and is the
+authoritative mark; `generate.py` mirrors its geometry. The output is committed,
+so this only needs running when the accent colour changes.
 
 ---
 

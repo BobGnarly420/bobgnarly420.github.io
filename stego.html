@@ -254,7 +254,51 @@
                 font-size: 1.8rem;
             }
         }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .panel, header { padding: 1.25rem; }
+        }
+
+        /* busy + field-error states */
+        .status.busy{display:block;border-color:#3b82f6;color:#3b82f6}
+        .spinner{
+            display:inline-block;width:11px;height:11px;margin-right:0.6rem;
+            vertical-align:-1px;border:2px solid rgba(59,130,246,.25);
+            border-top-color:#3b82f6;border-radius:50%;animation:spin .7s linear infinite
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media(prefers-reduced-motion:reduce){.spinner{animation-duration:2.4s}}
+        .form-group.invalid textarea,
+        .form-group.invalid input[type="password"],
+        .form-group.invalid .file-input-label{border-color:#ef4444}
+        .field-error{display:none;color:#ef4444;font-size:0.75rem;margin-top:0.35rem}
+        .form-group.invalid .field-error{display:block}
+
+        /* shared site footer — every page reaches the policy pages */
+        .site-foot{
+            display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;
+            margin:2.5rem auto 0;padding:1.25rem 1rem 2rem;
+            border-top:1px solid #333;font-size:0.75rem
+        }
+        .site-foot a{color:#666;text-decoration:none;transition:color .18s}
+        .site-foot a:hover{color:#3b82f6}
     </style>
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BobGnarly420">
+<meta property="og:title" content="WHISPER_KEY — Image Steganography">
+<meta property="og:description" content="LSB image steganography with AES-256-GCM and PBKDF2, via the Web Crypto API. Nothing leaves the tab.">
+<meta property="og:url" content="https://bobgnarly420.github.io/stego.html">
+<meta property="og:image" content="https://bobgnarly420.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BobGnarly420 — instruments for systems that will not hold still.">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
     <div class="container">
@@ -280,20 +324,22 @@
             <div class="panel">
                 <h2>[ ENCODE ] Hide Message</h2>
 
-                <div class="form-group">
+                <div class="form-group" id="fg-encodeImage">
                     <label>Select Cover Image (PNG)</label>
                     <label for="encodeImage" class="file-input-label">Choose PNG File</label>
                     <input type="file" id="encodeImage" accept="image/png">
                     <div class="filename" id="encodeFilename"></div>
+                    <div class="field-error" role="alert"></div>
                 </div>
 
                 <div class="preview" id="encodePreview">
                     <span class="preview-empty">No image loaded</span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="fg-secretMessage">
                     <label>Secret Message</label>
                     <textarea id="secretMessage" placeholder="Enter message to hide..."></textarea>
+                    <div class="field-error" role="alert"></div>
                 </div>
 
                 <div class="form-group">
@@ -301,19 +347,20 @@
                     <input type="password" id="encodePassword" placeholder="Leave empty for no encryption">
                 </div>
 
-                <button onclick="encodeMessage()">EMBED MESSAGE</button>
+                <button id="encodeBtn" onclick="encodeMessage()">EMBED MESSAGE</button>
 
-                <div class="status" id="encodeStatus"></div>
+                <div class="status" id="encodeStatus" role="status" aria-live="polite"></div>
             </div>
 
             <!-- DECODE PANEL -->
             <div class="panel">
                 <h2>[ DECODE ] Extract Message</h2>
 
-                <div class="form-group">
+                <div class="form-group" id="fg-decodeImage">
                     <label>Select Encoded Image (PNG)</label>
                     <label for="decodeImage" class="file-input-label">Choose PNG File</label>
                     <input type="file" id="decodeImage" accept="image/png">
+                    <div class="field-error" role="alert"></div>
                     <div class="filename" id="decodeFilename"></div>
                 </div>
 
@@ -326,19 +373,49 @@
                     <input type="password" id="decodePassword" placeholder="Enter password if message is encrypted">
                 </div>
 
-                <button onclick="decodeMessage()">EXTRACT MESSAGE</button>
+                <button id="decodeBtn" onclick="decodeMessage()">EXTRACT MESSAGE</button>
 
                 <div class="form-group" style="margin-top: 1.5rem;">
                     <label>Extracted Message</label>
                     <textarea id="extractedMessage" readonly placeholder="Decoded message will appear here..."></textarea>
                 </div>
 
-                <div class="status" id="decodeStatus"></div>
+                <div class="status" id="decodeStatus" role="status" aria-live="polite"></div>
             </div>
         </div>
+        <footer class="site-foot">
+            <a href="/">Home</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/terms.html">Terms</a>
+            <a href="https://github.com/BobGnarly420">GitHub</a>
+        </footer>
     </div>
-
     <script>
+        // Field-level validation state: the message sits next to the control
+        // the visitor has to fix, and the status panel keeps the summary.
+        function fieldError(groupId, message) {
+            const group = document.getElementById(groupId);
+            if (!group) return;
+            group.classList.toggle('invalid', !!message);
+            const box = group.querySelector('.field-error');
+            if (box) box.textContent = message || '';
+        }
+        function clearFieldErrors(ids) {
+            ids.forEach(function (id) { fieldError(id, ''); });
+        }
+        function setBusy(statusEl, buttonEl, message) {
+            buttonEl.disabled = true;
+            statusEl.className = 'status busy';
+            statusEl.style.display = 'block';
+            statusEl.setAttribute('aria-busy', 'true');
+            statusEl.innerHTML =
+                '<span class="spinner" aria-hidden="true"></span>' + message;
+        }
+        function clearBusy(statusEl, buttonEl) {
+            buttonEl.disabled = false;
+            statusEl.removeAttribute('aria-busy');
+        }
+
         // Image preview handlers
         document.getElementById('encodeImage').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -479,32 +556,38 @@
             const password = document.getElementById('encodePassword').value;
             const status = document.getElementById('encodeStatus');
 
+            const btn = document.getElementById('encodeBtn');
+
             status.className = 'status';
             status.style.display = 'none';
+            clearFieldErrors(['fg-encodeImage', 'fg-secretMessage']);
 
             // Input validation
             if (!fileInput.files[0]) {
+                fieldError('fg-encodeImage', 'Choose a PNG to hide the message in.');
                 status.className = 'status error';
                 status.textContent = 'ERROR: No image selected';
                 return;
             }
 
             if (!message) {
+                fieldError('fg-secretMessage', 'There is no message to embed.');
                 status.className = 'status error';
                 status.textContent = 'ERROR: No message to hide';
                 return;
             }
 
             if (message.length > 10000) {
+                fieldError('fg-secretMessage',
+                    'Too long: ' + message.length + ' characters, the limit is 10,000.');
                 status.className = 'status error';
                 status.textContent = 'ERROR: Message too long (max 10,000 characters)';
                 return;
             }
 
-            // Show loading state
-            status.className = 'status';
-            status.style.display = 'block';
-            status.textContent = 'Processing... Encrypting and embedding message...';
+            setBusy(status, btn, password
+                ? 'Deriving key, encrypting and embedding\u2026'
+                : 'Embedding message\u2026');
 
             const reader = new FileReader();
             reader.onload = async function(e) {
@@ -561,14 +644,27 @@
 
                             status.className = 'status success';
                             status.textContent = `SUCCESS: Message embedded. Downloaded as ${a.download}`;
+                            clearBusy(status, btn);
                         }, 'image/png');
 
                     } catch (err) {
                         status.className = 'status error';
                         status.textContent = 'ERROR: ' + err.message;
+                        clearBusy(status, btn);
                     }
                 };
+                img.onerror = function() {
+                    fieldError('fg-encodeImage', 'That file could not be read as an image.');
+                    status.className = 'status error';
+                    status.textContent = 'ERROR: Could not decode that file as a PNG';
+                    clearBusy(status, btn);
+                };
                 img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                status.className = 'status error';
+                status.textContent = 'ERROR: Could not read that file';
+                clearBusy(status, btn);
             };
             reader.readAsDataURL(fileInput.files[0]);
         }
@@ -579,20 +675,21 @@
             const status = document.getElementById('decodeStatus');
             const outputArea = document.getElementById('extractedMessage');
 
+            const btn = document.getElementById('decodeBtn');
+
             status.className = 'status';
             status.style.display = 'none';
             outputArea.value = '';
+            clearFieldErrors(['fg-decodeImage']);
 
             if (!fileInput.files[0]) {
+                fieldError('fg-decodeImage', 'Choose the PNG to extract from.');
                 status.className = 'status error';
                 status.textContent = 'ERROR: No image selected';
                 return;
             }
 
-            // Show loading state
-            status.className = 'status';
-            status.style.display = 'block';
-            status.textContent = 'Processing... Extracting and decrypting message...';
+            setBusy(status, btn, 'Extracting and decrypting\u2026');
 
             const reader = new FileReader();
             reader.onload = async function(e) {
@@ -650,12 +747,26 @@
                     } catch (err) {
                         status.className = 'status error';
                         status.textContent = 'ERROR: ' + err.message;
+                    } finally {
+                        clearBusy(status, btn);
                     }
                 };
+                img.onerror = function() {
+                    fieldError('fg-decodeImage', 'That file could not be read as an image.');
+                    status.className = 'status error';
+                    status.textContent = 'ERROR: Could not decode that file as a PNG';
+                    clearBusy(status, btn);
+                };
                 img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                status.className = 'status error';
+                status.textContent = 'ERROR: Could not read that file';
+                clearBusy(status, btn);
             };
             reader.readAsDataURL(fileInput.files[0]);
         }
     </script>
+<script src="/assets/consent.js" defer></script>
 </body>
 </html>

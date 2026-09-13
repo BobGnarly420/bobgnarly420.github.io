@@ -7,10 +7,22 @@
 <meta name="description" content="Research and tooling on latent dynamics: mechanistic interpretability of transformer residual streams, computational neuropharmacology of reward and arousal circuits, and agent-native trust protocols.">
 <link rel="canonical" href="https://bobgnarly420.github.io/">
 
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+<meta name="theme-color" content="#080B18">
+
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="BobGnarly420">
 <meta property="og:title" content="Latent Dynamics — Research &amp; Instrumentation">
 <meta property="og:description" content="Mechanistic interpretability, computational neuropharmacology, and agent-native protocol design — with the instruments to look at each.">
 <meta property="og:url" content="https://bobgnarly420.github.io/">
+<meta property="og:image" content="https://bobgnarly420.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BobGnarly420 — instruments for systems that will not hold still.">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,15 +79,25 @@ header.top{
   width:9px;height:9px;background:var(--accent);border-radius:var(--radius-xs);
   box-shadow:0 0 0 4px var(--accent-subtle);flex:none
 }
-nav.top-nav{display:flex;gap:22px;font-size:13px}
+nav.top-nav{
+  display:flex;gap:22px;font-size:13px;
+  /* min-width:0 lets the flex item shrink; without it the nav sets the page
+     width and everything scrolls sideways. Overflow scrolls the nav itself. */
+  min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none
+}
+nav.top-nav::-webkit-scrollbar{display:none}
 nav.top-nav a{
   color:var(--fg-2);text-decoration:none;font-family:var(--mono);
-  letter-spacing:.02em;transition:color .18s var(--ease)
+  letter-spacing:.02em;white-space:nowrap;transition:color .18s var(--ease)
 }
 nav.top-nav a:hover{color:var(--fg-1)}
-@media(max-width:760px){nav.top-nav{gap:16px}nav.top-nav a:nth-child(n+4){display:none}}
-@media(max-width:560px){nav.top-nav a:nth-child(n+3){display:none}}
-@media(max-width:420px){nav.top-nav{display:none}}
+/* Narrow screens scroll the nav rather than dropping links from it — the old
+   rules hid everything past the third item and removed the nav entirely below
+   420px, which took Portability, Catalogue and GitHub off every phone. */
+@media(max-width:760px){
+  .top .wrap{gap:14px}
+  nav.top-nav{gap:18px;padding-right:4px}
+}
 
 /* ── hero ─────────────────────────────────────────────────────────────── */
 .hero{padding:clamp(64px,11vw,132px) 0 clamp(48px,7vw,80px)}
@@ -91,6 +113,42 @@ h1{
 h1 em{font-style:normal;color:var(--accent)}
 .lede{margin-top:26px;max-width:66ch;font-size:clamp(16px,1.7vw,18.5px);color:var(--fg-2)}
 .lede strong{color:var(--fg-1);font-weight:500}
+
+/* ── calls to action ──────────────────────────────────────────────────── */
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+  padding:12px 20px;border-radius:var(--radius-xs);
+  border:1px solid var(--border-strong);color:var(--fg-2);
+  transition:color .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease)
+}
+.btn:hover{color:var(--fg-1);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#080B18;font-weight:500}
+.btn.primary:hover{background:#6A92F6;color:#080B18}
+.btn::after{content:"→";font-size:12px;opacity:.7}
+.btn.ext::after{content:"↗"}
+@media(max-width:480px){.cta-row{flex-direction:column;align-items:stretch}.btn{justify-content:center}}
+
+/* Phone-only persistent CTA. Hidden while the consent banner holds the same
+   strip of screen — consent.js sets that class on <html>. */
+.sticky-cta{
+  display:none;position:fixed;left:0;right:0;bottom:0;z-index:20;
+  background:rgba(8,11,24,.94);border-top:1px solid var(--border-strong);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom))
+}
+.sticky-cta a{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--accent);color:#080B18;text-decoration:none;font-weight:500;
+  font-family:var(--mono);font-size:13.5px;padding:13px 18px;border-radius:var(--radius-xs)
+}
+.sticky-cta a::after{content:"↗";font-size:12px;opacity:.7}
+@media(max-width:760px){
+  .sticky-cta{display:block}
+  body{padding-bottom:78px}
+}
+html.has-consent-banner .sticky-cta{display:none}
 
 .metrics{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -189,11 +247,42 @@ td.stack{font-family:var(--mono);font-size:12px;color:var(--fg-2);white-space:no
 .principle h4{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
 .principle p{font-size:14px;color:var(--fg-2)}
 
+/* ── contact ──────────────────────────────────────────────────────────── */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+@media(max-width:800px){.contact{grid-template-columns:1fr}}
+.contact>div{background:var(--surface-0);padding:clamp(24px,3.2vw,32px)}
+.channels dl{display:flex;flex-direction:column;gap:20px;margin-top:4px}
+.channels dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);margin-bottom:5px}
+.channels dd a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .18s var(--ease);font-size:15px}
+.channels dd a:hover{border-bottom-color:var(--accent)}
+.channels dd p{font-size:13px;color:var(--fg-2);margin-top:5px}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2);margin-bottom:8px}
+.field label .opt{text-transform:none;letter-spacing:0;font-size:11px;opacity:.75}
+.field input,.field textarea{
+  width:100%;background:var(--base);color:var(--fg-1);
+  border:1px solid var(--border-strong);border-radius:var(--radius-xs);
+  padding:11px 13px;font:14px/1.5 var(--sans);
+  transition:border-color .18s var(--ease)
+}
+.field textarea{min-height:112px;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--accent);outline:none}
+.field input::placeholder,.field textarea::placeholder{color:var(--fg-2);opacity:.55}
+
+/* error state — colour is never the only signal: the message carries it too */
+.field .err{display:none;font-size:12.5px;color:var(--red);margin-top:7px}
+.field .err::before{content:"▲ ";font-size:10px}
+.field.invalid input,.field.invalid textarea{border-color:var(--red)}
+.field.invalid .err{display:block}
+.form-note{font-size:12.5px;color:var(--fg-2);margin-top:4px}
+.form-note a{color:var(--accent)}
+
 /* ── footer ───────────────────────────────────────────────────────────── */
 footer{border-top:1px solid var(--border);padding:40px 0 56px}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
 footer .who{font-family:var(--mono);font-size:12px;color:var(--fg-2)}
-footer nav{display:flex;gap:22px}
+footer nav{display:flex;flex-wrap:wrap;gap:14px 22px}
 footer nav a{font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;transition:color .18s var(--ease)}
 footer nav a:hover{color:var(--accent)}
 
@@ -212,6 +301,7 @@ footer nav a:hover{color:var(--accent)}
       <a href="#method">Method</a>
       <a href="portability.html">Portability</a>
       <a href="catalogue.html">Catalogue</a>
+      <a href="#contact">Contact</a>
       <a href="https://github.com/BobGnarly420">GitHub</a>
     </nav>
   </div>
@@ -230,6 +320,11 @@ footer nav a:hover{color:var(--accent)}
       <strong>a trajectory through a state space nobody can see directly</strong>,
       and the question of how much of any picture of it survived the projection.
     </p>
+
+    <div class="cta-row">
+      <a class="btn primary ext" href="https://bobgnarly420.github.io/mottled/">Open the live explorer</a>
+      <a class="btn" href="portability.html">Read the first external result</a>
+    </div>
 
     <div class="metrics">
       <div class="metric"><div class="v">3</div><div class="k">Active threads</div></div>
@@ -523,18 +618,205 @@ footer nav a:hover{color:var(--accent)}
     </div>
   </section>
 
+  <section id="contact">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Contact</h2></div>
+      <p class="sec-sub">
+        Questions about a result, a bug in an instrument, or a collaboration —
+        all of it goes to the same place. Everything below is a public,
+        verifiable channel; there is no mailing list and no form that quietly
+        stores your details.
+      </p>
+
+      <div class="contact">
+        <div class="channels">
+          <dl>
+            <div>
+              <dt>Primary</dt>
+              <dd>
+                <a href="https://github.com/BobGnarly420/bobgnarly420.github.io/issues">github.com/BobGnarly420 · Issues</a>
+                <p>Best for anything about a specific instrument. Public thread, so the answer helps the next person too.</p>
+              </dd>
+            </div>
+            <div>
+              <dt>Profile</dt>
+              <dd>
+                <a href="https://github.com/BobGnarly420">github.com/BobGnarly420</a>
+                <p>Source for every project listed above, and the fastest way to see what is moving.</p>
+              </dd>
+            </div>
+            <div>
+              <dt>Published work</dt>
+              <dd>
+                <a href="https://doi.org/10.5281/ZENODO.19625787">doi.org/10.5281/zenodo.19625787</a>
+                <p>Cite the DOI rather than this page for the neuropharmacology model.</p>
+              </dd>
+            </div>
+            <div>
+              <dt>Jurisdiction</dt>
+              <dd>
+                <p style="margin-top:0">
+                  Operated by an individual, remote, in the United Kingdom.
+                  Terms of use are on the <a href="terms.html" style="color:var(--accent)">terms page</a>;
+                  what the site stores is on the <a href="privacy.html" style="color:var(--accent)">privacy page</a>.
+                </p>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div>
+          <!-- Composes a prefilled GitHub issue: the site has no backend, so
+               this is the honest way to give the form somewhere real to go.
+               The action is GitHub's own new-issue endpoint and the fields are
+               named for its query parameters, so a plain GET submit with
+               JavaScript switched off lands on the same prefilled form. -->
+          <form id="contact-form" method="get" novalidate
+                action="https://github.com/BobGnarly420/bobgnarly420.github.io/issues/new">
+            <div class="field" id="f-subject">
+              <label for="c-subject">Subject</label>
+              <input type="text" id="c-subject" name="title" maxlength="120"
+                     placeholder="Mottled: SAE fit readout looks wrong on Qwen"
+                     autocomplete="off" aria-describedby="e-subject">
+              <div class="err" id="e-subject" role="alert"></div>
+            </div>
+
+            <div class="field" id="f-message">
+              <label for="c-message">Message</label>
+              <textarea id="c-message" name="body" maxlength="4000"
+                        placeholder="What you were doing, what you expected, what happened instead."
+                        aria-describedby="e-message"></textarea>
+              <div class="err" id="e-message" role="alert"></div>
+            </div>
+
+            <div class="field" id="f-from">
+              <label for="c-from">Who you are <span class="opt">(optional)</span></label>
+              <input type="text" id="c-from" name="from" maxlength="120"
+                     placeholder="Name, affiliation, or a link" autocomplete="off">
+            </div>
+
+            <div class="cta-row" style="margin-top:4px">
+              <button type="submit" class="btn primary">Open the message</button>
+            </div>
+            <p class="form-note">
+              This opens a prefilled issue on GitHub for you to send. Nothing is
+              transmitted from this page, and issues on a public repository are
+              public — see <a href="privacy.html">privacy</a>.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer>
   <div class="wrap">
     <div class="who">BobGnarly420 · latent dynamics, artificial and biological</div>
     <nav>
+      <a href="#contact">Contact</a>
       <a href="https://github.com/BobGnarly420">GitHub</a>
       <a href="https://github.com/BobGnarly420/bobgnarly420.github.io">Source</a>
       <a href="https://doi.org/10.5281/ZENODO.19625787">Zenodo</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </div>
 </footer>
+
+<div class="sticky-cta">
+  <a href="https://bobgnarly420.github.io/mottled/">Open the live explorer</a>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "BobGnarly420",
+  "url": "https://bobgnarly420.github.io/",
+  "image": "https://bobgnarly420.github.io/assets/og-image.png",
+  "description": "Builds measurement tools for high-dimensional processes: mechanistic interpretability of transformer residual streams, computational neuropharmacology of reward and arousal circuits, and agent-native trust protocols.",
+  "knowsAbout": [
+    "Mechanistic interpretability",
+    "Computational neuropharmacology",
+    "Agent-native protocol design"
+  ],
+  "address": { "@type": "PostalAddress", "addressCountry": "GB" },
+  "sameAs": [
+    "https://github.com/BobGnarly420",
+    "https://doi.org/10.5281/ZENODO.19625787"
+  ]
+}
+</script>
+
+<script>
+/* Client-side validation with inline, per-field error messages, then hand the
+   message to GitHub. Falls back to a plain GET to thanks.html without JS. */
+(function () {
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+
+  var ISSUE = 'https://github.com/BobGnarly420/bobgnarly420.github.io/issues/new';
+
+  var rules = [
+    { field: 'f-subject', input: 'c-subject', err: 'e-subject', min: 4,
+      empty: 'Give the message a subject so it lands in the right place.',
+      short: 'A few more words, please — at least 4 characters.' },
+    { field: 'f-message', input: 'c-message', err: 'e-message', min: 12,
+      empty: 'The message is empty.',
+      short: 'Tell me a little more — at least 12 characters.' }
+  ];
+
+  function check(rule, show) {
+    var wrap = document.getElementById(rule.field);
+    var input = document.getElementById(rule.input);
+    var value = input.value.trim();
+    var problem = !value ? rule.empty : value.length < rule.min ? rule.short : '';
+
+    if (problem && show) {
+      wrap.classList.add('invalid');
+      document.getElementById(rule.err).textContent = problem;
+      input.setAttribute('aria-invalid', 'true');
+    } else if (!problem) {
+      wrap.classList.remove('invalid');
+      document.getElementById(rule.err).textContent = '';
+      input.removeAttribute('aria-invalid');
+    }
+    return !problem;
+  }
+
+  rules.forEach(function (rule) {
+    var input = document.getElementById(rule.input);
+    /* Clear an error as soon as it stops being true; only re-assert on blur. */
+    input.addEventListener('input', function () { check(rule, false); });
+    input.addEventListener('blur', function () { check(rule, true); });
+  });
+
+  form.addEventListener('submit', function (ev) {
+    var bad = null;
+    rules.forEach(function (rule) {
+      if (!check(rule, true) && !bad) bad = document.getElementById(rule.input);
+    });
+    if (bad) { ev.preventDefault(); bad.focus(); return; }
+
+    var from = document.getElementById('c-from').value.trim();
+    var body = document.getElementById('c-message').value.trim() +
+               (from ? '\n\n— ' + from : '');
+    var url = ISSUE +
+      '?title=' + encodeURIComponent(document.getElementById('c-subject').value.trim()) +
+      '&body=' + encodeURIComponent(body);
+
+    /* The new tab carries the draft; this one goes to thanks.html, which
+       explains that the issue still has to be submitted over there. Stop the
+       default GET so the message never ends up in this page's own URL. */
+    ev.preventDefault();
+    window.open(url, '_blank', 'noopener');
+    location.href = 'thanks.html';
+  });
+})();
+</script>
+<script src="/assets/consent.js" defer></script>
 
 </body>
 </html>

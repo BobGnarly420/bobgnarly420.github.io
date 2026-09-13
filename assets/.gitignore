@@ -1,0 +1,5 @@
+# Fetched by fetch_fonts.py; Google's to distribute, not mine.
+.fonts/
+
+# Byte-code from running the generators.
+__pycache__/
