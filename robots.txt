@@ -1,4 +1,4 @@
-# https://bobgnarly420.github.io/
+# https://enactedvolition.github.io/
 # One group for every crawler. The previous file split its rules across two
 # "User-agent: *" blocks, which crawlers merge but nobody can read.
 
@@ -7,4 +7,4 @@ Allow: /
 Disallow: /.git/
 Disallow: /codex/
 
-Sitemap: https://bobgnarly420.github.io/sitemap.xml
+Sitemap: https://enactedvolition.github.io/sitemap.xml

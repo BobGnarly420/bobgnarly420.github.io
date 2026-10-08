@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "description": "Personal research site: mechanistic interpretability, computational neuropharmacology, agent-native protocols.",
-  "homepage": "https://bobgnarly420.github.io",
+  "homepage": "https://enactedvolition.github.io",
   "license": "MIT",
   "scripts": {
     "serve": "python3 -m http.server 8000",
