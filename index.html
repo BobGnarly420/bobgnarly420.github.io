@@ -323,7 +323,7 @@ footer nav a:hover{color:var(--accent)}
 <main id="top">
 
   <div class="wrap hero">
-    <div class="eyebrow">Updated <mark class="confirm">[CONFIRM: date]</mark></div>
+    <div class="eyebrow">Updated 2026-10-09</div>
     <h1>What I've found, how sure I am, and how to check.</h1>
     <p class="lede">
       Enacted Volition Research is one person, Evelyn Campbell, self-funded.
@@ -338,7 +338,7 @@ footer nav a:hover{color:var(--accent)}
           <tr>
             <td class="what"><strong>Pasting a hidden state from an unrelated fact moves the answer more than one from a related fact.</strong> The preregistered prediction was the opposite.</td>
             <td class="conf">likely</td>
-            <td class="what">Qwen2.5-0.5B-Instruct only, 32 directional transplants, paired sign-flip p = 3.05×10⁻⁵. Designed and run by an AI agent (Manus). Checked by <mark class="confirm">[CONFIRM: who checked it, and how]</mark>.</td>
+            <td class="what">Qwen2.5-0.5B-Instruct only, 32 directional transplants, paired sign-flip p = 3.05×10⁻⁵. Designed and run by an AI agent (Manus). Not independently replicated. I checked only that Mottled’s capture path reproduces the model’s own outputs (identity error 0.0000).</td>
             <td class="name"><a href="portability.html">Portability study</a></td>
           </tr>
           <tr>
@@ -350,7 +350,7 @@ footer nav a:hover{color:var(--accent)}
           <tr>
             <td class="what"><strong>In the meth × ADHD model, temperature is a bifurcation parameter for neurotoxicity.</strong> Risk does not scale in a straight line with it.</td>
             <td class="conf">holds in the model</td>
-            <td class="what">A simulation. <mark class="confirm">[CONFIRM: has it been fit to any human outcome data?]</mark> Not medical guidance.</td>
+            <td class="what">A simulation with parameters from published studies, compared with group-level findings. Not fit to individual human outcome data. Not medical guidance.</td>
             <td class="name"><a href="https://doi.org/10.5281/ZENODO.19625787">DOI 10.5281/zenodo.19625787</a></td>
           </tr>
           <tr>
@@ -362,7 +362,7 @@ footer nav a:hover{color:var(--accent)}
           <tr>
             <td class="what"><strong>A 2D view of a layer-by-layer trajectory keeps enough to compare two prompts.</strong></td>
             <td class="conf">possible</td>
-            <td class="what">Variance kept in 2D on the sample scenes: <mark class="confirm">[CONFIRM: projection-fidelity numbers]</mark>. Not yet shown: a task where Mottled beats a linear probe.</td>
+            <td class="what">Mean neighbourhood preservation across four sample scenes, from Mottled’s own fidelity_summary: 0.37 (self-portrait, GPT-2; 71% of states under the 0.5 flag) to 0.64 (gpt2-capitals). In three of the four, more than half the states are under the flag. Not yet shown: a task where Mottled beats a linear probe.</td>
             <td class="name"><a href="https://enactedvolition.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Sample scene</a></td>
           </tr>
         </tbody>
@@ -401,7 +401,7 @@ footer nav a:hover{color:var(--accent)}
               data type, <code class="mono">StateTrajectory</code>.
             </p>
             <p>
-              Tested on two architectures: GPT-2 and Qwen2.5 <mark class="confirm">[CONFIRM: homepage said 1.5B-Instruct; the portability study used 0.5B-Instruct. Which models has Mottled been run on?]</mark>.
+              Sample scenes cover GPT-2, DistilGPT-2 and Qwen2.5-1.5B-Instruct; the portability study and the blast samples used Qwen2.5-0.5B-Instruct.
               Limits: the 2D projection is lossy, and every scene reports how much it kept.
             </p>
             <div class="tags">
@@ -433,7 +433,7 @@ footer nav a:hover{color:var(--accent)}
 
         <article class="thread">
           <div>
-            <div class="thread-status"><span class="dot published"></span>Preprint on Zenodo · <mark class="confirm">[CONFIRM: Published · iterating here vs In submission on the portfolio]</mark></div>
+            <div class="thread-status"><span class="dot published"></span>Preprint on Zenodo, 2026-04-17 · not peer reviewed</div>
             <h3>Meth × neurodivergent reward architecture</h3>
             <div class="field">Computational neuropharmacology</div>
             <p>
@@ -493,7 +493,7 @@ footer nav a:hover{color:var(--accent)}
             <p>
               The server stores and serves signatures. Agents verify locally, so the server
               is not a trust root. An MCP server exposes the workflow as agent tools.
-              Status: spec and reference server. Outside users: <mark class="confirm">[CONFIRM: any outside users yet?]</mark>
+              Status: spec and reference server. Outside users: none visible on GitHub (0 stars, 0 forks, no issues from others as of 2026-10-09).
             </p>
             <div class="tags">
               <span class="tag">Python 3.12</span><span class="tag">FastAPI</span>
@@ -567,7 +567,7 @@ footer nav a:hover{color:var(--accent)}
             </tr>
             <tr>
               <td class="name"><a href="catalogue.html">Catalogue analysis</a></td>
-              <td class="what">Audio-feature study of a fixed set of 155 generated tracks, as of <mark class="confirm">[CONFIRM: date the 155 were analysed; the page was published 2026-08-28]</mark>. Shows which features carry information and which three are track length in disguise.</td>
+              <td class="what">Audio-feature study of a fixed set of 155 generated tracks, analysed in August 2026. Shows which features carry information and which three are track length in disguise.</td>
               <td class="stack">librosa · SVG</td>
               <td><span class="pill live">Live</span></td>
             </tr>
@@ -647,7 +647,7 @@ footer nav a:hover{color:var(--accent)}
         <table>
           <tbody>
             <tr><td class="name">Funding</td><td class="what">Self-funded. No affiliations.</td></tr>
-            <tr><td class="name">AI involvement</td><td class="what">The portability study was designed and run by Manus, an AI agent, against Mottled's unmodified code. The 155 analysed catalogue tracks are generated music <mark class="confirm">[CONFIRM: generated with which tool, Suno?]</mark>. Live total on Suno: <span data-suno-count>see suno.com/@evevev</span>. Other AI help on code or writing: <mark class="confirm">[CONFIRM: which assistants, and for what?]</mark></td></tr>
+            <tr><td class="name">AI involvement</td><td class="what">The portability study was designed and run by Manus, an AI agent, against Mottled's unmodified code. The 155 analysed catalogue tracks are made with Suno (121 of the 146 distinct titles match public tracks on suno.com/@evevev; the rest are not public). Live total on Suno: <span data-suno-count>see suno.com/@evevev</span>. Claude (Anthropic’s coding agent) wrote or co-wrote many commits in Mottled, EVT-1 and this site; git history shows which. This revision of the site copy was drafted with an AI assistant (Grok Bot). Writing of the meth/ADHD paper: <mark class="confirm">[CONFIRM: was an AI assistant used to draft or edit the paper text?]</mark></td></tr>
             <tr><td class="name">Reversals</td><td class="what">The portability study's registered prediction came out backwards. The catalogue analysis dropped three of its six structural features as track-length proxies.</td></tr>
           </tbody>
         </table>
@@ -690,7 +690,7 @@ footer nav a:hover{color:var(--accent)}
               <dt>Jurisdiction</dt>
               <dd>
                 <p style="margin-top:0">
-                  Operated by an individual, remote, in <mark class="confirm">[CONFIRM: is the United Kingdom correct?]</mark>.
+                  Operated by an individual, remote.
                   Terms of use are on the <a href="terms.html" style="color:var(--accent)">terms page</a>;
                   what the site stores is on the <a href="privacy.html" style="color:var(--accent)">privacy page</a>.
                 </p>
