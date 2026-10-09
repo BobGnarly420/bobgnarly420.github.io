@@ -1,7 +1,7 @@
 /* ── Incision design language ──────────────────────────────────────────────
    Shared by the site's plain document pages (404, privacy, terms, thanks).
    Mirrors the tokens inlined in index.html, which in turn mirror
-   github.com/BobGnarly420/mottled → design_tokens.py. Change them there first.
+   github.com/enactedvolition/mottled → design_tokens.py. Change them there first.
    The research pages keep their own inlined copy so they stay single-file.  */
 :root{
   --base:#080B18; --surface-0:#0C1020; --surface-1:#11162A;
