@@ -103,7 +103,7 @@ def og():
     d.rounded_rectangle([PAD, 60, PAD + 13, 73], radius=3, fill=ACCENT)
     d.text((PAD + 26, 54), "BobGnarly420", font=font("dmsans700", 21), fill=FG_1)
     dom = font("jbmono400", 17)
-    url = "bobgnarly420.github.io"
+    url = "enactedvolition.github.io"
     d.text((W - PAD - d.textlength(url, font=dom), 56), url, font=dom, fill=FG_2)
 
     # eyebrow

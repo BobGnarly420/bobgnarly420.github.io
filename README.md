@@ -1,9 +1,9 @@
-# bobgnarly420.github.io
+# enactedvolition.github.io
 
-Personal research site — **[bobgnarly420.github.io](https://bobgnarly420.github.io)**
+Personal research site — **[enactedvolition.github.io](https://enactedvolition.github.io)**
 
 Static single-file site, no build step. Styled in **Incision**, the design
-language defined in [`mottled/design_tokens.py`](https://github.com/BobGnarly420/mottled/blob/main/design_tokens.py):
+language defined in [`mottled/design_tokens.py`](https://github.com/enactedvolition/mottled/blob/main/design_tokens.py):
 dark navy void, one precision-blue accent, 1px borders, near-sharp corners,
 monospace for every data value. Colours here mirror those tokens — change them
 there first.
@@ -17,7 +17,7 @@ rather than observed. Two substrates, one problem: a trajectory through a state
 space nobody can see directly, and the question of how much of any picture of it
 survived the projection.
 
-### 1. Mechanistic interpretability — [Mottled](https://github.com/BobGnarly420/mottled)
+### 1. Mechanistic interpretability — [Mottled](https://github.com/enactedvolition/mottled)
 
 Interactive latent trajectory explorer for transformer forward passes. Captures
 the residual stream after every block, projects it, estimates the local
@@ -27,7 +27,7 @@ Not a neuron inspector — the object of study is the dynamics.
 - Real SAE features, fetched and then *measured* for fit rather than assumed
 - Logit-lens readouts, attention patterns, exact attn/MLP residual decomposition
 - Model-agnostic and verified: GPT-2 and Qwen2.5-1.5B-Instruct on one terrain
-- Live: [explorer + WebGL viewer](https://bobgnarly420.github.io/mottled/)
+- Live: [explorer + WebGL viewer](https://enactedvolition.github.io/mottled/)
 - **First external result:** an autonomous agent (Manus AI) used Mottled's unmodified
   capture path for a preregistered residual-state transplant study on Qwen2.5-0.5B and
   found its compatibility hypothesis *reversed* — unrelated-relation donor states were
@@ -35,7 +35,7 @@ Not a neuron inspector — the object of study is the dynamics.
   surviving raw-logit, distance-rematching, norm and permutation controls.
   [Write-up](portability.html).
 
-### 2. Computational neuropharmacology — [meth-neurodiv-model](https://github.com/BobGnarly420/meth-neurodiv-model)
+### 2. Computational neuropharmacology — [meth-neurodiv-model](https://github.com/enactedvolition/meth-neurodiv-model)
 
 Six-layer simulation of methamphetamine perturbations in neurodivergent reward
 and arousal networks, from millisecond dopamine terminal kinetics to months of
@@ -55,7 +55,7 @@ generator emits novelty at 34.4 ± 2.6 peaks/min regardless of track length.
 What survives: a 3.65 ± 0.89 s lead-in on every track, a median repetition score
 of 0.973, and brightness correlating with repetition at r = +0.474.
 
-### 3. Agent-native trust infrastructure — [EVT-1](https://github.com/BobGnarly420/evt-1)
+### 3. Agent-native trust infrastructure — [EVT-1](https://github.com/enactedvolition/evt-1)
 
 TLS certificates, but for product claims. Deterministic canonical URNs for
 product identity plus Ed25519-signed trust assertions that agents verify
@@ -140,8 +140,8 @@ so this only needs running when the accent colour changes.
 ## Running locally
 
 ```bash
-git clone https://github.com/BobGnarly420/bobgnarly420.github.io.git
-cd bobgnarly420.github.io
+git clone https://github.com/enactedvolition/enactedvolition.github.io.git
+cd enactedvolition.github.io
 
 python3 -m http.server 8000     # then open http://localhost:8000
 
