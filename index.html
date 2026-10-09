@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Latent Dynamics — Research &amp; Instrumentation</title>
-<meta name="description" content="Research and tooling on latent dynamics: mechanistic interpretability of transformer residual streams, computational neuropharmacology of reward and arousal circuits, and agent-native trust protocols.">
+<title>Enacted Volition Research: findings, confidence, and how to check</title>
+<meta name="description" content="Tools and small studies for looking inside neural networks and dopamine models, with the failure cases published next to the results.">
 <link rel="canonical" href="https://enactedvolition.github.io/">
 
 <link rel="icon" href="/assets/favicon.ico" sizes="32x32">
@@ -15,13 +15,13 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Enacted Volition Research">
-<meta property="og:title" content="Latent Dynamics — Research &amp; Instrumentation">
-<meta property="og:description" content="Mechanistic interpretability, computational neuropharmacology, and agent-native protocol design — with the instruments to look at each.">
+<meta property="og:title" content="Enacted Volition Research: findings, confidence, and how to check">
+<meta property="og:description" content="Tools and small studies for looking inside neural networks and dopamine models, with the failure cases published next to the results.">
 <meta property="og:url" content="https://enactedvolition.github.io/">
 <meta property="og:image" content="https://enactedvolition.github.io/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Enacted Volition Research — instruments for systems that will not hold still.">
+<meta property="og:image:alt" content="Enacted Volition Research site preview image.">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -288,6 +288,18 @@ footer nav a:hover{color:var(--accent)}
 
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--radius-xs)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+.confirm{background:#ffd23f;color:#111;padding:0 .25em;font-weight:700;border-radius:2px}
+.conf{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.ledger td.what strong{color:var(--fg-1);font-weight:500}
+@media(max-width:760px){
+  .ledger table{min-width:0}
+  .ledger thead{display:none}
+  .ledger tr,.ledger td{display:block;width:100%}
+  .ledger td{border-bottom:none;padding:6px 16px}
+  .ledger tr{border-bottom:1px solid var(--border);padding:10px 0;background:var(--surface-0)}
+  .ledger td.conf::before{content:"Confidence: ";color:var(--fg-2)}
+  .ledger td.name{white-space:normal}
+}
 </style>
 </head>
 <body>
@@ -311,27 +323,56 @@ footer nav a:hover{color:var(--accent)}
 <main id="top">
 
   <div class="wrap hero">
-    <div class="eyebrow">Latent dynamics — artificial and biological</div>
-    <h1>Instruments for systems that <em>will not hold still</em>.</h1>
+    <div class="eyebrow">Updated <mark class="confirm">[CONFIRM: date]</mark></div>
+    <h1>What I've found, how sure I am, and how to check.</h1>
     <p class="lede">
-      I build measurement tools for high-dimensional processes that are usually
-      described rather than observed: the residual stream of a transformer as it
-      moves through its layers, and dopaminergic reward circuitry under
-      pharmacological load. Two substrates, one problem —
-      <strong>a trajectory through a state space nobody can see directly</strong>,
-      and the question of how much of any picture of it survived the projection.
+      Enacted Volition Research is one person, Evelyn Campbell, self-funded.
+      I work on small open language models and on simulations of the dopamine system.
+      Each line below links to the code or page that backs it.
     </p>
 
-    <div class="cta-row">
-      <a class="btn primary ext" href="https://enactedvolition.github.io/mottled/">Open the live explorer</a>
-      <a class="btn" href="portability.html">Read the first external result</a>
+    <div class="table-scroll ledger" style="margin-top:36px">
+      <table>
+        <thead><tr><th>Claim</th><th>Confidence</th><th>Scope and weakest point</th><th>Check</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="what"><strong>Pasting a hidden state from an unrelated fact moves the answer more than one from a related fact.</strong> The preregistered prediction was the opposite.</td>
+            <td class="conf">likely</td>
+            <td class="what">Qwen2.5-0.5B-Instruct only, 32 directional transplants, paired sign-flip p = 3.05×10⁻⁵. Designed and run by an AI agent (Manus). Checked by <mark class="confirm">[CONFIRM: who checked it, and how]</mark>.</td>
+            <td class="name"><a href="portability.html">Portability study</a></td>
+          </tr>
+          <tr>
+            <td class="what"><strong>Three of the six structural audio features in my catalogue analysis were track length in disguise.</strong></td>
+            <td class="conf">certain</td>
+            <td class="what">mean_seg_s vs duration r = 0.999. One of the three comes from a segmenter cap I set myself.</td>
+            <td class="name"><a href="catalogue.html">Catalogue analysis</a></td>
+          </tr>
+          <tr>
+            <td class="what"><strong>In the meth × ADHD model, temperature is a bifurcation parameter for neurotoxicity.</strong> Risk does not scale in a straight line with it.</td>
+            <td class="conf">holds in the model</td>
+            <td class="what">A simulation. <mark class="confirm">[CONFIRM: has it been fit to any human outcome data?]</mark> Not medical guidance.</td>
+            <td class="name"><a href="https://doi.org/10.5281/ZENODO.19625787">DOI 10.5281/zenodo.19625787</a></td>
+          </tr>
+          <tr>
+            <td class="what"><strong>Mottled's attention + MLP split reconstructs the residual stream exactly</strong> (max error 0.0000).</td>
+            <td class="conf">certain</td>
+            <td class="what">A sanity check on the capture code. It is not a finding about models.</td>
+            <td class="name"><a href="https://github.com/enactedvolition/mottled">Mottled tests</a></td>
+          </tr>
+          <tr>
+            <td class="what"><strong>A 2D view of a layer-by-layer trajectory keeps enough to compare two prompts.</strong></td>
+            <td class="conf">possible</td>
+            <td class="what">Variance kept in 2D on the sample scenes: <mark class="confirm">[CONFIRM: projection-fidelity numbers]</mark>. Not yet shown: a task where Mottled beats a linear probe.</td>
+            <td class="name"><a href="https://enactedvolition.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Sample scene</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <p class="form-note" style="margin-top:12px">Confidence words: <em>certain</em> means checked by construction or exact computation; <em>likely</em> means one solid study, not yet replicated; <em>possible</em> means plausible, not yet tested properly.</p>
 
-    <div class="metrics">
-      <div class="metric"><div class="v">3</div><div class="k">Active threads</div></div>
-      <div class="metric"><div class="v">6</div><div class="k">Model layers (neuro)</div></div>
-      <div class="metric"><div class="v">266</div><div class="k">Tests in Mottled</div></div>
-      <div class="metric"><div class="v">0.0000</div><div class="k">Residual recon. error</div></div>
+    <div class="cta-row">
+      <a class="btn primary ext" href="https://enactedvolition.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Open a sample scene (no install)</a>
+      <a class="btn" href="portability.html">Read the study that reversed</a>
     </div>
   </div>
 
@@ -339,8 +380,7 @@ footer nav a:hover{color:var(--accent)}
     <div class="wrap">
       <div class="sec-head"><span class="sec-num">01</span><h2>Research threads</h2></div>
       <p class="sec-sub">
-        Current work, ordered by how much of my attention it is taking. Each thread
-        ships as running code rather than as a claim.
+        Each project has a status, the claim it currently supports, and a link to the code.
       </p>
 
       <div class="threads">
@@ -351,24 +391,18 @@ footer nav a:hover{color:var(--accent)}
             <h3>Mottled</h3>
             <div class="field">Mechanistic interpretability · latent dynamics</div>
             <p>
-              An interactive latent trajectory explorer for transformer forward passes.
-              Mottled captures the residual stream after every block, projects it,
-              estimates the local manifold, and animates how a prompt
-              <strong>moves, turns, and settles</strong> as it flows through the model.
+              Mottled records a transformer's residual stream after every block and plays
+              it back in the browser, so you can see where in the layer stack two similar
+              prompts split apart and where a model's state stops changing.
             </p>
             <p>
-              It is deliberately <em>not</em> a neuron inspector or an attribution
-              dashboard. The object of study is the dynamics: attractor basins in the
-              late layers, where an A/B pair of prompts separates, what the decode axis
-              looks like when a model starts repeating itself. Real SAE features
-              (fetched, then <strong>measured for fit rather than assumed</strong>),
-              logit-lens readouts, attention patterns and an exact attn/MLP residual
-              decomposition all hang off a single interchange type, <code class="mono">StateTrajectory</code>.
+              Logit-lens readouts, attention patterns, SAE features (each checked for
+              fit to the model) and an exact attention/MLP decomposition all attach to one
+              data type, <code class="mono">StateTrajectory</code>.
             </p>
             <p>
-              Model-agnostic by construction and verified as such: GPT-2's 2019 design
-              and Qwen2.5-1.5B-Instruct (GQA, RoPE, SwiGLU, RMSNorm) land on the same
-              terrain, across a 29×1536 vs 13×768 divide.
+              Tested on two architectures: GPT-2 and Qwen2.5 <mark class="confirm">[CONFIRM: homepage said 1.5B-Instruct; the portability study used 0.5B-Instruct. Which models has Mottled been run on?]</mark>.
+              Limits: the 2D projection is lossy, and every scene reports how much it kept.
             </p>
             <div class="tags">
               <span class="tag">Python</span><span class="tag">PyTorch</span>
@@ -379,53 +413,46 @@ footer nav a:hover{color:var(--accent)}
               <a href="https://enactedvolition.github.io/mottled/">Live explorer</a>
               <a href="https://enactedvolition.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Self-portrait scene</a>
               <a href="https://github.com/enactedvolition/mottled">Source</a>
-              <a href="portability.html" class="internal">First external result</a>
+              <a href="portability.html" class="internal">Portability study</a>
             </div>
           </div>
           <div class="rail">
             <h4>Instrument readings</h4>
             <dl>
-              <dt class="accent">max |h[l+1] − (h[l]+attn+mlp)| = 0.0000</dt>
-              <dd>Residual decomposition reconciles exactly on a modern architecture, not just on GPT-2.</dd>
-              <dt class="teal">" into"</dt>
-              <dd>GPT-2's top continuation for "the residual stream moves, turns, and settles" — the model completes the project's own thesis.</dd>
+              <dt>max |h[l+1] − (h[l]+attn+mlp)| = 0.0000</dt>
+              <dd>Sanity check: the decomposition reconciles exactly on Qwen2.5 as well as GPT-2.</dd>
               <dt>42,257</dt>
               <dd>Shared vocabulary entries used to put Qwen and GPT-2 on one comparable terrain.</dd>
               <dt>266 tests · 24 files</dt>
               <dd>Including cross-language conformance between the Python BVH and its JS port.</dd>
-              <dt class="accent">First external result</dt>
-              <dd>An autonomous agent used Mottled's capture path to run a preregistered transplant study on Qwen2.5 — and reversed its own hypothesis. <a href="portability.html" style="color:var(--accent)">Read it</a>.</dd>
+              <dt class="accent">Portability study</dt>
+              <dd>An AI agent (Manus) used Mottled's unmodified capture code to run a preregistered transplant study on Qwen2.5-0.5B. Its prediction reversed. <a href="portability.html" style="color:var(--accent)">Read it</a>.</dd>
             </dl>
           </div>
         </article>
 
         <article class="thread">
           <div>
-            <div class="thread-status"><span class="dot published"></span>Published · iterating</div>
+            <div class="thread-status"><span class="dot published"></span>Preprint on Zenodo · <mark class="confirm">[CONFIRM: Published · iterating here vs In submission on the portfolio]</mark></div>
             <h3>Meth × neurodivergent reward architecture</h3>
             <div class="field">Computational neuropharmacology</div>
             <p>
-              A multi-scale simulation of methamphetamine perturbations in
-              neurodivergent reward and arousal networks, spanning six coupled layers
-              from <strong>millisecond dopamine terminal kinetics to months of chronic
-              neuroadaptation</strong>: DAT reverse transport and VMAT2 packing,
-              temperature-dependent oxidative toxicity, LC–NE gain control,
-              trial-level reinforcement learning, circadian and sleep modulation, and
-              setpoint drift over a 365-day horizon.
+              ADHD stimulants and methamphetamine act on the same dopamine machinery, with
+              opposite clinical outcomes. This simulation links six layers to ask why:
+              DAT reverse transport and VMAT2 packing, temperature-dependent oxidative
+              toxicity, LC–NE gain control, trial-level reinforcement learning, sleep and
+              circadian modulation, and setpoint drift over 365 days.
             </p>
             <p>
-              The interesting result is structural: temperature behaves as a
-              <strong>bifurcation parameter</strong> for neurotoxicity rather than as a
-              linear risk multiplier, and the same drug exposure produces materially
-              different trajectories across neurotypical, ADHD-C and ADHD-I parameter
-              architectures.
+              In the model, temperature is a bifurcation parameter for neurotoxicity, and the
+              same exposure gives different trajectories for neurotypical, ADHD-C and ADHD-I
+              parameter sets. It is a model, and it is not medical guidance.
             </p>
             <p>
-              The RL layer has since been rebuilt on <strong>ANCCR</strong>
-              (Jeong et al. 2022) with IRI-scaling per Burke et al. 2026 — learning rate
-              scales with the inter-reward interval instead of sitting as a free
-              parameter, so total conditioning time is invariant to trial frequency.
-              That replaced a fitted knob with a mechanism.
+              The RL layer now uses <strong>ANCCR</strong> (Jeong et al. 2022) with
+              IRI-scaling per Burke et al. 2026. The learning rate used to be a fitted
+              constant; it now comes from the interval between rewards, so total
+              conditioning time no longer depends on trial frequency.
             </p>
             <div class="tags">
               <span class="tag">NumPy</span><span class="tag">ODE systems</span>
@@ -458,20 +485,15 @@ footer nav a:hover{color:var(--accent)}
             <h3>EVT-1</h3>
             <div class="field">Agent-native trust infrastructure</div>
             <p>
-              TLS certificates, but for product claims. A minimal agent-first protocol
-              that gives agents a shared way to agree on <strong>what a product is</strong>
-              — deterministic canonical URNs — and to verify <strong>claims about it</strong>
-              via Ed25519-signed trust assertions, without trusting the marketplace that
-              displayed them.
+              A draft protocol for letting shopping agents check product claims themselves.
+              Each product gets a deterministic ID (a canonical URN), and claims about it are
+              signed with Ed25519, so an agent can verify them without trusting the store
+              that showed them.
             </p>
             <p>
-              Shopping and procurement agents currently inherit whatever a platform tells
-              them; badges and "verified" labels are unverifiable platform artifacts.
-              EVT-1 moves both problems down a level: identity is derived
-              (normalization → alias resolution → fuzzy-match confidence), and the server
-              stores and serves signatures but is explicitly <strong>not a trust root</strong> —
-              agents verify locally. It ships an MCP server, so the whole workflow is
-              available as tools to any MCP-compatible agent.
+              The server stores and serves signatures. Agents verify locally, so the server
+              is not a trust root. An MCP server exposes the workflow as agent tools.
+              Status: spec and reference server. Outside users: <mark class="confirm">[CONFIRM: any outside users yet?]</mark>
             </p>
             <div class="tags">
               <span class="tag">Python 3.12</span><span class="tag">FastAPI</span>
@@ -504,8 +526,7 @@ footer nav a:hover{color:var(--accent)}
     <div class="wrap">
       <div class="sec-head"><span class="sec-num">02</span><h2>Instruments</h2></div>
       <p class="sec-sub">
-        Everything that runs. The browser tools are fully client-side — no backend,
-        nothing leaves the tab.
+        Everything here runs. The top rows are maintained. The archive rows are older browser tools kept for reference; they run fully in the tab, with no backend.
       </p>
 
       <div class="table-scroll">
@@ -540,19 +561,19 @@ footer nav a:hover{color:var(--accent)}
             </tr>
             <tr>
               <td class="name"><a href="portability.html">Portability study</a></td>
-              <td class="what">Preregistered residual-state transplant experiment run on Mottled by an external agent; the compatibility hypothesis reversed under every control.</td>
+              <td class="what">Preregistered residual-state transplant experiment run on Mottled by an AI agent (Manus); the compatibility hypothesis reversed under every control.</td>
               <td class="stack">Qwen2.5 · CounterFact</td>
               <td><span class="pill live">Live</span></td>
             </tr>
             <tr>
               <td class="name"><a href="catalogue.html">Catalogue analysis</a></td>
-              <td class="what">Audio-feature study of 155 generated tracks — separates the real timbral and structural findings from the three columns that are duration in disguise.</td>
+              <td class="what">Audio-feature study of 155 generated tracks <mark class="confirm">[CONFIRM: portfolio says 129 tracks]</mark>. Shows which features carry information and which three are track length in disguise.</td>
               <td class="stack">librosa · SVG</td>
               <td><span class="pill live">Live</span></td>
             </tr>
             <tr>
               <td class="name"><a href="osint.html">GHOST_CHAIN</a></td>
-              <td class="what">Client-side OSINT toolchain — domain and IP reconnaissance, hash analysis, metadata extraction. Zero backend.</td>
+              <td class="what">Client-side OSINT toolchain: domain and IP reconnaissance, hash analysis, metadata extraction. Zero backend.</td>
               <td class="stack">Vanilla JS</td>
               <td><span class="pill archive">Archive</span></td>
             </tr>
@@ -590,43 +611,55 @@ footer nav a:hover{color:var(--accent)}
     <div class="wrap">
       <div class="sec-head"><span class="sec-num">03</span><h2>How I work</h2></div>
       <p class="sec-sub">
-        The same four commitments show up in the interpretability code and the
-        pharmacology code, which is most of why they are one body of work.
+        Four rules I apply to both the interpretability code and the pharmacology code, each with an example.
       </p>
 
       <div class="method">
         <div class="principle">
           <div class="n">01</div>
-          <h4>Honesty is load-bearing</h4>
-          <p>Any projection of a high-dimensional process is lossy. Every surface carries its fidelity and uncertainty machinery from day one — a lossy picture has to say where it lies, inline and unavoidably.</p>
+          <h4>Show what the picture loses</h4>
+          <p>A 2D view of a high-dimensional state is lossy, so each view reports its own fidelity. Example: the catalogue analysis flags three features that turned out to be track length.</p>
         </div>
         <div class="principle">
           <div class="n">02</div>
           <h4>One interchange type</h4>
-          <p>Producers and consumers never couple. New capture backends and new renderers meet at a single structure, so a feature is added in one place and works everywhere.</p>
+          <p>Capture code and renderers only meet at <code class="mono">StateTrajectory</code>. Example: GPT-2 and Qwen captures load in the same viewer.</p>
         </div>
         <div class="principle">
           <div class="n">03</div>
           <h4>Derive, don't fit</h4>
-          <p>A free parameter tuned to match data explains nothing. Replacing a fitted learning rate with an interval-scaling law is worth more than a better curve fit.</p>
+          <p>Prefer a mechanism to a tuned constant. Example: the RL learning rate now comes from the reward interval (ANCCR).</p>
         </div>
         <div class="principle">
           <div class="n">04</div>
           <h4>It must run offline</h4>
-          <p>Synthetic backends keep pace with real ones, so the whole pipeline stays explorable and testable with no model download, no API key, and no network.</p>
+          <p>Synthetic backends let the pipeline run and be tested with no model download, API key or network.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="provenance">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Provenance and funding</h2></div>
+      <p class="sec-sub">Who pays for this and where AI was involved.</p>
+      <div class="table-scroll">
+        <table>
+          <tbody>
+            <tr><td class="name">Funding</td><td class="what">Self-funded. No affiliations.</td></tr>
+            <tr><td class="name">AI involvement</td><td class="what">The portability study was designed and run by Manus, an AI agent, against Mottled's unmodified code. The 155 catalogue tracks are generated music <mark class="confirm">[CONFIRM: generated with which tool, Suno?]</mark>. Other AI help on code or writing: <mark class="confirm">[CONFIRM: which assistants, and for what?]</mark></td></tr>
+            <tr><td class="name">Reversals</td><td class="what">The portability study's registered prediction came out backwards. The catalogue analysis dropped three of its six structural features as track-length proxies.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <section id="contact">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-num">04</span><h2>Contact</h2></div>
+      <div class="sec-head"><span class="sec-num">05</span><h2>Contact</h2></div>
       <p class="sec-sub">
-        Questions about a result, a bug in an instrument, or a collaboration —
-        all of it goes to the same place. Everything below is a public,
-        verifiable channel; there is no mailing list and no form that quietly
-        stores your details.
+        Found a bug or think a result is wrong? Open a GitHub issue. It is public, so the answer helps the next person. There is no mailing list, and the form below stores nothing.
       </p>
 
       <div class="contact">
@@ -657,7 +690,7 @@ footer nav a:hover{color:var(--accent)}
               <dt>Jurisdiction</dt>
               <dd>
                 <p style="margin-top:0">
-                  Operated by an individual, remote, in the United Kingdom.
+                  Operated by an individual, remote, in <mark class="confirm">[CONFIRM: is the United Kingdom correct?]</mark>.
                   Terms of use are on the <a href="terms.html" style="color:var(--accent)">terms page</a>;
                   what the site stores is on the <a href="privacy.html" style="color:var(--accent)">privacy page</a>.
                 </p>
@@ -714,7 +747,7 @@ footer nav a:hover{color:var(--accent)}
 
 <footer>
   <div class="wrap">
-    <div class="who">Enacted Volition Research · latent dynamics, artificial and biological</div>
+    <div class="who">Enacted Volition Research · Evelyn Campbell</div>
     <nav>
       <a href="#contact">Contact</a>
       <a href="/portfolio/">Portfolio</a>
@@ -728,7 +761,7 @@ footer nav a:hover{color:var(--accent)}
 </footer>
 
 <div class="sticky-cta">
-  <a href="https://enactedvolition.github.io/mottled/">Open the live explorer</a>
+  <a href="https://enactedvolition.github.io/mottled/viewer/?file=samples/self-portrait.mtj">Open a sample scene</a>
 </div>
 
 <script type="application/ld+json">
@@ -738,13 +771,12 @@ footer nav a:hover{color:var(--accent)}
   "name": "Enacted Volition Research",
   "url": "https://enactedvolition.github.io/",
   "image": "https://enactedvolition.github.io/assets/og-image.png",
-  "description": "Builds measurement tools for high-dimensional processes: mechanistic interpretability of transformer residual streams, computational neuropharmacology of reward and arousal circuits, and agent-native trust protocols.",
+  "description": "Tools and small studies for looking inside neural networks and dopamine models, with the failure cases published next to the results.",
   "knowsAbout": [
     "Mechanistic interpretability",
     "Computational neuropharmacology",
     "Agent-native protocol design"
   ],
-  "address": { "@type": "PostalAddress", "addressCountry": "GB" },
   "sameAs": [
     "https://github.com/enactedvolition",
     "https://doi.org/10.5281/ZENODO.19625787"
