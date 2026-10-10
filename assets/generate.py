@@ -101,7 +101,7 @@ def og():
 
     # masthead
     d.rounded_rectangle([PAD, 60, PAD + 13, 73], radius=3, fill=ACCENT)
-    d.text((PAD + 26, 54), "Evelyn Campbell", font=font("dmsans700", 21), fill=FG_1)
+    d.text((PAD + 26, 54), "Enacted Volition Research", font=font("dmsans700", 21), fill=FG_1)
     dom = font("jbmono400", 17)
     url = "enactedvolition.github.io"
     d.text((W - PAD - d.textlength(url, font=dom), 56), url, font=dom, fill=FG_2)
